@@ -21,7 +21,7 @@ public class WeddingInfoDao<T extends WeddingInfo> implements IDao<T> {
 	// Handle on the currently open database
 	private SQLiteDatabase db;
 	
-	private static final String TAG=WeddingInfoDao.class.getName();
+	private static final String TAG=WeddingInfoDao.class.getSimpleName();
 	
 	public WeddingInfoDao(final Context context, final SQLiteDatabase db) {
 		Log.d(TAG, "Constructor - " + "create WeddingInfoDAO service");

@@ -3,18 +3,24 @@ package com.innovention.weddingplanner;
 
 import com.innovention.weddingplanner.ContactFragment.OnValidateContactListener;
 import com.innovention.weddingplanner.GuestListFragment.OnGuestSelectedListener;
+import com.innovention.weddingplanner.bean.Contact;
+import com.innovention.weddingplanner.bean.IDtoBean;
+
 import static com.innovention.weddingplanner.Constantes.*;
 
 import android.os.Bundle;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 import android.support.v4.app.NavUtils;
 
 public class GuestActivity extends Activity implements OnGuestSelectedListener, OnValidateContactListener {
+	
+	private final static String TAG = ContactFragment.class.getSimpleName();
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -56,7 +62,9 @@ public class GuestActivity extends Activity implements OnGuestSelectedListener, 
 			NavUtils.navigateUpFromSameTask(this);
 			return true;
 		case R.id.action_add_contact:
-			//Toast.makeText(this, "Ajouter invite", Toast.LENGTH_SHORT).show();
+			
+			if (Log.isLoggable(TAG, Log.VERBOSE))
+			Log.d(TAG, "User action : create new contact -> open the mask");
 			// Create contact action
 			Fragment contactFragment = ContactFragment.newInstance();
 			FragmentTransaction tx = getFragmentManager().beginTransaction();
@@ -75,10 +83,13 @@ public class GuestActivity extends Activity implements OnGuestSelectedListener, 
 		
 	}
 
+	/**
+	 * Triggered when a contact was validated from ContactFragment
+	 */
 	@Override
-	public void onValidateContact() {
+	public void onValidateContact(IDtoBean bean) {
 		// TODO Auto-generated method stub
-		Toast.makeText(this, "Validate", Toast.LENGTH_SHORT).show();
+		Log.d(TAG, "Contact about to save: " + bean);
 	}
 
 }

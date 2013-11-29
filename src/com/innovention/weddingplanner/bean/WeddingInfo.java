@@ -3,6 +3,9 @@ package com.innovention.weddingplanner.bean;
 
 import org.joda.time.DateTime;
 
+import com.innovention.weddingplanner.exception.IncorrectMailException;
+import com.innovention.weddingplanner.exception.MissingMandatoryFieldException;
+
 
 
 
@@ -59,6 +62,11 @@ public class WeddingInfo implements IDtoBean {
 				.append(getId()).append(",").append(getWeddingDate().toString());
 		
 		return buffer.toString();
+	}
+
+	@Override
+	public void validate() throws UnsupportedOperationException {
+		throw new UnsupportedOperationException();
 	}
 	
 	

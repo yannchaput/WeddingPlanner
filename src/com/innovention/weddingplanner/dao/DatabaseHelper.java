@@ -14,7 +14,7 @@ import static com.innovention.weddingplanner.dao.ConstantesDAO.*;
  */
 public class DatabaseHelper extends SQLiteOpenHelper {
 	
-	private final static String TAG = DatabaseHelper.class.getName();
+	private final static String TAG = DatabaseHelper.class.getSimpleName();
 
 
 	public DatabaseHelper(Context context, String name,

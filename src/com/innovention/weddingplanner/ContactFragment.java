@@ -1,15 +1,25 @@
 package com.innovention.weddingplanner;
 
 import android.app.Activity;
-import android.net.Uri;
-import android.os.Bundle;
+import android.app.DialogFragment;
 import android.app.Fragment;
+import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import static com.innovention.weddingplanner.utils.WeddingPlannerHelper.findView;
+import static com.innovention.weddingplanner.utils.WeddingPlannerHelper.showAlert;
 import android.view.ViewGroup;
-import android.webkit.WebView.FindListener;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
+
+import com.innovention.weddingplanner.bean.Contact;
+import com.innovention.weddingplanner.bean.IDtoBean;
+import com.innovention.weddingplanner.exception.IncorrectMailException;
+import com.innovention.weddingplanner.exception.IncorrectTelephoneException;
+import com.innovention.weddingplanner.exception.MissingMandatoryFieldException;
 
 /**
  * A simple {@link android.support.v4.app.Fragment} subclass. Activities that
@@ -24,6 +34,8 @@ public class ContactFragment extends Fragment {
 	// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
 	private static final String ARG_PARAM1 = "param1";
 	private static final String ARG_PARAM2 = "param2";
+	
+	private final static String TAG = ContactFragment.class.getSimpleName();
 
 	// TODO: Rename and change types of parameters
 	private String mParam1;
@@ -33,8 +45,37 @@ public class ContactFragment extends Fragment {
 	private OnValidateContactListener mListener;
 	private OnClickListener validateBtnListener = new OnClickListener() {
 		public void onClick(View v) {
-			mListener.onValidateContact();
-		    }
+				Log.v(TAG, "Click on validate button");
+			
+			// Create a "contact" bean object
+			Contact bean = new Contact.ContactBuilder()
+					.surname(
+							((EditText) findView(ContactFragment.this,
+									R.id.contactEditSurname)).getText()
+									.toString())
+					.name(((EditText) findView(ContactFragment.this,
+							R.id.contactEditName)).getText().toString())
+					.telephone(((EditText) findView(ContactFragment.this,
+							R.id.contactEditPhone)).getText().toString())
+					.mail(((EditText) findView(ContactFragment.this,
+							R.id.contactEditMail)).getText().toString())
+					.address(((EditText) findView(ContactFragment.this,
+							R.id.contactEditAdress)).getText().toString())
+					.build();
+			// TODO Make a helper out of it
+			Log.d(TAG, "Build contact object" + bean);
+			try {
+				bean.validate();
+				mListener.onValidateContact(bean);
+			} catch (MissingMandatoryFieldException e) {
+				showAlert(R.string.contact_alert_dialog_title, R.string.mandatory_validator_message, getFragmentManager());
+			} catch (IncorrectMailException e) {
+				showAlert(R.string.contact_alert_dialog_title, R.string.email_validator_message, getFragmentManager());
+			}
+			catch (IncorrectTelephoneException e) {
+				showAlert(R.string.contact_alert_dialog_title, R.string.phone_validator_message, getFragmentManager());
+			}
+		}
 	};
 
 	/**
@@ -114,7 +155,7 @@ public class ContactFragment extends Fragment {
 	 */
 	public interface OnValidateContactListener {
 		// TODO: Update argument type and name
-		void onValidateContact();
+		void onValidateContact(IDtoBean bean);
 	}
 
 }

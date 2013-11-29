@@ -18,7 +18,7 @@ import static com.innovention.weddingplanner.Constantes.*;
  */
 public class DatePickerFragment extends DialogFragment implements DatePickerDialog.OnDateSetListener {
 	
-	private static final String TAG =  DatePickerFragment.class.getName();
+	private static final String TAG =  DatePickerFragment.class.getSimpleName();
 
 	/* (non-Javadoc)
 	 * @see android.app.DialogFragment#onCreateDialog(android.os.Bundle)
@@ -60,7 +60,7 @@ public class DatePickerFragment extends DialogFragment implements DatePickerDial
 			int dayOfMonth) {
 	
 		Log.d(TAG, "onDateSet - " + "Set date " + dayOfMonth + "/" + monthOfYear + "/" + year);
-		// TODO: ajouter une validation pour les dates négatives
+		// TODO: ajouter une validation pour les dates nï¿½gatives
 		// Add 1 to month because calendar format is 0 to 11
 		((MainActivity) getActivity()).updateWeddingDate(year, monthOfYear+1, dayOfMonth);
 		

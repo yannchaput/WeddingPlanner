@@ -24,10 +24,11 @@ import com.innovention.weddingplanner.bean.IDtoBean;
 import com.innovention.weddingplanner.bean.WeddingInfo;
 import com.innovention.weddingplanner.dao.DatabaseHelper;
 import com.innovention.weddingplanner.dao.WeddingInfoDao;
+import com.innovention.weddingplanner.utils.WeddingPlannerHelper;
 
 public class MainActivity extends Activity {
 	
-	private final static String TAG = MainActivity.class.getName();
+	private final static String TAG = MainActivity.class.getSimpleName();
 	
 	private ImageButton taskBtn;
 	private ImageButton inviteeBtn;
@@ -54,7 +55,7 @@ public class MainActivity extends Activity {
 		vendorBtn = (ImageButton) findViewById(R.id.imageButton4);
 		
 		// Enregistre la police du texte en bas
-		// TODO : voir si on peut pas faire la même chose par les styles
+		// TODO : voir si on peut pas faire la mï¿½me chose par les styles
 		days2WeddingTxt = (TextView) findViewById(R.id.days2WeddingText);
 		Typeface font = Typeface.createFromAsset(getAssets(), "GreatVibes-Regular.otf");
 		days2WeddingTxt.setTypeface(font);

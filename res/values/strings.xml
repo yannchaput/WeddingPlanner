@@ -31,5 +31,9 @@
     <string name="contact_item_attend">Présent</string>
     <string name="contact_item_absent">Absent</string>
     <string name="contact_button_validate">Valider</string>
-
+	<string name="alert_dialog_validate">OK</string>
+	<string name="contact_alert_dialog_title">Informations manquantes</string>
+	<string name="email_validator_message">Format incorrect de l\'e-mail</string>
+	<string name="phone_validator_message">Format incorrect du numéro de téléphone</string>
+	<string name="mandatory_validator_message">Les champs nom, prénom sont obligatoires. Veuillez les renseigner.</string>
 </resources>
