@@ -1,19 +1,19 @@
 package com.innovention.weddingplanner;
 
+import static com.innovention.weddingplanner.utils.WeddingPlannerHelper.findView;
+import static com.innovention.weddingplanner.utils.WeddingPlannerHelper.showAlert;
 import android.app.Activity;
-import android.app.DialogFragment;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
-import static com.innovention.weddingplanner.utils.WeddingPlannerHelper.findView;
-import static com.innovention.weddingplanner.utils.WeddingPlannerHelper.showAlert;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.Toast;
+import android.widget.RadioButton;
 
 import com.innovention.weddingplanner.bean.Contact;
 import com.innovention.weddingplanner.bean.IDtoBean;
@@ -34,7 +34,7 @@ public class ContactFragment extends Fragment {
 	// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
 	private static final String ARG_PARAM1 = "param1";
 	private static final String ARG_PARAM2 = "param2";
-	
+
 	private final static String TAG = ContactFragment.class.getSimpleName();
 
 	// TODO: Rename and change types of parameters
@@ -45,8 +45,8 @@ public class ContactFragment extends Fragment {
 	private OnValidateContactListener mListener;
 	private OnClickListener validateBtnListener = new OnClickListener() {
 		public void onClick(View v) {
-				Log.v(TAG, "Click on validate button");
-			
+			Log.v(TAG, "Click on validate button");
+
 			// Create a "contact" bean object
 			Contact bean = new Contact.ContactBuilder()
 					.surname(
@@ -55,12 +55,40 @@ public class ContactFragment extends Fragment {
 									.toString())
 					.name(((EditText) findView(ContactFragment.this,
 							R.id.contactEditName)).getText().toString())
-					.telephone(((EditText) findView(ContactFragment.this,
-							R.id.contactEditPhone)).getText().toString())
+					.telephone(
+							((EditText) findView(ContactFragment.this,
+									R.id.contactEditPhone)).getText()
+									.toString())
 					.mail(((EditText) findView(ContactFragment.this,
 							R.id.contactEditMail)).getText().toString())
-					.address(((EditText) findView(ContactFragment.this,
-							R.id.contactEditAdress)).getText().toString())
+					.address(
+							((EditText) findView(ContactFragment.this,
+									R.id.contactEditAdress)).getText()
+									.toString())
+					.inviteSent(
+							((CheckBox) findView(ContactFragment.this,
+									R.id.contactcheckBoxFairePart)).isChecked())
+					.atChurch(
+							((CheckBox) findView(ContactFragment.this,
+									R.id.contactCheckBoxChurch)).isChecked())
+					.atTownHall(
+							((CheckBox) findView(ContactFragment.this,
+									R.id.contactCheckBoxHall)).isChecked())
+					.AtCocktail(
+							((CheckBox) findView(ContactFragment.this,
+									R.id.contactCheckBoxCocktail)).isChecked())
+					.AtParty(
+							((CheckBox) findView(ContactFragment.this,
+									R.id.contactCheckBoxReception)).isChecked())
+					.answerPending(
+							((RadioButton) findView(ContactFragment.this,
+									R.id.contactRadioNoAnswer)).isChecked())
+					.answerAttend(
+							((RadioButton) findView(ContactFragment.this,
+									R.id.contactRadioAttend)).isChecked())
+					.answerNotAttend(
+							((RadioButton) findView(ContactFragment.this,
+									R.id.contactRadioAbsent)).isChecked())
 					.build();
 			// TODO Make a helper out of it
 			Log.d(TAG, "Build contact object" + bean);
@@ -68,12 +96,15 @@ public class ContactFragment extends Fragment {
 				bean.validate();
 				mListener.onValidateContact(bean);
 			} catch (MissingMandatoryFieldException e) {
-				showAlert(R.string.contact_alert_dialog_title, R.string.mandatory_validator_message, getFragmentManager());
+				showAlert(R.string.contact_alert_dialog_title,
+						R.string.mandatory_validator_message,
+						getFragmentManager());
 			} catch (IncorrectMailException e) {
-				showAlert(R.string.contact_alert_dialog_title, R.string.email_validator_message, getFragmentManager());
-			}
-			catch (IncorrectTelephoneException e) {
-				showAlert(R.string.contact_alert_dialog_title, R.string.phone_validator_message, getFragmentManager());
+				showAlert(R.string.contact_alert_dialog_title,
+						R.string.email_validator_message, getFragmentManager());
+			} catch (IncorrectTelephoneException e) {
+				showAlert(R.string.contact_alert_dialog_title,
+						R.string.phone_validator_message, getFragmentManager());
 			}
 		}
 	};
@@ -97,7 +128,7 @@ public class ContactFragment extends Fragment {
 		fragment.setArguments(args);
 		return fragment;
 	}
-	
+
 	public static ContactFragment newInstance() {
 		ContactFragment fragment = new ContactFragment();
 		return fragment;

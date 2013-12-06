@@ -1,22 +1,25 @@
 package com.innovention.weddingplanner;
 
 
+import static com.innovention.weddingplanner.Constantes.TAG_FGT_CREATECONTACT;
+import static com.innovention.weddingplanner.Constantes.TAG_FGT_GUESTLIST;
+import android.app.Activity;
+import android.app.Fragment;
+import android.app.FragmentTransaction;
+import android.os.Bundle;
+import android.support.v4.app.NavUtils;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
+
 import com.innovention.weddingplanner.ContactFragment.OnValidateContactListener;
 import com.innovention.weddingplanner.GuestListFragment.OnGuestSelectedListener;
 import com.innovention.weddingplanner.bean.Contact;
 import com.innovention.weddingplanner.bean.IDtoBean;
-
-import static com.innovention.weddingplanner.Constantes.*;
-
-import android.os.Bundle;
-import android.app.Activity;
-import android.app.Fragment;
-import android.app.FragmentTransaction;
-import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.widget.Toast;
-import android.support.v4.app.NavUtils;
+import com.innovention.weddingplanner.dao.DaoLocator;
+import com.innovention.weddingplanner.dao.GuestsDao;
+import com.innovention.weddingplanner.dao.IDao;
+import com.innovention.weddingplanner.dao.DaoLocator.SERVICES;
 
 public class GuestActivity extends Activity implements OnGuestSelectedListener, OnValidateContactListener {
 	
@@ -85,11 +88,21 @@ public class GuestActivity extends Activity implements OnGuestSelectedListener, 
 
 	/**
 	 * Triggered when a contact was validated from ContactFragment
+	 * and needs saving
 	 */
 	@Override
 	public void onValidateContact(IDtoBean bean) {
 		// TODO Auto-generated method stub
 		Log.d(TAG, "Contact about to save: " + bean);
+		GuestsDao dao = (GuestsDao) DaoLocator.getInstance(getApplication())
+				.get(SERVICES.GUEST);
+		dao.insert((Contact) bean);
+		Log.d(TAG, "Contact saved: " + bean);
+		// Replace add contact fragment by list fragment
+		getFragmentManager()
+				.beginTransaction()
+				.replace(R.id.LayoutGuest, GuestListFragment.newInstance(),
+						TAG_FGT_GUESTLIST).addToBackStack(null).commit();
 	}
 
 }

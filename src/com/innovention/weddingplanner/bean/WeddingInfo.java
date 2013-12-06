@@ -3,9 +3,6 @@ package com.innovention.weddingplanner.bean;
 
 import org.joda.time.DateTime;
 
-import com.innovention.weddingplanner.exception.IncorrectMailException;
-import com.innovention.weddingplanner.exception.MissingMandatoryFieldException;
-
 
 
 

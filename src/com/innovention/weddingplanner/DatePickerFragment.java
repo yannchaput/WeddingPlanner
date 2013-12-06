@@ -1,7 +1,11 @@
 package com.innovention.weddingplanner;
 
+import static com.innovention.weddingplanner.Constantes.DEFAULT_MONTHS_INTERVAL;
+import static com.innovention.weddingplanner.Constantes.KEY_DTPICKER_D;
+import static com.innovention.weddingplanner.Constantes.KEY_DTPICKER_M;
+import static com.innovention.weddingplanner.Constantes.KEY_DTPICKER_Y;
+
 import org.joda.time.DateTime;
-import org.joda.time.Days;
 
 import android.app.DatePickerDialog;
 import android.app.Dialog;
@@ -9,7 +13,6 @@ import android.app.DialogFragment;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.DatePicker;
-import static com.innovention.weddingplanner.Constantes.*;
 
 /**
  * DatePicker dialog fragment

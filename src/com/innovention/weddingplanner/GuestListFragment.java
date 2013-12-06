@@ -1,18 +1,24 @@
 package com.innovention.weddingplanner;
 
 import android.app.Activity;
-import android.os.Bundle;
 import android.app.Fragment;
+import android.database.Cursor;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.CursorAdapter;
 import android.widget.ListAdapter;
+import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 
+import com.innovention.weddingplanner.dao.DaoLocator;
+import com.innovention.weddingplanner.dao.DaoLocator.SERVICES;
 import com.innovention.weddingplanner.dummy.DummyContent;
+import static com.innovention.weddingplanner.dao.ConstantesDAO.COL_NAME;
 
 /**
  * A fragment representing a list of Items.
@@ -80,9 +86,16 @@ public class GuestListFragment extends Fragment implements
 		}
 
 		// TODO: Change Adapter to display your content
-		mAdapter = new ArrayAdapter<DummyContent.DummyItem>(getActivity(),
-				android.R.layout.simple_list_item_1, android.R.id.text1,
-				DummyContent.ITEMS);
+//		mAdapter = new ArrayAdapter<DummyContent.DummyItem>(getActivity(),
+//				android.R.layout.simple_list_item_1, android.R.id.text1,
+//				DummyContent.ITEMS);
+		
+		Cursor c = DaoLocator
+				.getInstance(getActivity().getApplicationContext())
+				.get(SERVICES.GUEST).getCursor();
+		mAdapter = new SimpleCursorAdapter(getActivity(),
+				android.R.layout.simple_list_item_1, c,
+				new String[] { COL_NAME }, new int[] {android.R.id.text1});
 	}
 
 	@Override
@@ -153,6 +166,13 @@ public class GuestListFragment extends Fragment implements
 	public interface OnGuestSelectedListener {
 		// TODO: Update argument type and name
 		public void onSelectGuest(String id);
+	}
+	
+	/**
+	 * Refresh guests list
+	 */
+	void refreshList() {
+		((CursorAdapter) mAdapter).notifyDataSetChanged();
 	}
 
 }

@@ -1,7 +1,10 @@
 package com.innovention.weddingplanner;
 
 
-import static com.innovention.weddingplanner.Constantes.*;
+import static com.innovention.weddingplanner.Constantes.KEY_DTPICKER_D;
+import static com.innovention.weddingplanner.Constantes.KEY_DTPICKER_M;
+import static com.innovention.weddingplanner.Constantes.KEY_DTPICKER_Y;
+import static com.innovention.weddingplanner.Constantes.TAG_FGT_DATEPICKER;
 import static com.innovention.weddingplanner.dao.ConstantesDAO.NOM_BDD;
 import static com.innovention.weddingplanner.dao.ConstantesDAO.VERSION_BDD;
 import android.app.Activity;
@@ -10,6 +13,7 @@ import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.Log;
@@ -22,8 +26,11 @@ import android.widget.TextView;
 
 import com.innovention.weddingplanner.bean.IDtoBean;
 import com.innovention.weddingplanner.bean.WeddingInfo;
+import com.innovention.weddingplanner.dao.DaoLocator;
 import com.innovention.weddingplanner.dao.DatabaseHelper;
+import com.innovention.weddingplanner.dao.GuestsDao;
 import com.innovention.weddingplanner.dao.WeddingInfoDao;
+import com.innovention.weddingplanner.dao.DaoLocator.SERVICES;
 import com.innovention.weddingplanner.utils.WeddingPlannerHelper;
 
 public class MainActivity extends Activity {
@@ -38,8 +45,7 @@ public class MainActivity extends Activity {
 	private TextView days2WeddingTxt;
 	private ViewGroup days2WeddingLayout;
 	
-	private DatabaseHelper dbHelper;
-	private WeddingInfoDao<WeddingInfo> generalDao;
+	private DaoLocator locator = null;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -73,8 +79,7 @@ public class MainActivity extends Activity {
 	 */
 	private void initServices() {
 		// Create main DAO object and open db
-		dbHelper = new DatabaseHelper(this, NOM_BDD, null, VERSION_BDD);
-		generalDao = new WeddingInfoDao<WeddingInfo>(this, dbHelper.getWritableDatabase());
+		locator = DaoLocator.getInstance(getApplication());
 	}
 	
 	/* (non-Javadoc)
@@ -84,7 +89,7 @@ public class MainActivity extends Activity {
 	protected void onDestroy() {
 		// Close all open dbs
 		Log.d(TAG, "onDestroy - " + "Destroy db");
-		dbHelper.close();
+		locator.getDbHelper().close();
 		super.onDestroy();
 	}
 
@@ -93,7 +98,7 @@ public class MainActivity extends Activity {
 		switch (item.getItemId()) {
 		case R.id.action_recreateDb: 
 			// TODO call db connector recreate db
-			dbHelper.recreateDb(dbHelper.getWritableDatabase());
+			locator.getDbHelper().recreateDb(locator.getDbHelper().getWritableDatabase());
 		default:
 			return super.onOptionsItemSelected(item);
 		}
@@ -123,7 +128,8 @@ public class MainActivity extends Activity {
 		
 		DialogFragment datePicker = new DatePickerFragment();
 		WeddingInfo info = null;
-		if ( (info = (WeddingInfo) generalDao.get()) != null ) {
+		WeddingInfoDao infoDao = (WeddingInfoDao) DaoLocator.getInstance(getApplication()).get(SERVICES.INFO);
+		if ( (info = (WeddingInfo) infoDao.get()) != null ) {
 			Log.d(TAG, "showDatePickerDialog - " + "Fetch info : " + info);
 			Bundle parameters = new Bundle();
 			parameters.putInt(KEY_DTPICKER_Y, info.getWeddingDate().year().get());
@@ -153,7 +159,8 @@ public class MainActivity extends Activity {
 
 		WeddingInfo info = null;
 
-		if ((info = (WeddingInfo) generalDao.get()) != null) {
+		WeddingInfoDao infoDao = (WeddingInfoDao) DaoLocator.getInstance(getApplication()).get(SERVICES.INFO);
+		if ((info = (WeddingInfo) infoDao.get()) != null) {
 			Log.d(TAG, "Date get from db " + info.getWeddingDate());
 			updateGUIWeddingDate(WeddingPlannerHelper.computeDate(info
 					.getWeddingDate().year().get(), info.getWeddingDate()
@@ -174,15 +181,16 @@ public class MainActivity extends Activity {
 
 		Log.d(TAG, "updateWeddingDate - " + "Update wedding date in db");
 		IDtoBean info = null;
-
-		if ((info = generalDao.get()) == null) {
+		WeddingInfoDao infoDao = (WeddingInfoDao) DaoLocator.getInstance(getApplication()).get(SERVICES.INFO);
+		
+		if ((info = infoDao.get()) == null) {
 			Log.d(TAG, "Set first time date to " + dayOfMonth + "/"
 					+ monthOfYear + "/" + year);
-			generalDao.insert(new WeddingInfo(year, monthOfYear, dayOfMonth));
+			infoDao.insert(new WeddingInfo(year, monthOfYear, dayOfMonth));
 		} else {
 			Log.d(TAG, "Update date to " + dayOfMonth + "/" + monthOfYear + "/"
 					+ year);
-			generalDao.update(info.getId(), new WeddingInfo(year, monthOfYear,
+			infoDao.update(info.getId(), new WeddingInfo(year, monthOfYear,
 					dayOfMonth));
 		}
 		updateGUIWeddingDate(WeddingPlannerHelper.computeDate(year,

@@ -1,7 +1,10 @@
 package com.innovention.weddingplanner.utils;
 
 
-import static com.innovention.weddingplanner.Constantes.*;
+import static com.innovention.weddingplanner.Constantes.ILLEGAL_EMAIL_MSG;
+import static com.innovention.weddingplanner.Constantes.ILLEGAL_PHONE_MSG;
+import static com.innovention.weddingplanner.Constantes.MISSING_MANADTORY_FIELD_MSG;
+import static com.innovention.weddingplanner.Constantes.TAG_FGT_GUESTALERT;
 
 import org.joda.time.DateTime;
 import org.joda.time.Days;
@@ -62,22 +65,22 @@ public class WeddingPlannerHelper {
 	}
 	
 	/**
-	 * Validate a email is  well formated
+	 * Validate a email is  well formated (non mandatory)
 	 * @param field
 	 * @throws IncorrectMailException
 	 */
 	public static void validateEmail(final String field) throws IncorrectMailException {
-		if (!Patterns.EMAIL_ADDRESS.matcher(field).matches())
+		if (field!=null && !field.equals("") && !Patterns.EMAIL_ADDRESS.matcher(field).matches())
 			throw new IncorrectMailException(ILLEGAL_EMAIL_MSG);
 	}
 	
 	/**
-	 * Validate a phone number
+	 * Validate a phone number (non mandatory)
 	 * @param field
 	 * @throws IncorrectTelephoneException
 	 */
 	public static void validateTelephone(final String field) throws IncorrectTelephoneException {
-		if (!Patterns.PHONE.matcher(field).matches())
+		if (field!=null && !field.equals("") && !Patterns.PHONE.matcher(field).matches())
 			throw new IncorrectTelephoneException(ILLEGAL_PHONE_MSG);
 	}
 	

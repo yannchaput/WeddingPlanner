@@ -17,4 +17,5 @@ public interface Constantes {
 	String MISSING_MANADTORY_FIELD_MSG="Champs obligatoire manquant";
 	String ILLEGAL_EMAIL_MSG="Adresse mail incorrecte";
 	String ILLEGAL_PHONE_MSG="Numéro de téléphone incorrect";
+	String INCORRECT_NUMBER_ARGS="Incorrect number of arguments";
 }

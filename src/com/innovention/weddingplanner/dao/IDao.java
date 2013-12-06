@@ -1,5 +1,8 @@
 package com.innovention.weddingplanner.dao;
 
+
+import android.database.Cursor;
+
 import com.innovention.weddingplanner.bean.IDtoBean;
 
 
@@ -32,5 +35,11 @@ public interface IDao<T extends IDtoBean> {
 	 * @return
 	 */
 	public abstract T get();
+	
+	/**
+	 * Gets a cursor of the specified dataset
+	 * @return
+	 */
+	Cursor getCursor();
 
 }

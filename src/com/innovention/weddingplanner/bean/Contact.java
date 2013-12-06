@@ -1,12 +1,7 @@
 package com.innovention.weddingplanner.bean;
 
 
-import org.joda.time.DateTime;
-
-import android.util.Log;
-
 import com.google.common.base.Objects;
-import com.google.common.base.Optional;
 import com.innovention.weddingplanner.ContactFragment;
 import com.innovention.weddingplanner.exception.IncorrectMailException;
 import com.innovention.weddingplanner.exception.IncorrectTelephoneException;
@@ -32,15 +27,16 @@ public class Contact implements IDtoBean {
 	
 	private Boolean inviteSent;
 	private Boolean church;
-	private Boolean TownHall;
-	private Boolean Cocktail;
-	private Boolean Party;
+	private Boolean townHall;
+	private Boolean cocktail;
+	private Boolean party;
 	
 	private ResponseType response;
 	
 	public enum ResponseType {
-		PENDING, ATTEND, NOTATTEND
-	};
+		PENDING, ATTEND, NOTATTEND;
+		
+	}
 	
 	/**
 	 * Builder utility to create instance of "Contact" bean
@@ -135,14 +131,31 @@ public class Contact implements IDtoBean {
 		public Contact build() {
 			return new Contact(this);
 		}
+		
+		private ResponseType getEnumValue() {
+			if(attend.booleanValue()) return ResponseType.ATTEND;
+			else if (notAttend.booleanValue()) return ResponseType.NOTATTEND;
+			else return ResponseType.PENDING;
+		}
+		
 	}
 	
+	/**
+	 * Constructor (from a builder object)
+	 * @param builder: builder attached to this object
+	 */
 	private Contact(final ContactBuilder builder) {
 		this.surname = builder.surname;
 		this.name = builder.name;
 		this.telephone = builder.telephone;
 		this.mail = builder.mail;
 		this.address = builder.address;
+		this.inviteSent = builder.inviteSent;
+		this.church = builder.church;
+		this.cocktail = builder.cocktail;
+		this.townHall = builder.townHall;
+		this.party = builder.party;
+		this.response = builder.getEnumValue();
 	}
 	/**
 	 * Validate contact bean
@@ -176,6 +189,12 @@ public class Contact implements IDtoBean {
 				.add("telephone", this.getTelephone())
 				.add("mail", this.getMail())
 				.add("address", this.getAddress())
+				.add("inviteSent", this.getInviteSent())
+				.add("church", this.getChurch())
+				.add("cocktail", this.getCocktail())
+				.add("townhall", this.getTownHall())
+				.add("party", this.getParty())
+				.add("response", this.getResponse())
 				.toString();
 	}
 	public String getSurname() {
@@ -221,22 +240,22 @@ public class Contact implements IDtoBean {
 		this.church = church;
 	}
 	public Boolean getTownHall() {
-		return TownHall;
+		return townHall;
 	}
 	public void setTownHall(Boolean townHall) {
-		TownHall = townHall;
+		this.townHall = townHall;
 	}
 	public Boolean getCocktail() {
-		return Cocktail;
+		return cocktail;
 	}
 	public void setCocktail(Boolean cocktail) {
-		Cocktail = cocktail;
+		this.cocktail = cocktail;
 	}
 	public Boolean getParty() {
-		return Party;
+		return party;
 	}
 	public void setParty(Boolean party) {
-		Party = party;
+		this.party = party;
 	}
 	public ResponseType getResponse() {
 		return response;

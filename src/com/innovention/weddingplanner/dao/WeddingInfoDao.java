@@ -1,30 +1,35 @@
 package com.innovention.weddingplanner.dao;
 
-import org.joda.time.DateTime;
+import static com.innovention.weddingplanner.dao.ConstantesDAO.COL_ID;
+import static com.innovention.weddingplanner.dao.ConstantesDAO.COL_WEDDATE;
+import static com.innovention.weddingplanner.dao.ConstantesDAO.NUM_COL_ID;
+import static com.innovention.weddingplanner.dao.ConstantesDAO.NUM_COL_WEDDATE;
+import static com.innovention.weddingplanner.dao.ConstantesDAO.TABLE_WEDDINGINFO;
 
-import com.innovention.weddingplanner.bean.WeddingInfo;
+import org.joda.time.DateTime;
 
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
-import static com.innovention.weddingplanner.dao.ConstantesDAO.*;
+
+import com.innovention.weddingplanner.bean.WeddingInfo;
 
 /**
  * DAO class for wedding info table
  * @author YCH
  *
  */
-public class WeddingInfoDao<T extends WeddingInfo> implements IDao<T> {
+public class WeddingInfoDao implements IDao<WeddingInfo> {
 	
 	// Handle on the currently open database
 	private SQLiteDatabase db;
 	
 	private static final String TAG=WeddingInfoDao.class.getSimpleName();
 	
-	public WeddingInfoDao(final Context context, final SQLiteDatabase db) {
-		Log.d(TAG, "Constructor - " + "create WeddingInfoDAO service");
+	public WeddingInfoDao(final SQLiteDatabase db) {
+		Log.v(TAG, "Constructor - " + "create WeddingInfoDAO service");
 		this.db = db;
 	}
 
@@ -32,7 +37,7 @@ public class WeddingInfoDao<T extends WeddingInfo> implements IDao<T> {
 	 * @see com.innovention.weddingplanner.dao.IDao#insert(com.innovention.weddingplanner.dao.IDtoBean)
 	 */
 	@Override
-	public long insert(final T bean) {
+	public long insert(final WeddingInfo bean) {
 		Log.d(TAG, "insertInfo - " + bean.toString());
 		ContentValues values = new ContentValues();
 		values.put(COL_WEDDATE, bean.getWeddingDate().toString());
@@ -43,7 +48,7 @@ public class WeddingInfoDao<T extends WeddingInfo> implements IDao<T> {
 	 * @see com.innovention.weddingplanner.dao.IDao#update(int, com.innovention.weddingplanner.dao.IDtoBean)
 	 */
 	@Override
-	public int update(int id, final T bean) {
+	public int update(int id, final WeddingInfo bean) {
 		Log.d(TAG, "updateInfo - " + "Update table with id " + id + " and date " + bean.toString());
 		ContentValues values = new ContentValues();
 		values.put(COL_WEDDATE, bean.getWeddingDate().toString());
@@ -65,9 +70,9 @@ public class WeddingInfoDao<T extends WeddingInfo> implements IDao<T> {
 	 * @see com.innovention.weddingplanner.dao.IDao#get()
 	 */
 	@Override
-	public T get() {
-		Cursor c = getCursorWeddingInfo();
-		T bean = (T) cursorToBean(c);
+	public WeddingInfo get() {
+		Cursor c = getCursor();
+		WeddingInfo bean = cursorToBean(c);
 		if (bean != null)
 			Log.d(TAG, "getInfo - " + bean.toString());
 		return bean;
@@ -79,7 +84,7 @@ public class WeddingInfoDao<T extends WeddingInfo> implements IDao<T> {
 	 * Gets a cursor from WeddingInfo table
 	 * @return
 	 */
-	private Cursor getCursorWeddingInfo() {
+	public Cursor getCursor() {
 		return db.query(TABLE_WEDDINGINFO, new String[] {COL_ID, COL_WEDDATE}, null, null, null, null, null);
 	}
 	
@@ -89,13 +94,13 @@ public class WeddingInfoDao<T extends WeddingInfo> implements IDao<T> {
 	 * @param c
 	 * @return an item
 	 */
-	private T cursorToBean(final Cursor c) {
+	private WeddingInfo cursorToBean(final Cursor c) {
 		Log.d(TAG, "cursorToBean");
 		if (c.getCount() == 0) return null;
 		Log.d(TAG, "Count = " + c.getCount());
 		c.moveToFirst();
 		Log.d(TAG, "Entry " + c.getInt(NUM_COL_ID) +"," + c.getString(NUM_COL_WEDDATE));
-		T bean = (T) new WeddingInfo();
+		WeddingInfo bean = new WeddingInfo();
 		bean.setId(c.getInt(NUM_COL_ID));
 		bean.setWeddingDate(DateTime.parse(c.getString(NUM_COL_WEDDATE)));
 		Log.d(TAG, "Pass bean " + bean.toString());

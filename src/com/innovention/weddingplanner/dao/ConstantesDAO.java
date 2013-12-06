@@ -7,7 +7,7 @@ public interface ConstantesDAO {
 	String TABLE_GUESTS = "table_guests";
 	
 	// Columns wedding info
-	String COL_ID ="id";
+	String COL_ID ="_id";
 	byte NUM_COL_ID = 0;
 	String COL_WEDDATE = "weddate";
 	byte NUM_COL_WEDDATE = 1;
@@ -18,14 +18,68 @@ public interface ConstantesDAO {
 	String COL_TEL="telephone";
 	String COL_EMAIL="email";
 	String COL_ADDRESS="address";
+	String COL_INVITATION="invitation";
+	String COL_CHURCH="church";
+	String COL_TOWNHALL="townhall";
+	String COL_COCKTAIL="cocktail";
+	String COL_PARTY="party";
+	String COL_RSVP="rsvp";
 	
 	// General
-	final int VERSION_BDD = 2;
-	final String NOM_BDD = "wedplanner.db";
+	int VERSION_BDD = 2;
+	String NOM_BDD = "wedplanner.db";
 	
-	final String CREATE_BDD = "CREATE TABLE " + TABLE_WEDDINGINFO + " ("
-			+ COL_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + COL_WEDDATE + " TEXT NOT NULL"
-			+ ");";
+	String CREATE_WEDDINGINFO_TABLE= new StringBuilder()
+	.append("CREATE TABLE ")
+	.append(TABLE_WEDDINGINFO)
+	.append(" (")
+	.append(COL_ID)
+	.append(" INTEGER PRIMARY KEY AUTOINCREMENT, ")
+	.append(COL_WEDDATE)
+	.append(" TEXT NOT NULL")
+	.append(");")
+	.toString();
 	
-	final String DROP_DB = "DROP TABLE " + TABLE_WEDDINGINFO + ";";
+	String CREATE_GUEST_TABLE=new StringBuilder()
+	.append("CREATE TABLE ")
+	.append(TABLE_GUESTS)
+	.append(" (")
+	.append(COL_ID)
+	.append(" INTEGER PRIMARY KEY AUTOINCREMENT, ")
+	.append(COL_SURNAME)
+	.append(" TEXT NOT NULL, ")
+	.append(COL_NAME)
+	.append(" TEXT NOT NULL, ")
+	.append(COL_TEL)
+	.append(" TEXT, ")
+	.append(COL_EMAIL)
+	.append(" TEXT, ")
+	.append(COL_ADDRESS)
+	.append(" TEXT, ")
+	.append(COL_INVITATION)
+	.append(" INTEGER, ")
+	.append(COL_CHURCH)
+	.append(" INTEGER, ")
+	.append(COL_TOWNHALL)
+	.append(" INTEGER, ")
+	.append(COL_COCKTAIL)
+	.append(" INTEGER, ")
+	.append(COL_PARTY)
+	.append(" INTEGER, ")
+	.append(COL_RSVP)
+	.append(" TEXT NOT NULL ")
+	.append(");")
+	.toString();
+	
+	String DROP_WEDDINGINFO_TABLE = new StringBuilder()
+	.append("DROP TABLE ")
+	.append(TABLE_WEDDINGINFO)
+	.append(";")
+	.toString();
+	
+	String DROP_GUEST_TABLE = new StringBuilder()
+	.append("DROP TABLE ")
+	.append(TABLE_GUESTS)
+	.append(";")
+	.toString();
 }
