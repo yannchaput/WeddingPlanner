@@ -11,6 +11,7 @@ import android.support.v4.app.NavUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.innovention.weddingplanner.ContactFragment.OnValidateContactListener;
 import com.innovention.weddingplanner.GuestListFragment.OnGuestSelectedListener;
@@ -44,12 +45,12 @@ public class GuestActivity extends Activity implements OnGuestSelectedListener, 
 
 	}
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.guest, menu);
-		return true;
-	}
+//	@Override
+//	public boolean onCreateOptionsMenu(Menu menu) {
+//		// Inflate the menu; this adds items to the action bar if it is present.
+//		getMenuInflater().inflate(R.menu.guest, menu);
+//		return true;
+//	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
@@ -62,6 +63,7 @@ public class GuestActivity extends Activity implements OnGuestSelectedListener, 
 			//
 			// http://developer.android.com/design/patterns/navigation.html#up-vs-back
 			//
+			Log.d(TAG, "onOptionsItemSelected - Back to home page");
 			NavUtils.navigateUpFromSameTask(this);
 			return true;
 		case R.id.action_add_contact:
@@ -80,10 +82,14 @@ public class GuestActivity extends Activity implements OnGuestSelectedListener, 
 		}
 	}
 
+	/**
+	 * Called when an item is clicked on the fragment list
+	 */
 	@Override
-	public void onSelectGuest(String id) {
+	public void onSelectGuest(int id) {
 		// TODO Auto-generated method stub
-		
+		Log.d(TAG, "onSelectGuest - Selected item id:" + id);
+		Toast.makeText(this, "Select id: " + id, Toast.LENGTH_SHORT).show();
 	}
 
 	/**

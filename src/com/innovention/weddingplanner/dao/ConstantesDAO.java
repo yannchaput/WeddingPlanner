@@ -14,16 +14,27 @@ public interface ConstantesDAO {
 	
 	// Columns guest table
 	String COL_SURNAME="surname";
+	byte NUM_COL_SURNAME = 1;
 	String COL_NAME="name";
+	byte NUM_COL_NAME = 2;
 	String COL_TEL="telephone";
+	byte NUM_COL_TEL = 3;
 	String COL_EMAIL="email";
+	byte NUM_COL_MAIL = 4;
 	String COL_ADDRESS="address";
+	byte NUM_COL_ADDRESS = 5;
 	String COL_INVITATION="invitation";
+	byte NUM_COL_INVITATION = 6;
 	String COL_CHURCH="church";
+	byte NUM_COL_CHURCH = 7;
 	String COL_TOWNHALL="townhall";
+	byte NUM_COL_TOWNHALL = 8;
 	String COL_COCKTAIL="cocktail";
+	byte NUM_COL_COCKTAIL = 9;
 	String COL_PARTY="party";
+	byte NUM_COL_PARTY = 10;
 	String COL_RSVP="rsvp";
+	byte NUM_COL_RSVP = 11;
 	
 	// General
 	int VERSION_BDD = 2;

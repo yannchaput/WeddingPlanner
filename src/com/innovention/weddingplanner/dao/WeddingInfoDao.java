@@ -6,6 +6,9 @@ import static com.innovention.weddingplanner.dao.ConstantesDAO.NUM_COL_ID;
 import static com.innovention.weddingplanner.dao.ConstantesDAO.NUM_COL_WEDDATE;
 import static com.innovention.weddingplanner.dao.ConstantesDAO.TABLE_WEDDINGINFO;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.joda.time.DateTime;
 
 import android.content.ContentValues;
@@ -86,6 +89,35 @@ public class WeddingInfoDao implements IDao<WeddingInfo> {
 	 */
 	public Cursor getCursor() {
 		return db.query(TABLE_WEDDINGINFO, new String[] {COL_ID, COL_WEDDATE}, null, null, null, null, null);
+	}
+	
+	/**
+	 * Returns a list of WeddingInfo beans
+	 */
+	@Override
+	public List<WeddingInfo> getList() {
+		Log.d(TAG, "Get list of WeddingInfo beans");
+		Cursor c = getCursor();
+		Log.d(TAG, "Count = " + c.getCount());
+		if (c.getCount() == 0){
+			Log.d(TAG, "No data available");
+			return null;
+		}
+		
+		WeddingInfo bean = null;
+		List<WeddingInfo> list = new ArrayList<WeddingInfo>();
+		c.moveToFirst();
+		for (c.moveToFirst();!c.isLast();c.moveToNext()) {
+			Log.d(TAG, "Entry " + c.getInt(NUM_COL_ID) +"," + c.getString(NUM_COL_WEDDATE));
+			bean = new WeddingInfo();
+			bean.setId(c.getInt(NUM_COL_ID));
+			bean.setWeddingDate(DateTime.parse(c.getString(NUM_COL_WEDDATE)));
+			Log.d(TAG, "Insert bean " + bean.toString() + " to list");
+			list.add(bean);
+		}
+		
+		c.close();
+		return list;
 	}
 	
 	

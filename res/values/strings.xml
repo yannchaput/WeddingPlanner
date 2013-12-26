@@ -3,6 +3,9 @@
 
     <string name="app_name">WeddingPlanner</string>
     <string name="action_settings">Settings</string>
+    <string name="action_add_contact">Ajouter invité</string>
+    <string name="action_delete_contact">Supprimer invité</string>
+    <string name="action_update_contact">Modifier invité</string>
     <string name="hello_world">Hello world!</string>
     <string name="days_to_wedding">jours avant le Grand Jour!</string>
     <string name="initial_date_to_update">Quand est le grand jour?</string>
@@ -12,7 +15,6 @@
     <string name="prestations_option">Prestataires</string>
     <string name="item_recreateDb_action">Reset DB</string>
     <string name="title_activity_guest">Invitations</string>
-    <string name="action_add_contact">Ajouter invité</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="contact_field_surname">Nom</string>
     <string name="contact_field_name">Prénom</string>
@@ -36,4 +38,6 @@
 	<string name="email_validator_message">Format incorrect de l\'e-mail</string>
 	<string name="phone_validator_message">Format incorrect du numéro de téléphone</string>
 	<string name="mandatory_validator_message">Les champs nom, prénom sont obligatoires. Veuillez les renseigner.</string>
+	<string name="placeholder">placeholder</string>
+	<string name="empty">Vide</string>
 </resources>

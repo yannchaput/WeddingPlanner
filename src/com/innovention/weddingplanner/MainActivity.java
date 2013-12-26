@@ -5,6 +5,7 @@ import static com.innovention.weddingplanner.Constantes.KEY_DTPICKER_D;
 import static com.innovention.weddingplanner.Constantes.KEY_DTPICKER_M;
 import static com.innovention.weddingplanner.Constantes.KEY_DTPICKER_Y;
 import static com.innovention.weddingplanner.Constantes.TAG_FGT_DATEPICKER;
+import static com.innovention.weddingplanner.Constantes.FONT_CURVED;
 import static com.innovention.weddingplanner.dao.ConstantesDAO.NOM_BDD;
 import static com.innovention.weddingplanner.dao.ConstantesDAO.VERSION_BDD;
 import android.app.Activity;
@@ -63,7 +64,7 @@ public class MainActivity extends Activity {
 		// Enregistre la police du texte en bas
 		// TODO : voir si on peut pas faire la m�me chose par les styles
 		days2WeddingTxt = (TextView) findViewById(R.id.days2WeddingText);
-		Typeface font = Typeface.createFromAsset(getAssets(), "GreatVibes-Regular.otf");
+		Typeface font = WeddingPlannerHelper.getFont(this, FONT_CURVED);
 		days2WeddingTxt.setTypeface(font);
 		
 		// Init services and DAO

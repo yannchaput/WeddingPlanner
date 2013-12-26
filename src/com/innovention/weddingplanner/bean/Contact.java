@@ -36,6 +36,10 @@ public class Contact implements IDtoBean {
 	public enum ResponseType {
 		PENDING, ATTEND, NOTATTEND;
 		
+		public static ResponseType toEnum(String value) {
+			return ResponseType.valueOf(value);
+		}
+		
 	}
 	
 	/**
@@ -45,6 +49,7 @@ public class Contact implements IDtoBean {
 	 */
 	public static class ContactBuilder {
 		
+		private int id = 0; // Only for dao purpose
 		private String surname;
 		private String name;
 		private String telephone;
@@ -62,6 +67,11 @@ public class Contact implements IDtoBean {
 		private Boolean notAttend;
 		
 		public ContactBuilder() {}
+		
+		public ContactBuilder withId(final int id) {
+			this.id = id;
+			return this;
+		}
 		
 		public ContactBuilder surname(final String surname) {
 			this.surname = surname;
@@ -133,7 +143,8 @@ public class Contact implements IDtoBean {
 		}
 		
 		private ResponseType getEnumValue() {
-			if(attend.booleanValue()) return ResponseType.ATTEND;
+			if (attend == null) return null;
+			else if(attend.booleanValue()) return ResponseType.ATTEND;
 			else if (notAttend.booleanValue()) return ResponseType.NOTATTEND;
 			else return ResponseType.PENDING;
 		}
@@ -145,6 +156,7 @@ public class Contact implements IDtoBean {
 	 * @param builder: builder attached to this object
 	 */
 	private Contact(final ContactBuilder builder) {
+		this.id = builder.id;
 		this.surname = builder.surname;
 		this.name = builder.name;
 		this.telephone = builder.telephone;

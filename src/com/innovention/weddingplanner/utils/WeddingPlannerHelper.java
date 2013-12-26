@@ -12,6 +12,8 @@ import org.joda.time.Days;
 import android.app.DialogFragment;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.content.Context;
+import android.graphics.Typeface;
 import android.util.Patterns;
 import android.view.View;
 
@@ -93,5 +95,15 @@ public class WeddingPlannerHelper {
 	public static void showAlert(int titleResId, int content, final FragmentManager fgtMgr) {
 		DialogFragment newDlg = AlertDialogFragment.newInstance(titleResId, content);
 		newDlg.show(fgtMgr,TAG_FGT_GUESTALERT);
+	}
+	
+	/**
+	 * Get a registered font from assets
+	 * @param context
+	 * @param fontName
+	 * @return
+	 */
+	public static Typeface getFont(Context context, String fontName) {
+		return Typeface.createFromAsset(context.getAssets(), fontName);
 	}
 }

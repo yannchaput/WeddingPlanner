@@ -68,5 +68,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		db.execSQL(DROP_WEDDINGINFO_TABLE);
 		db.execSQL(DROP_GUEST_TABLE);
 	}
+	
+	/**
+	 * Convert an integer retrieved from SQLLite db to boolean
+	 * @param value
+	 * @return
+	 */
+	public static boolean convertIntToBool(int value) {
+		return (value ==1) ? true: false;
+	}
 
 }
