@@ -33,10 +33,17 @@ public interface IDao<T extends IDtoBean> {
 	int removeWithId(int id);
 
 	/**
-	 * Get an item of info
+	 * Get an item
 	 * @return
 	 */
 	T get();
+	
+	/**
+	 * Get an item from id column
+	 * @param id
+	 * @return
+	 */
+	T get(long id);
 	
 	/**
 	 * Gets a cursor of the specified dataset

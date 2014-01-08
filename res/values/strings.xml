@@ -40,4 +40,8 @@
 	<string name="mandatory_validator_message">Les champs nom, prénom sont obligatoires. Veuillez les renseigner.</string>
 	<string name="placeholder">placeholder</string>
 	<string name="empty">Vide</string>
+	<string name="delete_guest_alert_dialog_title">Erreur suppression</string>
+	<string name="delete_guest_0_alert_message">Aucun enregistrement correspondant à l\'invité sélectionné n\'a été trouvé</string>
+	<string name="delete_guest_multiple_alert_message">Plusieurs enregistrements correspondants à l\'invité sélectionné ont été trouvés</string>
+	<string name="delete_guest_OK_alert_message">Contact supprimé de la liste!</string>
 </resources>

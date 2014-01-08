@@ -6,7 +6,7 @@ import com.innovention.weddingplanner.ContactFragment;
 import com.innovention.weddingplanner.exception.IncorrectMailException;
 import com.innovention.weddingplanner.exception.IncorrectTelephoneException;
 import com.innovention.weddingplanner.exception.MissingMandatoryFieldException;
-import com.innovention.weddingplanner.utils.WeddingPlannerHelper;
+import static com.innovention.weddingplanner.utils.WeddingPlannerHelper.*;
 
 /**
  * Contact bean
@@ -49,7 +49,7 @@ public class Contact implements IDtoBean {
 	 */
 	public static class ContactBuilder {
 		
-		private int id = 0; // Only for dao purpose
+		private int id = -1; // Only for dao purpose
 		private String surname;
 		private String name;
 		private String telephone;
@@ -175,10 +175,10 @@ public class Contact implements IDtoBean {
 	 */
 	public void validate() throws IncorrectMailException, MissingMandatoryFieldException, IncorrectTelephoneException {
 		
-		WeddingPlannerHelper.validateMandatory(this.getSurname());
-		WeddingPlannerHelper.validateMandatory(this.getName());
-		WeddingPlannerHelper.validateEmail(this.getMail());
-		WeddingPlannerHelper.validateTelephone(this.getTelephone());
+		validateMandatory(this.getSurname());
+		validateMandatory(this.getName());
+		validateEmail(this.getMail());
+		validateTelephone(this.getTelephone());
 	}
 	
 	@Override

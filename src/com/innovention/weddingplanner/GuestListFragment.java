@@ -27,7 +27,9 @@ import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.innovention.weddingplanner.Constantes.FragmentTags;
 import com.innovention.weddingplanner.bean.Contact.ResponseType;
 import com.innovention.weddingplanner.dao.DaoLocator;
 import com.innovention.weddingplanner.dao.DaoLocator.SERVICES;
@@ -81,7 +83,7 @@ public class GuestListFragment extends Fragment implements
 	 */
 	public interface OnGuestSelectedListener {
 		// TODO: Update argument type and name
-		public void onSelectGuest(int id);
+		public void onSelectGuest(long id, final FragmentTags action);
 	}
 	
 	// Contextual action mode in activity
@@ -110,8 +112,28 @@ public class GuestListFragment extends Fragment implements
 		
 		@Override
 		public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-			// TODO Auto-generated method stub
-			return false;
+			int pos = ((GuestCursorAdapter) mAdapter).currentSelectionPos;
+			long id = ((GuestCursorAdapter) mAdapter).currentSelectionId;
+			
+			
+			
+			switch (item.getItemId()) {
+			case R.id.action_update_contact:
+				Log.d(TAG, "ActionMode.Callback - onActionItemClicked - edit item with db id " + id);
+				mListener.onSelectGuest(id, FragmentTags.TAG_FGT_UPDATECONTACT);
+				// Close the CAB
+				mode.finish();
+				return true;
+			case R.id.action_delete_contact:
+				Log.d(TAG, "ActionMode.Callback - onActionItemClicked - delete item with db id " + id);
+				mListener.onSelectGuest(id, FragmentTags.TAG_FGT_DELETECONTACT);
+				// Todo add a notifyDataSetchanged to update list accordingly
+				// close the CAB
+				mode.finish();
+				return true;
+			default:
+				return false;
+			}
 		}
 	};
 	
@@ -125,6 +147,8 @@ public class GuestListFragment extends Fragment implements
 		
 		private Context context;
 		private Cursor c;
+		private int currentSelectionPos = -1;
+		private long currentSelectionId = -1;
 		
 		private class ViewHolder {
 			private ImageView icon;
@@ -295,7 +319,8 @@ public class GuestListFragment extends Fragment implements
 	public boolean onItemLongClick(AdapterView<?> parent, View view, int position,
 			long id) {
 		
-		Log.d(TAG, "onItemLongClick - Long click on item " + id);
+		Log.v(TAG, "onItemLongClick - Long click on item id " + id);
+		Log.v(TAG, "onItemLongClick - Long click on item position " + position);
 		
 		if ((null == mListener) || (mActionMode != null)) {
 			return false;
@@ -303,16 +328,12 @@ public class GuestListFragment extends Fragment implements
 		
 		// Starts the CAB using the ActionMode.Callbakc defined above
 		mActionMode = getActivity().startActionMode(mActionModeCallback);
+		((GuestCursorAdapter) mAdapter).currentSelectionPos = position;
+		((GuestCursorAdapter) mAdapter).currentSelectionId = id;
 		view.setSelected(true);
 
-//		// Gets selected item
-//		Cursor c = (Cursor) mAdapter.getItem(position);
-//		c.moveToPosition(position);
-//		// Notify the active callbacks interface (the activity, if the
-//		// fragment is attached to one) that an item has been selected.
-//		mListener.onSelectGuest(c.getInt(NUM_COL_ID));
-
-		return false;
+		// consume the event
+		return true;
 	}
 
 	/**

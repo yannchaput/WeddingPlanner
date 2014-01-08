@@ -4,7 +4,7 @@ package com.innovention.weddingplanner;
 import static com.innovention.weddingplanner.Constantes.KEY_DTPICKER_D;
 import static com.innovention.weddingplanner.Constantes.KEY_DTPICKER_M;
 import static com.innovention.weddingplanner.Constantes.KEY_DTPICKER_Y;
-import static com.innovention.weddingplanner.Constantes.TAG_FGT_DATEPICKER;
+import static com.innovention.weddingplanner.Constantes.FragmentTags;
 import static com.innovention.weddingplanner.Constantes.FONT_CURVED;
 import static com.innovention.weddingplanner.dao.ConstantesDAO.NOM_BDD;
 import static com.innovention.weddingplanner.dao.ConstantesDAO.VERSION_BDD;
@@ -122,7 +122,7 @@ public class MainActivity extends Activity {
 		Log.d(TAG, "showDatePickerDialog - " + "show date picker fragment");
 		
 		FragmentTransaction ft = getFragmentManager().beginTransaction();
-		Fragment prev = getFragmentManager().findFragmentByTag(TAG_FGT_DATEPICKER);
+		Fragment prev = getFragmentManager().findFragmentByTag(FragmentTags.TAG_FGT_DATEPICKER.getValue());
 		if (prev != null)
 			ft.remove(prev);
 		ft.addToBackStack(null);
@@ -138,7 +138,7 @@ public class MainActivity extends Activity {
 			parameters.putInt(KEY_DTPICKER_D, info.getWeddingDate().dayOfMonth().get());
 			datePicker.setArguments(parameters);
 		}
-		datePicker.show(ft, TAG_FGT_DATEPICKER);
+		datePicker.show(ft, FragmentTags.TAG_FGT_DATEPICKER.getValue());
 	}
 	
 	public void showGuestActivity(View v) {

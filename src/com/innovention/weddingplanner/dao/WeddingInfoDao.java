@@ -83,6 +83,11 @@ public class WeddingInfoDao implements IDao<WeddingInfo> {
 	}
 	
 	
+	@Override
+	public WeddingInfo get(long id) {
+		throw new UnsupportedOperationException();
+	}
+
 	/**
 	 * Gets a cursor from WeddingInfo table
 	 * @return

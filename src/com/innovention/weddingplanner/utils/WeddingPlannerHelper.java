@@ -4,7 +4,7 @@ package com.innovention.weddingplanner.utils;
 import static com.innovention.weddingplanner.Constantes.ILLEGAL_EMAIL_MSG;
 import static com.innovention.weddingplanner.Constantes.ILLEGAL_PHONE_MSG;
 import static com.innovention.weddingplanner.Constantes.MISSING_MANADTORY_FIELD_MSG;
-import static com.innovention.weddingplanner.Constantes.TAG_FGT_GUESTALERT;
+import static com.innovention.weddingplanner.Constantes.FragmentTags;
 
 import org.joda.time.DateTime;
 import org.joda.time.Days;
@@ -94,7 +94,7 @@ public class WeddingPlannerHelper {
 	 */
 	public static void showAlert(int titleResId, int content, final FragmentManager fgtMgr) {
 		DialogFragment newDlg = AlertDialogFragment.newInstance(titleResId, content);
-		newDlg.show(fgtMgr,TAG_FGT_GUESTALERT);
+		newDlg.show(fgtMgr,FragmentTags.TAG_FGT_GUESTALERT.getValue());
 	}
 	
 	/**

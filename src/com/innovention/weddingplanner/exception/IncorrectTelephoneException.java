@@ -2,6 +2,11 @@ package com.innovention.weddingplanner.exception;
 
 public class IncorrectTelephoneException extends Exception {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -3375574735117182475L;
+
 	public IncorrectTelephoneException() {
 		// TODO Auto-generated constructor stub
 	}

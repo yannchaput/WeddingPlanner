@@ -12,7 +12,9 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
+import com.google.common.base.Objects;
 import com.innovention.weddingplanner.bean.Contact;
+import com.innovention.weddingplanner.bean.Contact.ResponseType;
 import com.innovention.weddingplanner.bean.WeddingInfo;
 
 /**
@@ -85,6 +87,41 @@ public class GuestsDao implements IDao<Contact> {
 	}
 
 	@Override
+	public Contact get(long id) {
+		Contact bean = null;
+		Contact.ContactBuilder builder = new Contact.ContactBuilder();
+		
+		Cursor c = db.query(TABLE_GUESTS, new String[] {COL_ID, COL_SURNAME, COL_NAME, COL_TEL, COL_EMAIL,
+				COL_ADDRESS, COL_INVITATION, COL_CHURCH, COL_TOWNHALL, COL_COCKTAIL, COL_PARTY, COL_RSVP}
+		, COL_ID + "=?", new String[] {String.valueOf(id)}, null, null, null);
+		
+		if (c.getCount() == 0){
+			Log.d(TAG, "No data available");
+			return null;
+		}
+		
+		c.moveToFirst();
+		bean = builder.withId(c.getInt(NUM_COL_ID))
+				.surname(c.getString(NUM_COL_SURNAME))
+				.name(c.getString(NUM_COL_NAME))
+				.telephone(c.getString(NUM_COL_TEL))
+				.address(c.getString(NUM_COL_ADDRESS))
+				.mail(c.getString(NUM_COL_MAIL))
+				.inviteSent(c.getInt(NUM_COL_INVITATION) == 1 ? Boolean.TRUE : Boolean.FALSE)
+				.atChurch(c.getInt(NUM_COL_CHURCH) == 1 ? Boolean.TRUE : Boolean.FALSE)
+				.atTownHall(c.getInt(NUM_COL_TOWNHALL) == 1 ? Boolean.TRUE : Boolean.FALSE)
+				.AtCocktail(c.getInt(NUM_COL_COCKTAIL) == 1 ? Boolean.TRUE : Boolean.FALSE)
+				.AtParty(c.getInt(NUM_COL_PARTY) == 1 ? Boolean.TRUE : Boolean.FALSE)
+				.answerPending(Objects.equal(c.getString(NUM_COL_RSVP), ResponseType.PENDING.toString()) ? Boolean.TRUE : Boolean.FALSE )
+				.answerAttend(Objects.equal(c.getString(NUM_COL_RSVP), ResponseType.ATTEND.toString()) ? Boolean.TRUE : Boolean.FALSE )
+				.answerNotAttend(Objects.equal(c.getString(NUM_COL_RSVP), ResponseType.NOTATTEND.toString()) ? Boolean.TRUE : Boolean.FALSE )
+				.build();
+		c.close();
+		
+		return bean;
+	}
+
+	@Override
 	public Cursor getCursor() {
 		// TODO Auto-generated method stub
 		return db.query(TABLE_GUESTS, new String[] {COL_ID, COL_SURNAME, COL_NAME, COL_TEL, COL_EMAIL,
@@ -110,7 +147,13 @@ public class GuestsDao implements IDao<Contact> {
 		List<Contact> list = new ArrayList<Contact>();
 		c.moveToFirst();
 		for (c.moveToFirst();!c.isLast();c.moveToNext()) {
-			Log.d(TAG, "Entry " + c.getInt(NUM_COL_ID) +"," + c.getString(NUM_COL_WEDDATE));
+			Log.d(TAG, new StringBuilder().append("Get contact ")
+					.append(c.getLong(NUM_COL_ID))
+					.append(", ")
+					.append(c.getString(NUM_COL_NAME))
+					.append(", ")
+					.append(c.getString(NUM_COL_SURNAME)).toString());
+			
 			bean = builder.withId(c.getInt(NUM_COL_ID))
 					.surname(c.getString(NUM_COL_SURNAME))
 					.name(c.getString(NUM_COL_NAME))

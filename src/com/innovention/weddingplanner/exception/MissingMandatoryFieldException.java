@@ -2,6 +2,11 @@ package com.innovention.weddingplanner.exception;
 
 public class MissingMandatoryFieldException extends Exception {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -2083604296719760649L;
+
 	public MissingMandatoryFieldException() {
 		// TODO Auto-generated constructor stub
 	}
