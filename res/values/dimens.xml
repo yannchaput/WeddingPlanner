@@ -4,8 +4,8 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="days_2_wedding_font_size">26sp</dimen>
-    <dimen name="contact_list_item_font_size">24sp</dimen>
+    <dimen name="contact_list_item_font_size">28sp</dimen>
 	<dimen name="contact_checkbox_space">66dp</dimen>
 	<dimen name="contact_list_item_padding">5dp</dimen>
-	<dimen name="contact_list_item_icon_size">32dp</dimen>
+	<dimen name="contact_list_item_icon_size">34dp</dimen>
 </resources>

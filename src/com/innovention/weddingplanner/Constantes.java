@@ -3,7 +3,8 @@ package com.innovention.weddingplanner;
 public interface Constantes {
 	
 	/**
-	 * List of tags to identify fragments
+	 * List of tags to identify fragments. Also serves to identify the mode
+	 * of the mask, i.e. create/edit
 	 * @author YCH
 	 *
 	 */

@@ -162,7 +162,7 @@ public class GuestActivity extends Activity implements OnGuestSelectedListener, 
 			fgt = ContactFragment.newInstance();
 			break;
 		case TAG_FGT_UPDATECONTACT:
-			fgt = ContactFragment.newInstance(param);
+			fgt = ContactFragment.newInstance(FragmentTags.TAG_FGT_UPDATECONTACT,param);
 			break;
 		default:
 			return;

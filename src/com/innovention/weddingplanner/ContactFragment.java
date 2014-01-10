@@ -34,26 +34,26 @@ import com.innovention.weddingplanner.exception.MissingMandatoryFieldException;
  * 
  */
 public class ContactFragment extends Fragment {
-	
+
 	// Bundle constantes key
-	private static final String ARG_ID="id";
-	private static final String ARG_SURNAME="surname";
-	private static final String ARG_NAME="name";
-	private static final String ARG_TEL="telephone";
-	private static final String ARG_EMAIL="email";
-	private static final String ARG_ADDRESS="address";
-	private static final String ARG_INVITATION="invitation";
-	private static final String ARG_CHURCH="church";
-	private static final String ARG_TOWNHALL="townhall";
-	private static final String ARG_COCKTAIL="cocktail";
-	private static final String ARG_PARTY="party";
-	private static final String ARG_RSVP_ATTEND="rsvp_attend";
-	private static final String ARG_RSVP_NOTATTEND="rsvp_NotAttend";
-	private static final String ARG_RSVP_PENDING="rsvp_pending";
+	private static final String ARG_ID = "id";
+	private static final String ARG_SURNAME = "surname";
+	private static final String ARG_NAME = "name";
+	private static final String ARG_TEL = "telephone";
+	private static final String ARG_EMAIL = "email";
+	private static final String ARG_ADDRESS = "address";
+	private static final String ARG_INVITATION = "invitation";
+	private static final String ARG_CHURCH = "church";
+	private static final String ARG_TOWNHALL = "townhall";
+	private static final String ARG_COCKTAIL = "cocktail";
+	private static final String ARG_PARTY = "party";
+	private static final String ARG_RSVP_ATTEND = "rsvp_attend";
+	private static final String ARG_RSVP_NOTATTEND = "rsvp_NotAttend";
+	private static final String ARG_RSVP_PENDING = "rsvp_pending";
 
 	private final static String TAG = ContactFragment.class.getSimpleName();
 
-	// TODO: Rename and change types of parameters
+	// Bundle parameters
 	private int mId = -1;
 	private String mSurname;
 	private String mName;
@@ -68,7 +68,9 @@ public class ContactFragment extends Fragment {
 	private Boolean mRsvpAttend = Boolean.FALSE;
 	private Boolean mRsvpNotAttend = Boolean.FALSE;
 	private Boolean mRsvpPending = Boolean.FALSE;
-	
+
+	// Display mode
+	private FragmentTags mode;
 
 	// Subscribe to validate button event
 	private OnValidateContactListener mListener;
@@ -124,7 +126,8 @@ public class ContactFragment extends Fragment {
 			Log.d(TAG, "Build contact object" + bean);
 			try {
 				bean.validate();
-				mListener.onValidateContact(bean, ContactFragment.this.getTag());
+				mListener
+						.onValidateContact(bean, ContactFragment.this.getTag());
 			} catch (MissingMandatoryFieldException e) {
 				showAlert(R.string.contact_alert_dialog_title,
 						R.string.mandatory_validator_message,
@@ -143,19 +146,23 @@ public class ContactFragment extends Fragment {
 	 * Use this factory method to create a new instance of this fragment using
 	 * the provided parameters.
 	 * 
-	 * @param param1
-	 *            Parameter 1.
-	 * @param param2
-	 *            Parameter 2.
+	 * @param mode
+	 *            edit mode.
+	 * @param guest
+	 *            guest bean (in edit mode, null otherwise).
 	 * @return A new instance of fragment ContactFragment.
 	 */
 	// TODO: Rename and change types and number of parameters
-	public static ContactFragment newInstance(final Contact guest) {
+	public static ContactFragment newInstance(final FragmentTags mode,
+			final Contact guest) {
 		ContactFragment fragment = new ContactFragment();
-		
-		if (guest != null) {
+
+		fragment.mode = mode;
+
+		if ((guest != null)
+				&& (FragmentTags.TAG_FGT_UPDATECONTACT.equals(mode))) {
 			Log.d(TAG, "newInstance - pass parameter contact : " + guest);
-			
+
 			Bundle args = new Bundle();
 			args.putInt(ARG_ID, guest.getId());
 			args.putString(ARG_SURNAME, guest.getSurname());
@@ -168,7 +175,7 @@ public class ContactFragment extends Fragment {
 			args.putBoolean(ARG_COCKTAIL, guest.getCocktail());
 			args.putBoolean(ARG_TOWNHALL, guest.getTownHall());
 			args.putBoolean(ARG_PARTY, guest.getParty());
-			
+
 			ResponseType response = guest.getResponse();
 			switch (response) {
 			case ATTEND:
@@ -187,14 +194,20 @@ public class ContactFragment extends Fragment {
 				args.putBoolean(ARG_RSVP_PENDING, Boolean.TRUE);
 				break;
 			}
-			
+
 			fragment.setArguments(args);
 		}
 		return fragment;
 	}
 
+	/**
+	 * Default factory method mode should always be create in this case
+	 * 
+	 * @return
+	 */
 	public static ContactFragment newInstance() {
 		ContactFragment fragment = new ContactFragment();
+		fragment.mode = FragmentTags.TAG_FGT_CREATECONTACT;
 		return fragment;
 	}
 
@@ -205,11 +218,12 @@ public class ContactFragment extends Fragment {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
+
 		// Set fields from bundle
-		if (getArguments() != null) {
+		if ((getArguments() != null)
+				&& (FragmentTags.TAG_FGT_UPDATECONTACT.equals(mode))) {
 			Log.d(TAG, "onCreate - restore bundle : " + getArguments());
-			
+
 			mId = getArguments().getInt(ARG_ID);
 			mSurname = getArguments().getString(ARG_SURNAME);
 			mName = getArguments().getString(ARG_NAME);
@@ -234,23 +248,37 @@ public class ContactFragment extends Fragment {
 		View v = inflater.inflate(R.layout.fragment_contact, container, false);
 		Button validateBtn = (Button) v.findViewById(R.id.contactButtonSave);
 		validateBtn.setOnClickListener(validateBtnListener);
-		// Set fields in the form in case of update
-		((EditText) v.findViewById(R.id.contactEditSurname)).setText(mSurname);
-		((EditText) v.findViewById(R.id.contactEditName)).setText(mName);
-		((EditText) v.findViewById(R.id.contactEditPhone)).setText(mTelephone);
-		((EditText) v.findViewById(R.id.contactEditMail)).setText(mEmail);
-		((EditText) v.findViewById(R.id.contactEditAdress)).setText(mAddress);
-		
-		((CheckBox) v.findViewById(R.id.contactcheckBoxFairePart)).setChecked(mInvitation.booleanValue());
-		((CheckBox) v.findViewById(R.id.contactCheckBoxChurch)).setChecked(mChurch.booleanValue());
-		((CheckBox) v.findViewById(R.id.contactCheckBoxCocktail)).setChecked(mCocktail.booleanValue());
-		((CheckBox) v.findViewById(R.id.contactCheckBoxHall)).setChecked(mTownHall.booleanValue());
-		((CheckBox) v.findViewById(R.id.contactCheckBoxReception)).setChecked(mParty.booleanValue());
-		
-		((RadioButton) v.findViewById(R.id.contactRadioAbsent)).setChecked(mRsvpNotAttend.booleanValue());
-		((RadioButton) v.findViewById(R.id.contactRadioAttend)).setChecked(mRsvpAttend.booleanValue());
-		((RadioButton) v.findViewById(R.id.contactRadioNoAnswer)).setChecked(mRsvpPending.booleanValue());
-		
+
+		if (FragmentTags.TAG_FGT_UPDATECONTACT.equals(mode)) {
+			// Set fields in the form in case of update
+			((EditText) v.findViewById(R.id.contactEditSurname))
+					.setText(mSurname);
+			((EditText) v.findViewById(R.id.contactEditName)).setText(mName);
+			((EditText) v.findViewById(R.id.contactEditPhone))
+					.setText(mTelephone);
+			((EditText) v.findViewById(R.id.contactEditMail)).setText(mEmail);
+			((EditText) v.findViewById(R.id.contactEditAdress))
+					.setText(mAddress);
+
+			((CheckBox) v.findViewById(R.id.contactcheckBoxFairePart))
+					.setChecked(mInvitation.booleanValue());
+			((CheckBox) v.findViewById(R.id.contactCheckBoxChurch))
+					.setChecked(mChurch.booleanValue());
+			((CheckBox) v.findViewById(R.id.contactCheckBoxCocktail))
+					.setChecked(mCocktail.booleanValue());
+			((CheckBox) v.findViewById(R.id.contactCheckBoxHall))
+					.setChecked(mTownHall.booleanValue());
+			((CheckBox) v.findViewById(R.id.contactCheckBoxReception))
+					.setChecked(mParty.booleanValue());
+
+			((RadioButton) v.findViewById(R.id.contactRadioAbsent))
+					.setChecked(mRsvpNotAttend.booleanValue());
+			((RadioButton) v.findViewById(R.id.contactRadioAttend))
+					.setChecked(mRsvpAttend.booleanValue());
+			((RadioButton) v.findViewById(R.id.contactRadioNoAnswer))
+					.setChecked(mRsvpPending.booleanValue());
+		}
+
 		return v;
 	}
 

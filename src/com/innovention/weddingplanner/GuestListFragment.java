@@ -23,6 +23,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
+import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.SimpleCursorAdapter;
@@ -126,8 +127,15 @@ public class GuestListFragment extends Fragment implements
 				return true;
 			case R.id.action_delete_contact:
 				Log.d(TAG, "ActionMode.Callback - onActionItemClicked - delete item with db id " + id);
+				// Notify activity to perform physical delete in db
 				mListener.onSelectGuest(id, FragmentTags.TAG_FGT_DELETECONTACT);
-				// Todo add a notifyDataSetchanged to update list accordingly
+				// Refresh list view
+				Cursor c = DaoLocator
+						.getInstance(getActivity().getApplicationContext())
+						.get(SERVICES.GUEST).getCursor();
+				GuestCursorAdapter adapter = (GuestCursorAdapter) mAdapter;
+				adapter.changeCursor(c);
+				adapter.notifyDataSetChanged();
 				// close the CAB
 				mode.finish();
 				return true;
@@ -146,7 +154,6 @@ public class GuestListFragment extends Fragment implements
 	private class GuestCursorAdapter extends SimpleCursorAdapter {
 		
 		private Context context;
-		private Cursor c;
 		private int currentSelectionPos = -1;
 		private long currentSelectionId = -1;
 		
@@ -159,7 +166,6 @@ public class GuestListFragment extends Fragment implements
 		public GuestCursorAdapter(Context context, int layout, Cursor c,
 				String[] from, int[] to, int flags) {
 			super(context, layout, c, from, to, flags);
-			this.c = c;
 			this.context = context;
 		}
 
@@ -179,6 +185,7 @@ public class GuestListFragment extends Fragment implements
 			}
 			
 			holder = (ViewHolder) row.getTag();
+			Cursor c = getCursor();
 			c.moveToPosition(position);
 			
 			ImageView icon = holder.icon;
@@ -248,14 +255,14 @@ public class GuestListFragment extends Fragment implements
 			mParam2 = getArguments().getString(ARG_PARAM2);
 		}
 		
-		// Necessary to set the menu visible for fragment
-		setHasOptionsMenu(true);
-		
 		Cursor c = DaoLocator
 				.getInstance(getActivity().getApplicationContext())
 				.get(SERVICES.GUEST).getCursor();
 
-		// Todo Use a CursorLoader
+		// TODO update to CursorLoader
+		getActivity().startManagingCursor(c);
+		
+		// TODO Use a CursorLoader
 		mAdapter = new GuestCursorAdapter(getActivity(),
 				R.layout.fragment_contact_list, c,
 				new String[] { COL_SURNAME, COL_NAME },
@@ -271,6 +278,9 @@ public class GuestListFragment extends Fragment implements
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.fragment_guest, container, false);
+		
+		// Necessary to set the menu visible for fragment
+		setHasOptionsMenu(true);
 
 		// Set the adapter
 		mListView = (AbsListView) view.findViewById(android.R.id.list);

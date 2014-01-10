@@ -141,11 +141,24 @@ public class MainActivity extends Activity {
 		datePicker.show(ft, FragmentTags.TAG_FGT_DATEPICKER.getValue());
 	}
 	
+	/**
+	 * Display guest activity on button click
+	 * @param v the triggering view
+	 */
 	public void showGuestActivity(View v) {
 		
 		Log.d(TAG, "Start Guest invitation activity");
-		//Toast.makeText(this, "Test", Toast.LENGTH_SHORT).show();
 		Intent intent = new Intent(this, GuestActivity.class);
+		startActivity(intent);
+	}
+	
+	/**
+	 * Display to do list activity
+	 * @param v the triggering view
+	 */
+	public void showTaskActivity(View v) {
+		Log.d(TAG, "Start To do list activity");
+		Intent intent = new Intent(this, TaskActivity.class);
 		startActivity(intent);
 	}
 	

@@ -6,6 +6,7 @@
     <string name="action_add_contact">Ajouter invité</string>
     <string name="action_delete_contact">Supprimer invité</string>
     <string name="action_update_contact">Modifier invité</string>
+    <string name="action_add_task">Nouvelle tâche</string>
     <string name="hello_world">Hello world!</string>
     <string name="days_to_wedding">jours avant le Grand Jour!</string>
     <string name="initial_date_to_update">Quand est le grand jour?</string>
@@ -33,15 +34,20 @@
     <string name="contact_item_attend">Présent</string>
     <string name="contact_item_absent">Absent</string>
     <string name="contact_button_validate">Valider</string>
-	<string name="alert_dialog_validate">OK</string>
-	<string name="contact_alert_dialog_title">Informations manquantes</string>
-	<string name="email_validator_message">Format incorrect de l\'e-mail</string>
-	<string name="phone_validator_message">Format incorrect du numéro de téléphone</string>
-	<string name="mandatory_validator_message">Les champs nom, prénom sont obligatoires. Veuillez les renseigner.</string>
-	<string name="placeholder">placeholder</string>
-	<string name="empty">Vide</string>
-	<string name="delete_guest_alert_dialog_title">Erreur suppression</string>
-	<string name="delete_guest_0_alert_message">Aucun enregistrement correspondant à l\'invité sélectionné n\'a été trouvé</string>
-	<string name="delete_guest_multiple_alert_message">Plusieurs enregistrements correspondants à l\'invité sélectionné ont été trouvés</string>
-	<string name="delete_guest_OK_alert_message">Contact supprimé de la liste!</string>
+    <string name="alert_dialog_validate">OK</string>
+    <string name="contact_alert_dialog_title">Informations manquantes</string>
+    <string name="email_validator_message">Format incorrect de l\'e-mail</string>
+    <string name="phone_validator_message">Format incorrect du numéro de téléphone</string>
+    <string name="mandatory_validator_message">Les champs nom, prénom sont obligatoires. Veuillez les renseigner.</string>
+    <string name="placeholder">placeholder</string>
+    <string name="empty">Vide</string>
+    <string name="delete_guest_alert_dialog_title">Erreur suppression</string>
+    <string name="delete_guest_0_alert_message">Aucun enregistrement correspondant à l\'invité sélectionné n\'a été trouvé</string>
+    <string name="delete_guest_multiple_alert_message">Plusieurs enregistrements correspondants à l\'invité sélectionné ont été trouvés</string>
+    <string name="delete_guest_OK_alert_message">Contact supprimé de la liste!</string>
+    <string name="title_activity_task">To-do liste</string>
+    <string name="title_section1">Tâches en cours</string>
+    <string name="title_section2">Tâches terminées</string>
+    <string name="title_section3">Tâches en retard</string>
+
 </resources>
