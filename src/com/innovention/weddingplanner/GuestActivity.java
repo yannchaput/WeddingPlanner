@@ -1,6 +1,6 @@
 package com.innovention.weddingplanner;
 
-import static com.innovention.weddingplanner.Constantes.FragmentTags;
+import com.innovention.weddingplanner.Constantes.FragmentTags;
 import static com.innovention.weddingplanner.utils.WeddingPlannerHelper.*;
 import android.app.Activity;
 import android.app.Fragment;
@@ -74,7 +74,7 @@ public class GuestActivity extends Activity implements OnGuestSelectedListener, 
 			if (Log.isLoggable(TAG, Log.VERBOSE))
 			Log.d(TAG, "User action : create new contact -> open the mask");
 			// Create contact action
-			replaceFragment(FragmentTags.TAG_FGT_CREATECONTACT, null);
+			replaceFragment(this,FragmentTags.TAG_FGT_CREATECONTACT);
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
@@ -96,7 +96,7 @@ public class GuestActivity extends Activity implements OnGuestSelectedListener, 
 		if (FragmentTags.TAG_FGT_UPDATECONTACT.equals(action)) {
 			Contact selectedGuest = dao.get(id);
 			Log.v(TAG, "onSelectGuest - Guest to update is " + selectedGuest);
-			replaceFragment(FragmentTags.TAG_FGT_UPDATECONTACT, selectedGuest);
+			replaceFragment(this,FragmentTags.TAG_FGT_UPDATECONTACT, selectedGuest);
 		}
 		else if (FragmentTags.TAG_FGT_DELETECONTACT.equals(action)) {
 			Log.v(TAG, "onSelectGuest - Suppress guest with id " + id);
@@ -142,34 +142,8 @@ public class GuestActivity extends Activity implements OnGuestSelectedListener, 
 			dao.update(bean.getId(), (Contact) bean); 
 		}
 		// Replace add contact fragment by list fragment
-		replaceFragment(FragmentTags.TAG_FGT_GUESTLIST, null);
+		replaceFragment(this,FragmentTags.TAG_FGT_GUESTLIST);
 		Log.d(TAG, "Contact saved: " + bean);
-	}
-	
-	/**
-	 * Replace the layout of the activity with the fragment specified
-	 * @param tag tag of the fragment to display
-	 */
-	void replaceFragment(FragmentTags tag, final Contact param) {
-		FragmentTransaction tx = getFragmentManager().beginTransaction();
-		Fragment fgt = null;
-		
-		switch (tag) {
-		case TAG_FGT_GUESTLIST:
-			fgt = GuestListFragment.newInstance();
-			break;
-		case TAG_FGT_CREATECONTACT:
-			fgt = ContactFragment.newInstance();
-			break;
-		case TAG_FGT_UPDATECONTACT:
-			fgt = ContactFragment.newInstance(FragmentTags.TAG_FGT_UPDATECONTACT,param);
-			break;
-		default:
-			return;
-		}
-		tx.replace(R.id.LayoutGuest, fgt, tag.getValue());
-		tx.addToBackStack(null);
-		tx.commit();
 	}
 
 }

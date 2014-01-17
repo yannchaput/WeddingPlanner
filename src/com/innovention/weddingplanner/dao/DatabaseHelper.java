@@ -56,6 +56,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		db.execSQL(CREATE_WEDDINGINFO_TABLE);
 		Log.v(TAG, "Create guests table");
 		db.execSQL(CREATE_GUEST_TABLE);
+		Log.v(TAG, "Create tasks table");
+		db.execSQL(CREATE_TASK_TABLE);
 	}
 
 	/**
@@ -67,6 +69,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		Log.d(TAG, "Drop database");
 		db.execSQL(DROP_WEDDINGINFO_TABLE);
 		db.execSQL(DROP_GUEST_TABLE);
+		db.execSQL(DROP_TASK_TABLE);
 	}
 	
 	/**

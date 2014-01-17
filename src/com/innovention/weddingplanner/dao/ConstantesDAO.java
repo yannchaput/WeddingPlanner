@@ -5,6 +5,7 @@ public interface ConstantesDAO {
 	// Table name
 	String TABLE_WEDDINGINFO = "table_weddingInfo";
 	String TABLE_GUESTS = "table_guests";
+	String TABLE_TASKS = "table_tasks";
 	
 	// Columns wedding info
 	String COL_ID ="_id";
@@ -36,12 +37,16 @@ public interface ConstantesDAO {
 	String COL_RSVP="rsvp";
 	byte NUM_COL_RSVP = 11;
 	
+	// Columns tasks table
+	String COL_TASK_DESC = "description";
+	byte NUM_COL_TASK_DESC = NUM_COL_ID + 1; 
+	
 	// General
-	int VERSION_BDD = 2;
+	int VERSION_BDD = 3;
 	String NOM_BDD = "wedplanner.db";
 	
 	String CREATE_WEDDINGINFO_TABLE= new StringBuilder()
-	.append("CREATE TABLE ")
+	.append("CREATE TABLE IF NOT EXISTS ")
 	.append(TABLE_WEDDINGINFO)
 	.append(" (")
 	.append(COL_ID)
@@ -52,7 +57,7 @@ public interface ConstantesDAO {
 	.toString();
 	
 	String CREATE_GUEST_TABLE=new StringBuilder()
-	.append("CREATE TABLE ")
+	.append("CREATE TABLE IF NOT EXISTS ")
 	.append(TABLE_GUESTS)
 	.append(" (")
 	.append(COL_ID)
@@ -82,15 +87,33 @@ public interface ConstantesDAO {
 	.append(");")
 	.toString();
 	
+	String CREATE_TASK_TABLE = new StringBuilder()
+	.append("CREATE TABLE IF NOT EXISTS ")
+	.append(TABLE_TASKS)
+	.append(" (")
+	.append(COL_ID)
+	.append(" INTEGER PRIMARY KEY AUTOINCREMENT, ")
+	.append(COL_TASK_DESC)
+	.append(" TEXT NOT NULL ")
+	.append(");")
+	.toString();
+	
+	
 	String DROP_WEDDINGINFO_TABLE = new StringBuilder()
-	.append("DROP TABLE ")
+	.append("DROP TABLE IF EXISTS ")
 	.append(TABLE_WEDDINGINFO)
 	.append(";")
 	.toString();
 	
 	String DROP_GUEST_TABLE = new StringBuilder()
-	.append("DROP TABLE ")
+	.append("DROP TABLE IF EXISTS ")
 	.append(TABLE_GUESTS)
+	.append(";")
+	.toString();
+	
+	String DROP_TASK_TABLE = new StringBuilder()
+	.append("DROP TABLE IF EXISTS ")
+	.append(TABLE_TASKS)
 	.append(";")
 	.toString();
 }

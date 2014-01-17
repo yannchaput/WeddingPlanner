@@ -1,5 +1,9 @@
 package com.innovention.weddingplanner;
 
+import static com.innovention.weddingplanner.utils.WeddingPlannerHelper.*;
+import com.innovention.weddingplanner.Constantes.FragmentTags;
+import com.innovention.weddingplanner.bean.Task;
+
 import android.annotation.TargetApi;
 import android.app.ActionBar;
 import android.app.Activity;
@@ -8,6 +12,7 @@ import android.os.Bundle;
 import android.content.Context;
 import android.os.Build;
 import android.support.v4.app.NavUtils;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -16,10 +21,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.TextView;
 
 public class TaskActivity extends Activity implements
 		ActionBar.OnNavigationListener {
+	
+	private static final String TAG = TaskActivity.class.getSimpleName();
 
 	/**
 	 * The serialization (saved instance state) Bundle key representing the
@@ -100,6 +108,10 @@ public class TaskActivity extends Activity implements
 			//
 			NavUtils.navigateUpFromSameTask(this);
 			return true;
+		case R.id.action_add_task:
+			replaceFragment(this, FragmentTags.TAG_FGT_CREATETASK);
+			return true;
+		default:	
 		}
 		return super.onOptionsItemSelected(item);
 	}
@@ -108,12 +120,26 @@ public class TaskActivity extends Activity implements
 	public boolean onNavigationItemSelected(int position, long id) {
 		// When the given dropdown item is selected, show its contents in the
 		// container view.
-		android.app.Fragment fragment = new AddTaskFragment();
+		android.app.Fragment fragment = new TaskListFragment();
 		Bundle args = new Bundle();
-		args.putInt(AddTaskFragment.ARG_SECTION_NUMBER, position + 1);
+		args.putInt(TaskListFragment.ARG_SECTION_NUMBER, position + 1);
 		fragment.setArguments(args);
 		getFragmentManager().beginTransaction()
 				.replace(R.id.layoutTask, fragment).commit();
 		return true;
+	}
+	
+	/**
+	 * Triggered on "Validate" button click
+	 * @param v the originating view
+	 */
+	public void saveTask(final View v) {
+		Log.d(TAG, "saveTask - click on button");
+		String description = ((EditText) findViewById(R.id.taskEditDescription)).getText().toString();
+		
+		// Build task bean
+		Task task = new Task.Builder().withDesc(description).build();
+		Log.v(TAG, "saveTask - build task bean: " + task);
+		replaceFragment(this, FragmentTags.TAG_FGT_TASKLIST);
 	}
 }

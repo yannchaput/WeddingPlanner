@@ -14,7 +14,9 @@ public interface Constantes {
 		TAG_FGT_DELETECONTACT("deleteContactFgt"),
 		TAG_FGT_GUESTLIST("guestListFgt"),
 		TAG_FGT_GUESTALERT("guestAlertFgt"),
-		TAG_FGT_DATEPICKER("datePickerDlgFgt");
+		TAG_FGT_DATEPICKER("datePickerDlgFgt"),
+		TAG_FGT_CREATETASK("createTaskFgt"),
+		TAG_FGT_TASKLIST("taskListFgt");
 		
 		private final String tag;
 		

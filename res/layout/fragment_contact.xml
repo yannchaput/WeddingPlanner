@@ -233,7 +233,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:text="@string/contact_button_validate" />
+                android:text="@string/task_button_validate" />
         </TableRow>
     </TableLayout>
 

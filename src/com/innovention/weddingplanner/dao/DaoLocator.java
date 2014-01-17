@@ -25,7 +25,7 @@ public class DaoLocator {
 	private static DaoLocator instance = null;
 	
 	public enum SERVICES {
-		INFO, GUEST;
+		INFO, GUEST, TASK;
 	}
 	
 	private DaoLocator(Context context) {
@@ -35,6 +35,7 @@ public class DaoLocator {
 		services = new HashMap<DaoLocator.SERVICES, IDao<? extends IDtoBean>>();
 		services.put(SERVICES.INFO, new WeddingInfoDao(database));
 		services.put(SERVICES.GUEST, new GuestsDao(database));
+		services.put(SERVICES.TASK, new TasksDao(database));
 		
 	}
 	

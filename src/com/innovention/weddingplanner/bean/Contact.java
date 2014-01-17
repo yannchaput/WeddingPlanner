@@ -15,7 +15,7 @@ import static com.innovention.weddingplanner.utils.WeddingPlannerHelper.*;
  */
 public class Contact implements IDtoBean {
 	
-	private final static String TAG = ContactFragment.class.getSimpleName();
+	private final static String TAG = Contact.class.getSimpleName();
 	
 	private int id;
 	
@@ -196,6 +196,7 @@ public class Contact implements IDtoBean {
 	@Override
 	public String toString() {
 		return Objects.toStringHelper(this).omitNullValues()
+				.add("id", getId())
 				.add("surname", this.getSurname())
 				.add("name", this.getName())
 				.add("telephone", this.getTelephone())

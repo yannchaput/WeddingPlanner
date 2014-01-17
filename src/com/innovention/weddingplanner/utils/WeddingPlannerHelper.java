@@ -4,20 +4,31 @@ package com.innovention.weddingplanner.utils;
 import static com.innovention.weddingplanner.Constantes.ILLEGAL_EMAIL_MSG;
 import static com.innovention.weddingplanner.Constantes.ILLEGAL_PHONE_MSG;
 import static com.innovention.weddingplanner.Constantes.MISSING_MANADTORY_FIELD_MSG;
-import static com.innovention.weddingplanner.Constantes.FragmentTags;
+
+import static com.google.common.base.Preconditions.*;
+import com.innovention.weddingplanner.Constantes.FragmentTags;
 
 import org.joda.time.DateTime;
 import org.joda.time.Days;
 
+import android.app.Activity;
 import android.app.DialogFragment;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.util.Patterns;
 import android.view.View;
 
 import com.innovention.weddingplanner.AlertDialogFragment;
+import com.innovention.weddingplanner.ContactFragment;
+import com.innovention.weddingplanner.GuestListFragment;
+import com.innovention.weddingplanner.R;
+import com.innovention.weddingplanner.TaskFragment;
+import com.innovention.weddingplanner.TaskListFragment;
+import com.innovention.weddingplanner.bean.Contact;
+import com.innovention.weddingplanner.bean.IDtoBean;
 import com.innovention.weddingplanner.exception.IncorrectMailException;
 import com.innovention.weddingplanner.exception.IncorrectTelephoneException;
 import com.innovention.weddingplanner.exception.MissingMandatoryFieldException;
@@ -105,5 +116,46 @@ public class WeddingPlannerHelper {
 	 */
 	public static Typeface getFont(Context context, String fontName) {
 		return Typeface.createFromAsset(context.getAssets(), fontName);
+	}
+	
+	/**
+	 * Replace the layout of the activity with the fragment specified
+	 * @param tag tag of the fragment to display
+	 */
+	public static void replaceFragment(Activity context, FragmentTags tag, final IDtoBean... params) {
+		FragmentTransaction tx = context.getFragmentManager().beginTransaction();
+		Fragment fgt = null;
+		int resId;
+		
+		switch (tag) {
+		case TAG_FGT_GUESTLIST:
+			fgt = GuestListFragment.newInstance();
+			resId = R.id.LayoutGuest;
+			break;
+		case TAG_FGT_CREATECONTACT:
+			fgt = ContactFragment.newInstance();
+			resId = R.id.LayoutGuest;
+			break;
+		case TAG_FGT_UPDATECONTACT:
+			checkNotNull(params, "The contact passed as parameter should not be null");
+			checkArgument(params.length == 1, "There should be exactly 1 contact to update");
+			fgt = ContactFragment.newInstance(FragmentTags.TAG_FGT_UPDATECONTACT,(Contact) params[0]);
+			resId = R.id.LayoutGuest;
+			break;
+		case TAG_FGT_CREATETASK:
+			fgt = TaskFragment.newInstance();
+			resId = R.id.layoutTask;
+			break;
+		case TAG_FGT_TASKLIST:
+			fgt = TaskListFragment.newInstance();
+			resId = R.id.layoutTask;
+			break;
+		default:
+			// do nothing
+			return;
+		}
+		tx.replace(resId, fgt, tag.getValue());
+		tx.addToBackStack(tag.getValue());
+		tx.commit();
 	}
 }
