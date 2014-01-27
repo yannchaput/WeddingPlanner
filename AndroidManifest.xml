@@ -26,6 +26,7 @@
         <activity
             android:name="com.innovention.weddingplanner.GuestActivity"
             android:label="@string/title_activity_guest"
+            android:windowSoftInputMode="adjustResize"
             android:parentActivityName="com.innovention.weddingplanner.MainActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -34,6 +35,7 @@
         <activity
             android:name="com.innovention.weddingplanner.TaskActivity"
             android:label="@string/title_activity_task"
+            android:windowSoftInputMode="adjustResize"
             android:parentActivityName="com.innovention.weddingplanner.MainActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

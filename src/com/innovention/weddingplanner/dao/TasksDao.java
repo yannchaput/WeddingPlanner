@@ -21,6 +21,11 @@ public class TasksDao implements IDao<Task> {
 		this.db = db;
 	}
 
+	/**
+	 * Inserts an entity task into table
+	 * @param task
+	 * @return id
+	 */
 	@Override
 	public long insert(Task bean) {
 		checkNotNull(bean,"Task bean to save can not be null");
@@ -30,16 +35,30 @@ public class TasksDao implements IDao<Task> {
 		return db.insert(TABLE_TASKS, null, values);
 	}
 
+	/**
+	 * Updates a record of tasks table
+	 * @param id
+	 * @param task
+	 * @return number of affected rows
+	 */
 	@Override
 	public int update(int id, Task bean) {
-		// TODO Auto-generated method stub
-		return 0;
+		Log.d(TAG, "update - " + "Update table with id " + id + " and bean " + bean.toString());
+		ContentValues values = new ContentValues();
+		values.put(COL_TASK_DESC, bean.getDescription());
+		int result = db.update(TABLE_TASKS, values, COL_ID + "=?", new String[] {String.valueOf(id)});
+		Log.d(TAG, "" + result + "rows affected");
+		return result;
 	}
 
+	/**
+	 * Delete the record with specified id
+	 * @param id
+	 * @return number of affected rows
+	 */
 	@Override
 	public int removeWithId(int id) {
-		// TODO Auto-generated method stub
-		return 0;
+		return db.delete(TABLE_TASKS, COL_ID + " = " + id, null);
 	}
 
 	@Override
@@ -54,10 +73,13 @@ public class TasksDao implements IDao<Task> {
 		return null;
 	}
 
+	/**
+	 * Returns a cursor with the table content
+	 */
 	@Override
 	public Cursor getCursor() {
-		// TODO Auto-generated method stub
-		return null;
+		return db.query(TABLE_TASKS, new String[] {COL_ID, COL_TASK_DESC}
+		, null, null, null, null, null);
 	}
 
 	@Override

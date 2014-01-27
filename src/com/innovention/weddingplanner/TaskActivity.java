@@ -3,6 +3,9 @@ package com.innovention.weddingplanner;
 import static com.innovention.weddingplanner.utils.WeddingPlannerHelper.*;
 import com.innovention.weddingplanner.Constantes.FragmentTags;
 import com.innovention.weddingplanner.bean.Task;
+import com.innovention.weddingplanner.dao.DaoLocator;
+import com.innovention.weddingplanner.dao.TasksDao;
+import com.innovention.weddingplanner.dao.DaoLocator.SERVICES;
 
 import android.annotation.TargetApi;
 import android.app.ActionBar;
@@ -140,6 +143,8 @@ public class TaskActivity extends Activity implements
 		// Build task bean
 		Task task = new Task.Builder().withDesc(description).build();
 		Log.v(TAG, "saveTask - build task bean: " + task);
+		TasksDao dao = (TasksDao) DaoLocator.getInstance(getApplication()).get(SERVICES.TASK);
+		dao.insert(task);
 		replaceFragment(this, FragmentTags.TAG_FGT_TASKLIST);
 	}
 }

@@ -10,8 +10,8 @@
 
 	<properties>
 		<jdk.version>1.6</jdk.version>
-		<android.api.version>4.3_r2</android.api.version>
-		<android.api.level>18</android.api.level>
+		<android.api.version>4.4.2_r2</android.api.version>
+		<android.api.level>19</android.api.level>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -23,7 +23,7 @@
 		<dependency>
 			<groupId>android.support</groupId>
 			<artifactId>compatibility-v4</artifactId>
-			<version>19</version>
+			<version>19.0.1</version>
 		</dependency>
 		<dependency>
 			<groupId>joda-time</groupId>
