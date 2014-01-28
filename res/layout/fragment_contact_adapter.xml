@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal" >
+    
+     
+    <ImageView
+        android:id="@+id/itemGuestIcon"
+        android:layout_width="@dimen/contact_list_item_icon_size"
+        android:layout_height="@dimen/contact_list_item_icon_size"
+        android:layout_marginLeft="@dimen/contact_list_item_padding"
+        android:layout_marginRight="@dimen/contact_list_item_padding"
+        android:src="@drawable/ic_action_good" 
+        android:contentDescription="@string/empty">
+    </ImageView>
+   
+
+    <TextView
+        android:id="@+id/itemGuestSurname"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/placeholder"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textSize="@dimen/contact_list_item_font_size"
+        android:padding="@dimen/contact_list_item_padding" />
+	<TextView
+        android:id="@+id/itemGuestName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/placeholder"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textSize="@dimen/contact_list_item_font_size"
+        android:padding="@dimen/contact_list_item_padding" />    
+
+</LinearLayout>

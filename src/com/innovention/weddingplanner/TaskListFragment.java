@@ -23,6 +23,31 @@ public class TaskListFragment extends Fragment {
 	public static TaskListFragment newInstance() {
 		return new TaskListFragment();
 	}
+	
+//	@Override
+//	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+//			Bundle savedInstanceState) {
+//		View rootView = inflater.inflate(R.layout.fragment_task_dummy,
+//				container, false);
+//
+//		// Necessary to set the menu visible for fragment
+//		setHasOptionsMenu(true);
+//
+//		if (null != getArguments()) {
+//			TextView dummyTextView = (TextView) rootView
+//					.findViewById(R.id.section_label);
+//			dummyTextView.setText(Integer.toString(getArguments().getInt(
+//					ARG_SECTION_NUMBER)));
+//		}
+//		return rootView;
+//	}
+	
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		// TODO Auto-generated method stub
+		super.onCreate(savedInstanceState);
+	}
+
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -32,13 +57,7 @@ public class TaskListFragment extends Fragment {
 
 		// Necessary to set the menu visible for fragment
 		setHasOptionsMenu(true);
-
-		if (null != getArguments()) {
-			TextView dummyTextView = (TextView) rootView
-					.findViewById(R.id.section_label);
-			dummyTextView.setText(Integer.toString(getArguments().getInt(
-					ARG_SECTION_NUMBER)));
-		}
+		
 		return rootView;
 	}
 
