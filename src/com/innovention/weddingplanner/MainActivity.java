@@ -32,7 +32,7 @@ import com.innovention.weddingplanner.dao.DatabaseHelper;
 import com.innovention.weddingplanner.dao.GuestsDao;
 import com.innovention.weddingplanner.dao.WeddingInfoDao;
 import com.innovention.weddingplanner.dao.DaoLocator.SERVICES;
-import com.innovention.weddingplanner.utils.WeddingPlannerHelper;
+import static com.innovention.weddingplanner.utils.WeddingPlannerHelper.*;
 
 public class MainActivity extends Activity {
 	
@@ -64,7 +64,7 @@ public class MainActivity extends Activity {
 		// Enregistre la police du texte en bas
 		// TODO : voir si on peut pas faire la m�me chose par les styles
 		days2WeddingTxt = (TextView) findViewById(R.id.days2WeddingText);
-		Typeface font = WeddingPlannerHelper.getFont(this, FONT_CURVED);
+		Typeface font = getFont(this, FONT_CURVED);
 		days2WeddingTxt.setTypeface(font);
 		
 		// Init services and DAO
@@ -121,12 +121,6 @@ public class MainActivity extends Activity {
 		
 		Log.d(TAG, "showDatePickerDialog - " + "show date picker fragment");
 		
-		FragmentTransaction ft = getFragmentManager().beginTransaction();
-		Fragment prev = getFragmentManager().findFragmentByTag(FragmentTags.TAG_FGT_DATEPICKER.getValue());
-		if (prev != null)
-			ft.remove(prev);
-		ft.addToBackStack(null);
-		
 		DialogFragment datePicker = new DatePickerFragment();
 		WeddingInfo info = null;
 		WeddingInfoDao infoDao = (WeddingInfoDao) DaoLocator.getInstance(getApplication()).get(SERVICES.INFO);
@@ -137,9 +131,10 @@ public class MainActivity extends Activity {
 			parameters.putInt(KEY_DTPICKER_M, info.getWeddingDate().monthOfYear().get());
 			parameters.putInt(KEY_DTPICKER_D, info.getWeddingDate().dayOfMonth().get());
 			datePicker.setArguments(parameters);
-		}
-		datePicker.show(ft, FragmentTags.TAG_FGT_DATEPICKER.getValue());
+			}
+		showFragmentDialog(this, datePicker, FragmentTags.TAG_FGT_DATEPICKER);
 	}
+		
 	
 	/**
 	 * Display guest activity on button click
@@ -176,7 +171,7 @@ public class MainActivity extends Activity {
 		WeddingInfoDao infoDao = (WeddingInfoDao) DaoLocator.getInstance(getApplication()).get(SERVICES.INFO);
 		if ((info = (WeddingInfo) infoDao.get()) != null) {
 			Log.d(TAG, "Date get from db " + info.getWeddingDate());
-			updateGUIWeddingDate(WeddingPlannerHelper.computeDate(info
+			updateGUIWeddingDate(computeDate(info
 					.getWeddingDate().year().get(), info.getWeddingDate()
 					.monthOfYear().get(), info.getWeddingDate().dayOfMonth()
 					.get()));
@@ -207,7 +202,7 @@ public class MainActivity extends Activity {
 			infoDao.update(info.getId(), new WeddingInfo(year, monthOfYear,
 					dayOfMonth));
 		}
-		updateGUIWeddingDate(WeddingPlannerHelper.computeDate(year,
+		updateGUIWeddingDate(computeDate(year,
 				monthOfYear, dayOfMonth));
 
 	}

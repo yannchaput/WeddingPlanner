@@ -30,6 +30,44 @@
 
                 <requestFocus />
             </EditText>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" >
+                
+                <TextView
+                        android:id="@+id/taskSectionDates"
+                        style="?android:attr/listSeparatorTextViewStyle"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentTop="true"
+                        android:text="@string/task_label_dates" />
+
+                <TextView
+                    android:id="@+id/taskLabelEcheance"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignLeft="@id/taskSectionDates"
+                    android:layout_below="@id/taskSectionDates"
+                    android:layout_marginLeft="@dimen/task_form_field_left_margin"
+                    android:layout_marginTop="@dimen/task_form_field_top_margin"
+                    android:text="@string/task_label_echeance"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+
+                <EditText
+                    android:id="@+id/taskDateEcheance"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/taskSectionDates"
+                    android:layout_toRightOf="@+id/taskLabelEcheance"
+                    android:ems="10"
+                    android:hint="@string/task_hint_field_echeance"
+                    android:inputType="date" 
+                    android:focusable="false"/>
+
+            </RelativeLayout>
+
         </LinearLayout>
 
     </ScrollView>

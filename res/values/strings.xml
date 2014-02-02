@@ -36,8 +36,13 @@
     <string name="contact_item_absent">Absent</string>
     <string name="contact_button_validate">Valider</string>
     <!-- Task form -->
-     <string name="task_field_description">Contenu de la tâche</string>
-     <string name="task_button_validate">Valider</string>
+    <string name="task_field_description">Contenu de la tâche</string>
+    <string name="task_label_dates">Echeance \u0026 rappels</string>
+    <string name="task_label_echeance">Echeance le</string>
+    <string name="task_hint_field_echeance">Entrez la date</string>
+    <string name="task_button_validate">Valider</string>
+    
+    <!-- Autres -->
     <string name="alert_dialog_validate">OK</string>
     <string name="contact_alert_dialog_title">Informations manquantes</string>
     <string name="email_validator_message">Format incorrect de l\'e-mail</string>
