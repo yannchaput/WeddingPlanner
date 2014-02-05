@@ -63,14 +63,12 @@ public class TasksDao implements IDao<Task> {
 
 	@Override
 	public Task get() {
-		// TODO Auto-generated method stub
-		return null;
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
 	public Task get(long id) {
-		// TODO Auto-generated method stub
-		return null;
+		throw new UnsupportedOperationException();
 	}
 
 	/**
@@ -84,8 +82,7 @@ public class TasksDao implements IDao<Task> {
 
 	@Override
 	public List<Task> getList() {
-		// TODO Auto-generated method stub
-		return null;
+		throw new UnsupportedOperationException();
 	}
 
 }

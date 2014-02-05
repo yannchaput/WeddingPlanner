@@ -18,6 +18,7 @@ import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
 import android.graphics.Typeface;
+import android.support.v4.app.FragmentTabHost;
 import android.util.Patterns;
 import android.view.View;
 
@@ -122,8 +123,8 @@ public class WeddingPlannerHelper {
 	 * Replace the layout of the activity with the fragment specified
 	 * @param tag tag of the fragment to display
 	 */
-	public static void replaceFragment(Activity context, FragmentTags tag, final IDtoBean... params) {
-		FragmentTransaction tx = context.getFragmentManager().beginTransaction();
+	public static void replaceFragment(Activity parent, FragmentTags tag, final IDtoBean... params) {
+		FragmentTransaction tx = parent.getFragmentManager().beginTransaction();
 		Fragment fgt = null;
 		int resId;
 		
@@ -158,4 +159,17 @@ public class WeddingPlannerHelper {
 		tx.addToBackStack(tag.getValue());
 		tx.commit();
 	}
+	
+	/**
+	 * Shows a dialog
+	 * @param parent parent activity
+	 * @param dialog dialog window
+	 * @param tag tag of the fragment to display
+	 */
+	public static void showFragmentDialog(Activity parent, DialogFragment dialog, FragmentTags tag) {
+		FragmentTransaction ft = parent.getFragmentManager().beginTransaction();
+		ft.addToBackStack(tag.getValue());
+		dialog.show(ft, tag.getValue());
+	}
+	
 }
