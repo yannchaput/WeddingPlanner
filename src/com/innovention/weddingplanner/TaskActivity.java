@@ -1,11 +1,17 @@
 package com.innovention.weddingplanner;
 
 import static com.innovention.weddingplanner.utils.WeddingPlannerHelper.*;
+
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+
 import com.innovention.weddingplanner.Constantes.FragmentTags;
 import com.innovention.weddingplanner.bean.Task;
 import com.innovention.weddingplanner.dao.DaoLocator;
 import com.innovention.weddingplanner.dao.TasksDao;
 import com.innovention.weddingplanner.dao.DaoLocator.SERVICES;
+import com.innovention.weddingplanner.exception.MissingMandatoryFieldException;
+import com.innovention.weddingplanner.utils.WeddingPlannerHelper;
 
 import android.annotation.TargetApi;
 import android.app.ActionBar;
@@ -23,13 +29,15 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 public class TaskActivity extends Activity implements
 		ActionBar.OnNavigationListener {
-	
+
 	private static final String TAG = TaskActivity.class.getSimpleName();
 
 	/**
@@ -91,12 +99,12 @@ public class TaskActivity extends Activity implements
 				.getSelectedNavigationIndex());
 	}
 
-//	@Override
-//	public boolean onCreateOptionsMenu(Menu menu) {
-//		// Inflate the menu; this adds items to the action bar if it is present.
-//		getMenuInflater().inflate(R.menu.task, menu);
-//		return true;
-//	}
+	// @Override
+	// public boolean onCreateOptionsMenu(Menu menu) {
+	// // Inflate the menu; this adds items to the action bar if it is present.
+	// getMenuInflater().inflate(R.menu.task, menu);
+	// return true;
+	// }
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
@@ -114,7 +122,7 @@ public class TaskActivity extends Activity implements
 		case R.id.action_add_task:
 			replaceFragment(this, FragmentTags.TAG_FGT_CREATETASK);
 			return true;
-		default:	
+		default:
 		}
 		return super.onOptionsItemSelected(item);
 	}
@@ -131,20 +139,50 @@ public class TaskActivity extends Activity implements
 				.replace(R.id.layoutTask, fragment).commit();
 		return true;
 	}
-	
+
 	/**
 	 * Triggered on "Validate" button click
-	 * @param v the originating view
+	 * 
+	 * @param v
+	 *            the originating view
 	 */
-	public void saveTask(final View v) {
-		Log.d(TAG, "saveTask - click on button");
-		String description = ((EditText) findViewById(R.id.taskEditDescription)).getText().toString();
+	public void validateTask(final View v) {
+		Log.d(TAG, "validateTask - click on validate task button");
+
+		// Hide virtual keyboard if opened
+		InputMethodManager inputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+		inputManager.hideSoftInputFromWindow(
+				getCurrentFocus().getWindowToken(),
+				InputMethodManager.HIDE_NOT_ALWAYS);
+
+		// Retrieve field content
+		String description = ((EditText) findViewById(R.id.taskEditDescription))
+				.getText().toString();
+		String dueDateTxt = ((EditText) findViewById(R.id.taskEditDateEcheance)).getText().toString();
+		String remindDateTxt = (String) ((Spinner) findViewById(R.id.taskSpinnerRemindDate)).getSelectedItem();
 		
-		// Build task bean
-		Task task = new Task.Builder().withDesc(description).build();
-		Log.v(TAG, "saveTask - build task bean: " + task);
-		TasksDao dao = (TasksDao) DaoLocator.getInstance(getApplication()).get(SERVICES.TASK);
-		dao.insert(task);
-		replaceFragment(this, FragmentTags.TAG_FGT_TASKLIST);
+		DateTime dueDate = DateTimeFormat.shortDate().parseDateTime(dueDateTxt);
+		
+		//TODO Remplacer le string array par un enum avec les valeurs correspondantes sous forme de Duration
+		// Rajouter méthode de calcul de l'échéance
+		
+		try {
+			// Build task bean
+			Task task = new Task.Builder().withDesc(description)
+					.dueDate(dueDate)
+					.build();
+			// Validate task
+			task.validate();
+			Log.v(TAG, "saveTask - build task bean: " + task);
+			TasksDao dao = (TasksDao) DaoLocator.getInstance(getApplication())
+					.get(SERVICES.TASK);
+			dao.insert(task);
+			replaceFragment(this, FragmentTags.TAG_FGT_TASKLIST);
+		} catch (MissingMandatoryFieldException e) {
+			showAlert(R.string.task_alert_dialog_title,
+					R.string.task_mandatory_validator_message,
+					getFragmentManager());
+		}
+
 	}
 }

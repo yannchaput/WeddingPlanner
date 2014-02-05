@@ -130,7 +130,7 @@ public class ContactFragment extends Fragment {
 						.onValidateContact(bean, ContactFragment.this.getTag());
 			} catch (MissingMandatoryFieldException e) {
 				showAlert(R.string.contact_alert_dialog_title,
-						R.string.mandatory_validator_message,
+						R.string.contact_mandatory_validator_message,
 						getFragmentManager());
 			} catch (IncorrectMailException e) {
 				showAlert(R.string.contact_alert_dialog_title,

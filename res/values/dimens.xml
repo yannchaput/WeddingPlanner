@@ -6,12 +6,14 @@
     <!--  font -->
     <dimen name="days_2_wedding_font_size">26sp</dimen>
     <dimen name="contact_list_item_font_size">28sp</dimen>
-    <!-- margins & paddings -->
+    <!-- contacts -->
 	<dimen name="contact_checkbox_space">66dp</dimen>
 	<dimen name="contact_list_item_padding">5dp</dimen>
 	<dimen name="contact_list_item_icon_size">34dp</dimen>
 	<dimen name="task_list_item_padding">5dp</dimen>
 	<!--  tasks -->
 	<dimen name="task_form_field_left_margin">5dp</dimen>
-	<dimen name="task_form_field_top_margin">15dp</dimen>
+	<dimen name="task_form_field_top_margin">10dp</dimen>
+	<dimen name="task_form_field_inbetween">20dp</dimen>
+	<dimen name="task_form_section_gap">20dp</dimen>
 </resources>

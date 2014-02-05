@@ -40,9 +40,11 @@ public interface ConstantesDAO {
 	// Columns tasks table
 	String COL_TASK_DESC = "description";
 	byte NUM_COL_TASK_DESC = NUM_COL_ID + 1; 
+	String COL_TASK_DUEDATE = "dueDate";
+	byte NUM_COL_TASK_DUEDATE = NUM_COL_TASK_DESC + 1;
 	
 	// General
-	int VERSION_BDD = 3;
+	int VERSION_BDD = 4;
 	String NOM_BDD = "wedplanner.db";
 	
 	String CREATE_WEDDINGINFO_TABLE= new StringBuilder()
@@ -94,7 +96,9 @@ public interface ConstantesDAO {
 	.append(COL_ID)
 	.append(" INTEGER PRIMARY KEY AUTOINCREMENT, ")
 	.append(COL_TASK_DESC)
-	.append(" TEXT NOT NULL ")
+	.append(" TEXT NOT NULL, ")
+	.append(COL_TASK_DUEDATE)
+	.append(" TEXT")
 	.append(");")
 	.toString();
 	

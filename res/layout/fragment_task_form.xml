@@ -25,7 +25,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:ems="10"
-                android:hint="@string/task_field_description"
+                android:hint="@string/task_hint_field_description"
                 android:inputType="textMultiLine" >
 
                 <requestFocus />
@@ -33,7 +33,8 @@
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" >
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/task_form_section_gap" >
                 
                 <TextView
                         android:id="@+id/taskSectionDates"
@@ -56,15 +57,37 @@
                     android:textAppearance="?android:attr/textAppearanceMedium" />
 
                 <EditText
-                    android:id="@+id/taskDateEcheance"
-                    android:layout_width="wrap_content"
+                    android:id="@+id/taskEditDateEcheance"
+                    android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/taskSectionDates"
+                    android:layout_marginLeft="@dimen/task_form_field_inbetween"
                     android:layout_toRightOf="@+id/taskLabelEcheance"
                     android:ems="10"
+                    android:focusable="false"
                     android:hint="@string/task_hint_field_echeance"
-                    android:inputType="date" 
-                    android:focusable="false"/>
+                    android:inputType="date" />
+
+                <TextView
+                    android:id="@+id/taskLabelRemindDate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignLeft="@id/taskLabelEcheance"
+                    android:layout_below="@id/taskLabelEcheance"
+                    android:layout_marginTop="@dimen/task_form_field_top_margin"
+                    android:text="@string/task_label_remind_date"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+
+                <Spinner
+                    android:id="@+id/taskSpinnerRemindDate"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignLeft="@id/taskEditDateEcheance"
+                    android:layout_alignTop="@+id/taskLabelRemindDate"
+                    android:layout_centerHorizontal="true"
+                    android:spinnerMode="dialog"
+                    android:prompt="@string/task_spinner_prompt"
+                    android:entries="@array/task_spinner_entries" />
 
             </RelativeLayout>
 
@@ -81,7 +104,7 @@
             android:id="@+id/taskButtonSave"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:onClick="saveTask"
+            android:onClick="validateTask"
             android:text="@string/contact_button_validate" />
     </LinearLayout>
 
