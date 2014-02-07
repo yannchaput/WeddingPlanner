@@ -6,11 +6,30 @@
 
     <CheckBox
         android:id="@+id/checkboxTaskList"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_weight="1"
         android:layout_marginLeft="@dimen/task_list_item_padding"
         android:text="@string/placeholder"
         android:textColor="@color/selector_task"
         android:textAppearance="?android:attr/textAppearanceMedium" />
+    
+    <ImageView
+        android:id="@+id/iconAlarmTaskList"
+        android:layout_width="@dimen/task_list_icon_size"
+        android:layout_height="@dimen/task_list_icon_size"
+        android:layout_gravity="bottom"
+        android:contentDescription="@string/empty"
+        android:src="@drawable/ic_alarm_icon" >
+
+    </ImageView>
+
+    <TextView
+        android:id="@+id/textReminderTaskList"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:text="@string/empty"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
 
 </LinearLayout>

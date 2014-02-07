@@ -3,6 +3,7 @@ package com.innovention.weddingplanner;
 import static com.innovention.weddingplanner.utils.WeddingPlannerHelper.*;
 
 import org.joda.time.DateTime;
+import org.joda.time.DateTimeConstants;
 import org.joda.time.format.DateTimeFormat;
 
 import com.innovention.weddingplanner.Constantes.FragmentTags;
@@ -160,16 +161,18 @@ public class TaskActivity extends Activity implements
 				.getText().toString();
 		String dueDateTxt = ((EditText) findViewById(R.id.taskEditDateEcheance)).getText().toString();
 		String remindDateTxt = (String) ((Spinner) findViewById(R.id.taskSpinnerRemindDate)).getSelectedItem();
-		
-		DateTime dueDate = DateTimeFormat.shortDate().parseDateTime(dueDateTxt);
-		
-		//TODO Remplacer le string array par un enum avec les valeurs correspondantes sous forme de Duration
-		// Rajouter méthode de calcul de l'échéance
+		DateTime dueDate = null;
+		DateTime remindDate = null;
 		
 		try {
+			if (!dueDateTxt.isEmpty()) {
+				dueDate = DateTimeFormat.shortDate().parseDateTime(dueDateTxt);
+				remindDate = calculateReminder(dueDate, remindDateTxt);
+			}
 			// Build task bean
 			Task task = new Task.Builder().withDesc(description)
 					.dueDate(dueDate)
+					.remind(remindDate)
 					.build();
 			// Validate task
 			task.validate();
@@ -184,5 +187,66 @@ public class TaskActivity extends Activity implements
 					getFragmentManager());
 		}
 
+	}
+	
+	/**
+	 * Calculate reminder date from due date
+	 * @param dueDate
+	 * @param option
+	 * @return reminder date
+	 */
+	private DateTime calculateReminder(DateTime dueDate, String option) {
+
+		DateTime remindDate = dueDate;
+		
+		// Hard set time to midday
+		remindDate = remindDate.withHourOfDay(12);
+
+		// Default case
+		if ((null == remindDate) || (option.equals(getResources().getString(R.string.task_spinner_item1)))) {
+			remindDate = null;
+		}
+		// 1 month
+		else if (option
+				.equals(getResources().getString(R.string.task_spinner_item2))) {
+			remindDate = remindDate.minusMonths(1);
+		}
+		// 2 weeks
+		else if (option.equals(getResources().getString(
+				R.string.task_spinner_item3))) {
+			remindDate = remindDate.minusWeeks(2);
+		}
+		// 1 week
+		else if (option.equals(getResources().getString(
+				R.string.task_spinner_item4))) {
+			remindDate = remindDate.minusWeeks(1);
+		}
+		// 3 days
+		else if (option.equals(getResources().getString(
+				R.string.task_spinner_item5))) {
+			remindDate = remindDate.minusDays(3);
+		}
+		// 1 day
+		else if (option.equals(getResources().getString(
+				R.string.task_spinner_item6))) {
+			remindDate = remindDate.minusDays(1);
+		}
+		// 6 hours
+		else if (option.equals(getResources().getString(
+				R.string.task_spinner_item7))) {
+			remindDate = remindDate.minusHours(6);
+		}
+		// 2 hours
+		else if (option.equals(getResources().getString(
+				R.string.task_spinner_item8))) {
+			remindDate = remindDate.minusHours(2);
+		}
+		// 1 hour
+		else if (option.equals(getResources().getString(
+				R.string.task_spinner_item9))) {
+			remindDate = remindDate.minusHours(1);
+		}
+
+		return remindDate;
 	}
 }

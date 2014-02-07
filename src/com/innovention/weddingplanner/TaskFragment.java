@@ -161,7 +161,7 @@ public class TaskFragment extends Fragment implements OnDateSetListener {
 	public void onDateSet(DatePicker view, int year, int monthOfYear,
 			int dayOfMonth) {
 		DateTime setDate = new DateTime().withDayOfMonth(dayOfMonth)
-				.withMonthOfYear(monthOfYear).withYear(monthOfYear);
+				.withMonthOfYear(monthOfYear).withYear(year);
 		dueDateTxt.setText(DateTimeFormat.shortDate().print(setDate));
 	}
 

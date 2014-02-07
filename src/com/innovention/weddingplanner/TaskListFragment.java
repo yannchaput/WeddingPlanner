@@ -1,12 +1,21 @@
 package com.innovention.weddingplanner;
 
 import static com.innovention.weddingplanner.dao.ConstantesDAO.COL_TASK_DESC;
+import static com.innovention.weddingplanner.dao.ConstantesDAO.COL_TASK_DUEDATE;
+import static com.innovention.weddingplanner.dao.ConstantesDAO.COL_TASK_REMINDDATE;
 import static com.innovention.weddingplanner.dao.ConstantesDAO.NUM_COL_TASK_DESC;
+import static com.innovention.weddingplanner.dao.ConstantesDAO.NUM_COL_TASK_DUEDATE;
+import static com.innovention.weddingplanner.dao.ConstantesDAO.NUM_COL_TASK_REMINDDATE;
+
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+
 import android.app.Fragment;
 import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Paint;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -16,6 +25,7 @@ import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
@@ -27,6 +37,8 @@ import com.innovention.weddingplanner.utils.WeddingPlannerHelper;
 
 public class TaskListFragment extends Fragment {
 
+	
+	private static final String TAG = TaskListFragment.class.getSimpleName();
 	/**
 	 * The fragment argument representing the section number for this fragment.
 	 */
@@ -55,6 +67,8 @@ public class TaskListFragment extends Fragment {
 		
 		private class ViewHolder {
 			private CheckBox check;
+			private ImageView alarmIcon;
+			private TextView remindDateTxt;
 		}
 
 		public TaskCursorAdapter(Context context, int layout, Cursor c,
@@ -89,6 +103,8 @@ public class TaskListFragment extends Fragment {
 						buttonView.setText(buttonView.getText());		
 					}
 				});
+				holder.alarmIcon = (ImageView) row.findViewById(R.id.iconAlarmTaskList);
+				holder.remindDateTxt = (TextView) row.findViewById(R.id.textReminderTaskList);
 				row.setTag(holder);
 			}
 			
@@ -97,7 +113,36 @@ public class TaskListFragment extends Fragment {
 			c.moveToPosition(position);
 			
 			CheckBox check = holder.check;
+			ImageView icon = holder.alarmIcon;
+			TextView dateTxt = holder.remindDateTxt;
+			String remindDate = c.getString(NUM_COL_TASK_REMINDDATE);
+			
 			check.setText(c.getString(NUM_COL_TASK_DESC));
+			
+			// Set visibility of reminder
+			if (null != remindDate && !remindDate.isEmpty()) {
+				icon.setVisibility(View.VISIBLE);
+				dateTxt.setVisibility(View.VISIBLE);
+				DateTime parsedDate = DateTime.parse(remindDate);
+				dateTxt.setText(DateTimeFormat.mediumDate().print(parsedDate));
+			}
+			else{
+				icon.setVisibility(View.GONE);
+				dateTxt.setVisibility(View.GONE);
+			}
+			
+			// Set color according to expiration date
+			String expiryTxt = c.getString(NUM_COL_TASK_DUEDATE);
+			if (null != expiryTxt && !expiryTxt.isEmpty()) {
+				DateTime today = DateTime.now();
+				DateTime expiry = DateTime.parse(expiryTxt);
+				
+				if (expiry.compareTo(today) < 0) {
+					int color = getResources().getColor(R.color.Red);
+					check.setTextColor(color);
+					dateTxt.setTextColor(color);
+				}
+			}
 			
 			return row;
 		}
@@ -125,7 +170,7 @@ public class TaskListFragment extends Fragment {
 		getActivity().startManagingCursor(c);
 		// TODO Use a CursorLoader
 		mAdapter = new TaskCursorAdapter(getActivity(),
-				R.layout.fragment_contact_adapter, c,
+				R.layout.fragment_task_adapter, c,
 				new String[] { COL_TASK_DESC },
 				new int[] { R.id.checkboxTaskList }, 1);
 	}

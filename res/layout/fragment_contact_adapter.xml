@@ -9,8 +9,8 @@
         android:id="@+id/itemGuestIcon"
         android:layout_width="@dimen/contact_list_item_icon_size"
         android:layout_height="@dimen/contact_list_item_icon_size"
-        android:layout_marginLeft="@dimen/contact_list_item_padding"
-        android:layout_marginRight="@dimen/contact_list_item_padding"
+        android:layout_marginLeft="@dimen/contact_list_item_margin"
+        android:layout_marginRight="@dimen/contact_list_item_margin"
         android:src="@drawable/ic_action_good" 
         android:contentDescription="@string/empty">
     </ImageView>

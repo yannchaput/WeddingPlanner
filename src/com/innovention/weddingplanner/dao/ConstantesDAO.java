@@ -40,8 +40,10 @@ public interface ConstantesDAO {
 	// Columns tasks table
 	String COL_TASK_DESC = "description";
 	byte NUM_COL_TASK_DESC = NUM_COL_ID + 1; 
-	String COL_TASK_DUEDATE = "dueDate";
+	String COL_TASK_DUEDATE = "duedate";
 	byte NUM_COL_TASK_DUEDATE = NUM_COL_TASK_DESC + 1;
+	String COL_TASK_REMINDDATE = "reminddate";
+	byte NUM_COL_TASK_REMINDDATE = NUM_COL_TASK_DUEDATE + 1;
 	
 	// General
 	int VERSION_BDD = 4;
@@ -98,7 +100,9 @@ public interface ConstantesDAO {
 	.append(COL_TASK_DESC)
 	.append(" TEXT NOT NULL, ")
 	.append(COL_TASK_DUEDATE)
-	.append(" TEXT")
+	.append(" TEXT, ")
+	.append(COL_TASK_REMINDDATE)
+	.append(" TEXT ")
 	.append(");")
 	.toString();
 	

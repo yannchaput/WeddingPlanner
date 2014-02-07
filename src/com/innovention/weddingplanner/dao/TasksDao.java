@@ -32,7 +32,8 @@ public class TasksDao implements IDao<Task> {
 		Log.d(TAG, "insert - " + bean.toString());
 		ContentValues values = new ContentValues();
 		values.put(COL_TASK_DESC, bean.getDescription());
-		values.put(COL_TASK_DUEDATE, bean.getDueDate().toString());
+		if (null != bean.getDueDate()) values.put(COL_TASK_DUEDATE, bean.getDueDate().toString());
+		if (null != bean.getRemindDate()) values.put(COL_TASK_REMINDDATE, bean.getRemindDate().toString());
 		return db.insert(TABLE_TASKS, null, values);
 	}
 
@@ -47,7 +48,8 @@ public class TasksDao implements IDao<Task> {
 		Log.d(TAG, "update - " + "Update table with id " + id + " and bean " + bean.toString());
 		ContentValues values = new ContentValues();
 		values.put(COL_TASK_DESC, bean.getDescription());
-		values.put(COL_TASK_DUEDATE, bean.getDueDate().toString());
+		if (null != bean.getDueDate()) values.put(COL_TASK_DUEDATE, bean.getDueDate().toString());
+		if (null != bean.getRemindDate()) values.put(COL_TASK_REMINDDATE, bean.getRemindDate().toString());
 		int result = db.update(TABLE_TASKS, values, COL_ID + "=?", new String[] {String.valueOf(id)});
 		Log.d(TAG, "" + result + "rows affected");
 		return result;
@@ -78,8 +80,9 @@ public class TasksDao implements IDao<Task> {
 	 */
 	@Override
 	public Cursor getCursor() {
-		return db.query(TABLE_TASKS, new String[] {COL_ID, COL_TASK_DESC, COL_TASK_DUEDATE}
-		, null, null, null, null, null);
+		return db.query(TABLE_TASKS, new String[] { COL_ID, COL_TASK_DESC,
+				COL_TASK_DUEDATE, COL_TASK_REMINDDATE }, null, null, null,
+				null, null);
 	}
 
 	@Override
