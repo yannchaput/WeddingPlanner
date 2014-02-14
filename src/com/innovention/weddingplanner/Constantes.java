@@ -17,6 +17,8 @@ public interface Constantes {
 		TAG_FGT_MAINDATEPICKER("mainDatePickerDlgFgt"),
 		TAG_FGT_TASKDATEPICKER("taskDatePickerDlgFgt"),
 		TAG_FGT_CREATETASK("createTaskFgt"),
+		TAG_FGT_UPDATETASK("updateTaskFgt"),
+		TAG_FGT_DELETETASK("deleteTaskFgt"),
 		TAG_FGT_TASKLIST("taskListFgt");
 		
 		private final String tag;

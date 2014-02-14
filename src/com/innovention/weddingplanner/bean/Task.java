@@ -14,9 +14,11 @@ public class Task implements IDtoBean {
 	private final static String TAG = Task.class.getSimpleName();
 
 	private int id;
+	private Boolean active = Boolean.TRUE;
 	private String description;
 	private DateTime dueDate;
 	private DateTime remindDate;
+	private String remindChoice;
 	
 	/**
 	 * Builder class for Task bean
@@ -26,9 +28,11 @@ public class Task implements IDtoBean {
 	public static class Builder {
 		
 		private int id;
+		private Boolean active = Boolean.TRUE;
 		private String description;
 		private DateTime dueDate;
 		private DateTime remindDate;
+		private String remindChoice;
 		
 		public Builder() {
 			
@@ -37,6 +41,12 @@ public class Task implements IDtoBean {
 		public Builder withId(final int id) {
 			checkArgument(id > 0, "Id should be greater than 0");
 			this.id = id;
+			return this;
+		}
+		
+		public Builder setActive(final Boolean statut) {
+			checkNotNull(statut, "Statut of the task can not be null");
+			this.active = statut;
 			return this;
 		}
 		
@@ -55,6 +65,11 @@ public class Task implements IDtoBean {
 			return this;
 		}
 		
+		public Builder remindOption(String option) {
+			this.remindChoice = option;
+			return this;
+		}
+		
 		public Task build() {
 			return new Task(this);
 		}
@@ -65,9 +80,11 @@ public class Task implements IDtoBean {
 	
 	private Task(final Builder builder) {
 		this.id = builder.id;
+		this.active = builder.active;
 		this.description = builder.description;
 		this.dueDate = builder.dueDate;
 		this.remindDate = builder.remindDate;
+		this.remindChoice = builder.remindChoice;
 	}
 
 	@Override
@@ -100,6 +117,8 @@ public class Task implements IDtoBean {
 				.add("description", getDescription())
 				.add("dueDate", getDueDate())
 				.add("remindDate", getRemindDate())
+				.add("reminder option", getRemindChoice())
+				.add("active", getActive())
 				.toString();
 	}
 
@@ -117,6 +136,22 @@ public class Task implements IDtoBean {
 
 	public void setRemindDate(DateTime remindDate) {
 		this.remindDate = remindDate;
+	}
+
+	public Boolean getActive() {
+		return active;
+	}
+
+	public void setActive(Boolean active) {
+		this.active = active;
+	}
+
+	public String getRemindChoice() {
+		return remindChoice;
+	}
+
+	public void setRemindChoice(String remindChoice) {
+		this.remindChoice = remindChoice;
 	}
 
 }

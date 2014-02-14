@@ -6,8 +6,12 @@ import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.DateTimeFormatterBuilder;
 
 import com.innovention.weddingplanner.Constantes.FragmentTags;
+import com.innovention.weddingplanner.ContactFragment.OnValidateContactListener;
+import com.innovention.weddingplanner.bean.IDtoBean;
+import com.innovention.weddingplanner.bean.Task;
 import com.innovention.weddingplanner.utils.WeddingPlannerHelper;
 
+import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.DatePickerDialog.OnDateSetListener;
 import android.app.Dialog;
@@ -24,6 +28,7 @@ import android.webkit.WebView.FindListener;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.Spinner;
 
 /**
  * Task fragment
@@ -34,8 +39,26 @@ import android.widget.EditText;
 public class TaskFragment extends Fragment implements OnDateSetListener {
 
 	private static final String TAG = TaskFragment.class.getSimpleName();
+	
+	// Edit mode
+	private FragmentTags mode = FragmentTags.TAG_FGT_CREATETASK;
+	// Parameter bean
+	private Task bean;
 
+	// Description field
+	private EditText descriptionTxt;
+	// Due date field
 	private EditText dueDateTxt;
+	// Reminder field
+	private Spinner remindTxt;
+	// Validate button
+	private Button validateBtn;
+	// listener on validate button
+	private OnValidateTask mListener;
+	
+	interface OnValidateTask {
+		void onValidateTask(View v, FragmentTags tag);  
+	}
 
 	/**
 	 * Internal date picker dialog for task purpose
@@ -107,6 +130,20 @@ public class TaskFragment extends Fragment implements OnDateSetListener {
 	 */
 	public static TaskFragment newInstance() {
 		TaskFragment fgt = new TaskFragment();
+		fgt.mode = FragmentTags.TAG_FGT_CREATETASK;
+		return fgt;
+	}
+	
+	/**
+	 * Factory method with parameters
+	 * @param action
+	 * @param bean
+	 * @return
+	 */
+	public static TaskFragment newInstance(FragmentTags action, final Task bean) {
+		TaskFragment fgt = newInstance();
+		fgt.mode = action;
+		fgt.bean = bean;
 		return fgt;
 	}
 
@@ -122,7 +159,22 @@ public class TaskFragment extends Fragment implements OnDateSetListener {
 		// Inflate the layout for this fragment
 		View view = inflater.inflate(R.layout.fragment_task_form, container,
 				false);
+		
+		validateBtn = (Button) view.findViewById(R.id.taskButtonSave);
 		dueDateTxt = (EditText) view.findViewById(R.id.taskEditDateEcheance);
+		descriptionTxt = (EditText) view.findViewById(R.id.taskEditDescription);
+		remindTxt = (Spinner) view.findViewById(R.id.taskSpinnerRemindDate);
+		
+		validateBtn.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				if (mListener != null) {
+					mListener.onValidateTask(v, FragmentTags.TAG_FGT_CREATETASK);
+				}
+				
+			}
+		});
 		dueDateTxt.setOnClickListener(new View.OnClickListener() {
 
 			@Override
@@ -131,6 +183,12 @@ public class TaskFragment extends Fragment implements OnDateSetListener {
 
 			}
 		});
+		
+		if (mode.equals(FragmentTags.TAG_FGT_UPDATETASK) && null != bean) {
+			descriptionTxt.setText(bean.getDescription());
+			dueDateTxt.setText(DateTimeFormat.shortDate().print(bean.getDueDate()));
+		}
+		
 		return view;
 	}
 
@@ -163,6 +221,24 @@ public class TaskFragment extends Fragment implements OnDateSetListener {
 		DateTime setDate = new DateTime().withDayOfMonth(dayOfMonth)
 				.withMonthOfYear(monthOfYear).withYear(year);
 		dueDateTxt.setText(DateTimeFormat.shortDate().print(setDate));
+	}
+
+	@Override
+	public void onAttach(Activity activity) {
+		super.onAttach(activity);
+		try {
+			mListener = (OnValidateTask) activity;
+		} catch (ClassCastException e) {
+			throw new ClassCastException(activity.toString()
+					+ " must implement OnFragmentInteractionListener");
+		}
+	}
+
+	@Override
+	public void onDetach() {
+		super.onDetach();
+		mListener = null;
+		dueDateTxt = null;
 	}
 
 }

@@ -3,6 +3,7 @@ package com.innovention.weddingplanner;
 import static com.innovention.weddingplanner.dao.ConstantesDAO.COL_TASK_DESC;
 import static com.innovention.weddingplanner.dao.ConstantesDAO.COL_TASK_DUEDATE;
 import static com.innovention.weddingplanner.dao.ConstantesDAO.COL_TASK_REMINDDATE;
+import static com.innovention.weddingplanner.dao.ConstantesDAO.NUM_COL_TASK_STATUS;
 import static com.innovention.weddingplanner.dao.ConstantesDAO.NUM_COL_TASK_DESC;
 import static com.innovention.weddingplanner.dao.ConstantesDAO.NUM_COL_TASK_DUEDATE;
 import static com.innovention.weddingplanner.dao.ConstantesDAO.NUM_COL_TASK_REMINDDATE;
@@ -10,15 +11,18 @@ import static com.innovention.weddingplanner.dao.ConstantesDAO.NUM_COL_TASK_REMI
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Paint;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.ActionMode;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
@@ -27,15 +31,18 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.ListAdapter;
+import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 
+import com.innovention.weddingplanner.Constantes.FragmentTags;
 import com.innovention.weddingplanner.dao.DaoLocator;
+import com.innovention.weddingplanner.dao.DatabaseHelper;
 import com.innovention.weddingplanner.dao.DaoLocator.SERVICES;
 import com.innovention.weddingplanner.dao.TasksDao;
 import com.innovention.weddingplanner.utils.WeddingPlannerHelper;
 
-public class TaskListFragment extends Fragment {
+public class TaskListFragment extends Fragment implements AbsListView.OnItemLongClickListener {
 
 	
 	private static final String TAG = TaskListFragment.class.getSimpleName();
@@ -48,11 +55,71 @@ public class TaskListFragment extends Fragment {
 	 * The list adapter
 	 */
 	private TaskCursorAdapter mAdapter;
+	
+	private OnTaskSelectedListener mListener = null;
 
 	/**
 	 * The fragment's ListView/GridView.
 	 */
 	private AbsListView mListView;
+	
+	// Contextual action mode in activity
+	private ActionMode mActionMode = null;
+
+	// Action mode callback handler
+	private ActionMode.Callback mActionModeCallback = new ActionMode.Callback() {
+
+		@Override
+		public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+			// TODO Auto-generated method stub
+			return false;
+		}
+
+		@Override
+		public void onDestroyActionMode(ActionMode mode) {
+			mActionMode = null;
+		}
+
+		@Override
+		public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+			MenuInflater inflater = mode.getMenuInflater();
+			inflater.inflate(R.menu.task_context_menu, menu);
+			return true;
+		}
+
+		@Override
+		public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+
+			long id = mAdapter.currentSelectionId;
+			
+			switch (item.getItemId()) {
+			case R.id.action_update_task:
+				Log.d(TAG,
+						"ActionMode.Callback - onActionItemClicked - edit item with db id " + id);
+				if (mListener != null) {
+					mListener.onSelectTask(id, FragmentTags.TAG_FGT_UPDATETASK);
+				}
+				// Close the CAB
+				mode.finish();
+				return true;
+			case R.id.action_delete_task:
+				Log.d(TAG,
+						"ActionMode.Callback - onActionItemClicked - delete item with db id " + id);
+				if (mListener != null) {
+					mListener.onSelectTask(id, FragmentTags.TAG_FGT_DELETETASK);
+				}
+				// close the CAB
+				mode.finish();
+				return true;
+			default:
+				return false;
+			}
+		}
+	};
+	
+	interface OnTaskSelectedListener {
+		public void onSelectTask(long id, final FragmentTags action);
+	}
 
 	/**
 	 * Override SimpleCursorAdapter in order to have a stronger control on this
@@ -64,6 +131,8 @@ public class TaskListFragment extends Fragment {
 	private class TaskCursorAdapter extends SimpleCursorAdapter {
 
 		private Context context;
+		private int currentSelectionPos = -1;
+		private long currentSelectionId = -1;
 		
 		private class ViewHolder {
 			private CheckBox check;
@@ -116,8 +185,10 @@ public class TaskListFragment extends Fragment {
 			ImageView icon = holder.alarmIcon;
 			TextView dateTxt = holder.remindDateTxt;
 			String remindDate = c.getString(NUM_COL_TASK_REMINDDATE);
+			boolean isActive = DatabaseHelper.convertIntToBool(c.getInt(NUM_COL_TASK_STATUS));
 			
 			check.setText(c.getString(NUM_COL_TASK_DESC));
+			check.setChecked(!isActive);
 			
 			// Set visibility of reminder
 			if (null != remindDate && !remindDate.isEmpty()) {
@@ -138,9 +209,10 @@ public class TaskListFragment extends Fragment {
 				DateTime expiry = DateTime.parse(expiryTxt);
 				
 				if (expiry.compareTo(today) < 0) {
-					int color = getResources().getColor(R.color.Red);
+					int color = getResources().getColor(R.color.Crimson);
 					check.setTextColor(color);
 					dateTxt.setTextColor(color);
+					icon.setImageResource(R.drawable.ic_alarm_icon_red);
 				}
 			}
 			
@@ -187,6 +259,8 @@ public class TaskListFragment extends Fragment {
 		// Set the adapter
 		mListView = (AbsListView) rootView.findViewById(android.R.id.list);
 		((AdapterView<ListAdapter>) mListView).setAdapter(mAdapter);
+		mListView.setChoiceMode(AbsListView.CHOICE_MODE_SINGLE);
+		mListView.setOnItemLongClickListener(this);
 
 		return rootView;
 	}
@@ -196,5 +270,42 @@ public class TaskListFragment extends Fragment {
 		// TODO Auto-generated method stub
 		// super.onCreateOptionsMenu(menu, inflater);
 		inflater.inflate(R.menu.task, menu);
+	}
+
+	@Override
+	public boolean onItemLongClick(AdapterView<?> parent, View view,
+			int position, long id) {
+		Log.v(TAG, String.format("onItemLongClick - perform long click on item of the list [id=%d, pos=%d]", id, position));
+		
+		if ((null != mListener) && (mActionMode != null)) {
+			return false;
+		}
+		
+		// Starts the CAB using the ActionMode.Callbakc defined above
+		mActionMode = getActivity().startActionMode(mActionModeCallback);
+		mListView.setItemChecked(position, true);
+		((TaskCursorAdapter) mAdapter).currentSelectionPos = position;
+		((TaskCursorAdapter) mAdapter).currentSelectionId = id;
+		view.setSelected(true);
+		
+		return true;
+	}
+
+	@Override
+	public void onAttach(Activity activity) {
+		super.onAttach(activity);
+		try {
+			mListener = (OnTaskSelectedListener) activity;
+		} catch (ClassCastException e) {
+			throw new ClassCastException(activity.toString()
+					+ " must implement OnTaskSelectedListener");
+		}
+	}
+
+	@Override
+	public void onDetach() {
+		super.onDetach();
+		mListener = null;
+		mActionMode = null;
 	}
 }

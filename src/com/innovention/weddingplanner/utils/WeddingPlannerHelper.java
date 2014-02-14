@@ -30,6 +30,7 @@ import com.innovention.weddingplanner.TaskFragment;
 import com.innovention.weddingplanner.TaskListFragment;
 import com.innovention.weddingplanner.bean.Contact;
 import com.innovention.weddingplanner.bean.IDtoBean;
+import com.innovention.weddingplanner.bean.Task;
 import com.innovention.weddingplanner.exception.IncorrectMailException;
 import com.innovention.weddingplanner.exception.IncorrectTelephoneException;
 import com.innovention.weddingplanner.exception.MissingMandatoryFieldException;
@@ -149,6 +150,12 @@ public class WeddingPlannerHelper {
 			break;
 		case TAG_FGT_TASKLIST:
 			fgt = TaskListFragment.newInstance();
+			resId = R.id.layoutTask;
+			break;
+		case TAG_FGT_UPDATETASK:
+			checkNotNull(params, "The task passed in parameter should not be null");
+			checkArgument(params.length == 1, "There should be exactly one task to update");
+			fgt = TaskFragment.newInstance(tag, (Task) params[0]);
 			resId = R.id.layoutTask;
 			break;
 		default:

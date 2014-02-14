@@ -38,15 +38,19 @@ public interface ConstantesDAO {
 	byte NUM_COL_RSVP = 11;
 	
 	// Columns tasks table
+	String COL_TASK_STATUS = "active";
+	byte NUM_COL_TASK_STATUS = NUM_COL_ID + 1; 
 	String COL_TASK_DESC = "description";
-	byte NUM_COL_TASK_DESC = NUM_COL_ID + 1; 
+	byte NUM_COL_TASK_DESC = NUM_COL_TASK_STATUS + 1; 
 	String COL_TASK_DUEDATE = "duedate";
 	byte NUM_COL_TASK_DUEDATE = NUM_COL_TASK_DESC + 1;
 	String COL_TASK_REMINDDATE = "reminddate";
 	byte NUM_COL_TASK_REMINDDATE = NUM_COL_TASK_DUEDATE + 1;
+	String COL_TASK_REMINDOPTION = "remindoption";
+	byte NUM_COL_TASK_REMINDOPTION = NUM_COL_TASK_REMINDDATE + 1;
 	
 	// General
-	int VERSION_BDD = 4;
+	int VERSION_BDD = 6;
 	String NOM_BDD = "wedplanner.db";
 	
 	String CREATE_WEDDINGINFO_TABLE= new StringBuilder()
@@ -97,11 +101,15 @@ public interface ConstantesDAO {
 	.append(" (")
 	.append(COL_ID)
 	.append(" INTEGER PRIMARY KEY AUTOINCREMENT, ")
+	.append(COL_TASK_STATUS)
+	.append(" INTEGER NOT NULL, ")
 	.append(COL_TASK_DESC)
 	.append(" TEXT NOT NULL, ")
 	.append(COL_TASK_DUEDATE)
 	.append(" TEXT, ")
 	.append(COL_TASK_REMINDDATE)
+	.append(" TEXT, ")
+	.append(COL_TASK_REMINDOPTION)
 	.append(" TEXT ")
 	.append(");")
 	.toString();

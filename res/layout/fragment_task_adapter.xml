@@ -2,17 +2,24 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="horizontal" >
+    android:focusable="false"
+    android:focusableInTouchMode="false"
+    android:orientation="horizontal"
+    android:paddingBottom="@dimen/task_list_row_padding"
+    android:paddingTop="@dimen/task_list_row_padding" >
 
     <CheckBox
         android:id="@+id/checkboxTaskList"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/task_list_item_left_margin"
         android:layout_weight="1"
-        android:layout_marginLeft="@dimen/task_list_item_padding"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
+        android:longClickable="true"
         android:text="@string/placeholder"
-        android:textColor="@color/selector_task"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="@color/selector_task" />
     
     <ImageView
         android:id="@+id/iconAlarmTaskList"
@@ -20,6 +27,7 @@
         android:layout_height="@dimen/task_list_icon_size"
         android:layout_gravity="bottom"
         android:contentDescription="@string/empty"
+        android:focusable="false"
         android:src="@drawable/ic_alarm_icon" >
 
     </ImageView>
@@ -30,6 +38,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
         android:text="@string/empty"
+        android:focusable="false"
         android:textAppearance="?android:attr/textAppearanceSmall" />
 
 </LinearLayout>

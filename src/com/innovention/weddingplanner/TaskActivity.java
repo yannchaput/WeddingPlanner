@@ -7,6 +7,8 @@ import org.joda.time.DateTimeConstants;
 import org.joda.time.format.DateTimeFormat;
 
 import com.innovention.weddingplanner.Constantes.FragmentTags;
+import com.innovention.weddingplanner.TaskFragment.OnValidateTask;
+import com.innovention.weddingplanner.TaskListFragment.OnTaskSelectedListener;
 import com.innovention.weddingplanner.bean.Task;
 import com.innovention.weddingplanner.dao.DaoLocator;
 import com.innovention.weddingplanner.dao.TasksDao;
@@ -37,7 +39,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 public class TaskActivity extends Activity implements
-		ActionBar.OnNavigationListener {
+		ActionBar.OnNavigationListener, OnValidateTask, OnTaskSelectedListener {
 
 	private static final String TAG = TaskActivity.class.getSimpleName();
 
@@ -140,14 +142,42 @@ public class TaskActivity extends Activity implements
 				.replace(R.id.layoutTask, fragment).commit();
 		return true;
 	}
+	
+	/**
+	 * Triggered by the CAB on the list
+	 * @param id
+	 * @param action
+	 */
+	@Override
+	public void onSelectTask(long id, FragmentTags action) {
+		Log.d(TAG, String.format("onSelectTask - task with id %d was selected for %s", id, action.getValue()));
+		
+		TasksDao service = (TasksDao) DaoLocator.getInstance(getApplicationContext()).get(SERVICES.TASK);
+		
+		switch(action) {
+			case TAG_FGT_UPDATETASK:
+				Task task = service.get(id);
+				Log.v(TAG, "Update task " + task);
+				if (null != task) {
+					replaceFragment(this, FragmentTags.TAG_FGT_UPDATETASK, task);
+				}
+				else {
+					showAlert(R.string.update_task_alert_dialog_title, R.string.update_task_0_alert_message, getFragmentManager());
+				}
+				break;
+			case TAG_FGT_DELETETASK:
+				break;
+			default:
+				return;
+		}
+	}
 
 	/**
 	 * Triggered on "Validate" button click
-	 * 
 	 * @param v
-	 *            the originating view
+	 * @param tag
 	 */
-	public void validateTask(final View v) {
+	public void onValidateTask(final View v, FragmentTags tag) {
 		Log.d(TAG, "validateTask - click on validate task button");
 
 		// Hide virtual keyboard if opened
@@ -173,6 +203,7 @@ public class TaskActivity extends Activity implements
 			Task task = new Task.Builder().withDesc(description)
 					.dueDate(dueDate)
 					.remind(remindDate)
+					.remindOption(remindDateTxt)
 					.build();
 			// Validate task
 			task.validate();

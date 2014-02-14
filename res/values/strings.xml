@@ -66,6 +66,10 @@
         <item>@string/task_spinner_item9</item>
     </string-array>
     
+    <!-- Tasks list -->
+    <string name="action_delete_task">Supprimer tâche</string>
+    <string name="action_update_task">Modifier tâche</string>
+    
     <!-- Validators -->
     <string name="alert_dialog_validate">OK</string>
     <string name="contact_alert_dialog_title">Informations manquantes</string>
@@ -78,10 +82,15 @@
     <!-- Autres -->
     <string name="placeholder">placeholder</string>
     <string name="empty">Vide</string>
+    
+    <!-- Alerts -->
     <string name="delete_guest_alert_dialog_title">Erreur suppression</string>
     <string name="delete_guest_0_alert_message">Aucun enregistrement correspondant à l\'invité sélectionné n\'a été trouvé</string>
     <string name="delete_guest_multiple_alert_message">Plusieurs enregistrements correspondants à l\'invité sélectionné ont été trouvés</string>
     <string name="delete_guest_OK_alert_message">Contact supprimé de la liste!</string>
+    <string name="update_task_alert_dialog_title">Erreur mise à jour</string>
+    <string name="update_task_0_alert_message">Aucun enregistrement correspondant à la tâche sélectionnée n\'a été trouvé</string> 
+    
     <string name="title_activity_task">To-do liste</string>
     <string name="title_section1">Tâches en cours</string>
     <string name="title_section2">Tâches terminées</string>
