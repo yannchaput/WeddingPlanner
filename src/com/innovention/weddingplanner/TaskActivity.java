@@ -9,6 +9,7 @@ import org.joda.time.format.DateTimeFormat;
 import com.innovention.weddingplanner.Constantes.FragmentTags;
 import com.innovention.weddingplanner.TaskFragment.OnValidateTask;
 import com.innovention.weddingplanner.TaskListFragment.OnTaskSelectedListener;
+import com.innovention.weddingplanner.bean.IDtoBean;
 import com.innovention.weddingplanner.bean.Task;
 import com.innovention.weddingplanner.dao.DaoLocator;
 import com.innovention.weddingplanner.dao.TasksDao;
@@ -166,6 +167,8 @@ public class TaskActivity extends Activity implements
 				}
 				break;
 			case TAG_FGT_DELETETASK:
+				Log.v(TAG, "Delete task with id " + id);
+				int count = service.removeWithId((int) id);
 				break;
 			default:
 				return;
@@ -177,7 +180,7 @@ public class TaskActivity extends Activity implements
 	 * @param v
 	 * @param tag
 	 */
-	public void onValidateTask(final View v, FragmentTags tag) {
+	public void onValidateTask(final IDtoBean bean, FragmentTags tag) {
 		Log.d(TAG, "validateTask - click on validate task button");
 
 		// Hide virtual keyboard if opened
@@ -186,98 +189,19 @@ public class TaskActivity extends Activity implements
 				getCurrentFocus().getWindowToken(),
 				InputMethodManager.HIDE_NOT_ALWAYS);
 
-		// Retrieve field content
-		String description = ((EditText) findViewById(R.id.taskEditDescription))
-				.getText().toString();
-		String dueDateTxt = ((EditText) findViewById(R.id.taskEditDateEcheance)).getText().toString();
-		String remindDateTxt = (String) ((Spinner) findViewById(R.id.taskSpinnerRemindDate)).getSelectedItem();
-		DateTime dueDate = null;
-		DateTime remindDate = null;
-		
-		try {
-			if (!dueDateTxt.isEmpty()) {
-				dueDate = DateTimeFormat.shortDate().parseDateTime(dueDateTxt);
-				remindDate = calculateReminder(dueDate, remindDateTxt);
-			}
-			// Build task bean
-			Task task = new Task.Builder().withDesc(description)
-					.dueDate(dueDate)
-					.remind(remindDate)
-					.remindOption(remindDateTxt)
-					.build();
-			// Validate task
-			task.validate();
-			Log.v(TAG, "saveTask - build task bean: " + task);
+			Log.v(TAG, "saveTask - build task bean: " + bean);
 			TasksDao dao = (TasksDao) DaoLocator.getInstance(getApplication())
 					.get(SERVICES.TASK);
-			dao.insert(task);
+			if (FragmentTags.TAG_FGT_CREATETASK.equals(tag)) {
+				Log.d(TAG, "Save task in creation mode : " + bean);
+				dao.insert( (Task) bean);
+			}
+			else if (FragmentTags.TAG_FGT_UPDATETASK.equals(tag)) {
+				Log.d(TAG, "Save task in update mode : " + bean);
+				dao.update(bean.getId(), (Task) bean);
+			}
+			
 			replaceFragment(this, FragmentTags.TAG_FGT_TASKLIST);
-		} catch (MissingMandatoryFieldException e) {
-			showAlert(R.string.task_alert_dialog_title,
-					R.string.task_mandatory_validator_message,
-					getFragmentManager());
-		}
-
 	}
 	
-	/**
-	 * Calculate reminder date from due date
-	 * @param dueDate
-	 * @param option
-	 * @return reminder date
-	 */
-	private DateTime calculateReminder(DateTime dueDate, String option) {
-
-		DateTime remindDate = dueDate;
-		
-		// Hard set time to midday
-		remindDate = remindDate.withHourOfDay(12);
-
-		// Default case
-		if ((null == remindDate) || (option.equals(getResources().getString(R.string.task_spinner_item1)))) {
-			remindDate = null;
-		}
-		// 1 month
-		else if (option
-				.equals(getResources().getString(R.string.task_spinner_item2))) {
-			remindDate = remindDate.minusMonths(1);
-		}
-		// 2 weeks
-		else if (option.equals(getResources().getString(
-				R.string.task_spinner_item3))) {
-			remindDate = remindDate.minusWeeks(2);
-		}
-		// 1 week
-		else if (option.equals(getResources().getString(
-				R.string.task_spinner_item4))) {
-			remindDate = remindDate.minusWeeks(1);
-		}
-		// 3 days
-		else if (option.equals(getResources().getString(
-				R.string.task_spinner_item5))) {
-			remindDate = remindDate.minusDays(3);
-		}
-		// 1 day
-		else if (option.equals(getResources().getString(
-				R.string.task_spinner_item6))) {
-			remindDate = remindDate.minusDays(1);
-		}
-		// 6 hours
-		else if (option.equals(getResources().getString(
-				R.string.task_spinner_item7))) {
-			remindDate = remindDate.minusHours(6);
-		}
-		// 2 hours
-		else if (option.equals(getResources().getString(
-				R.string.task_spinner_item8))) {
-			remindDate = remindDate.minusHours(2);
-		}
-		// 1 hour
-		else if (option.equals(getResources().getString(
-				R.string.task_spinner_item9))) {
-			remindDate = remindDate.minusHours(1);
-		}
-
-		return remindDate;
-	}
 }

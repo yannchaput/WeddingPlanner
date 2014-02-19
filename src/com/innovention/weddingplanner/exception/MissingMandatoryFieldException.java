@@ -1,6 +1,6 @@
 package com.innovention.weddingplanner.exception;
 
-public class MissingMandatoryFieldException extends Exception {
+public class MissingMandatoryFieldException extends WeddingPlannerException {
 
 	/**
 	 * 

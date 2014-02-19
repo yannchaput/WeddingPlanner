@@ -1,9 +1,9 @@
 package com.innovention.weddingplanner.utils;
 
 
-import static com.innovention.weddingplanner.Constantes.ILLEGAL_EMAIL_MSG;
-import static com.innovention.weddingplanner.Constantes.ILLEGAL_PHONE_MSG;
-import static com.innovention.weddingplanner.Constantes.MISSING_MANADTORY_FIELD_MSG;
+import static com.innovention.weddingplanner.Constantes.ILLEGAL_EMAIL_EX;
+import static com.innovention.weddingplanner.Constantes.ILLEGAL_PHONE_EX;
+import static com.innovention.weddingplanner.Constantes.MISSING_MANADTORY_FIELD_EX;
 
 import static com.google.common.base.Preconditions.*;
 import com.innovention.weddingplanner.Constantes.FragmentTags;
@@ -17,8 +17,10 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Typeface;
 import android.support.v4.app.FragmentTabHost;
+import android.text.TextUtils;
 import android.util.Patterns;
 import android.view.View;
 
@@ -67,7 +69,26 @@ public class WeddingPlannerHelper {
 		
 	}
 	
-	// TODO make a generic validator
+	/**
+	 * Get a string typed resource from the context
+	 * @param ctx
+	 * @param id
+	 * @return the string
+	 */
+	public static final String getStringResource(final Context ctx, int id) {
+		return ctx.getResources().getString(id);
+	}
+	
+	/**
+	 * String isEmpty utility
+	 * @param str
+	 * @return true if string is empty or null
+	 */
+	public static boolean isEmpty(final String str) {
+		//return ((null == str) || (str.isEmpty()));
+		return TextUtils.isEmpty(str);
+	}
+	
 	/**
 	 * Validate a mandatory field is not empty and not null
 	 * @param field
@@ -76,7 +97,7 @@ public class WeddingPlannerHelper {
 	public static <T> void validateMandatory(T field) throws MissingMandatoryFieldException {
 
 		if ( (field == null) || (field.equals("")) )
-			throw new MissingMandatoryFieldException(MISSING_MANADTORY_FIELD_MSG);
+			throw new MissingMandatoryFieldException(MISSING_MANADTORY_FIELD_EX);
 	}
 	
 	/**
@@ -86,7 +107,7 @@ public class WeddingPlannerHelper {
 	 */
 	public static void validateEmail(final String field) throws IncorrectMailException {
 		if (field!=null && !field.equals("") && !Patterns.EMAIL_ADDRESS.matcher(field).matches())
-			throw new IncorrectMailException(ILLEGAL_EMAIL_MSG);
+			throw new IncorrectMailException(ILLEGAL_EMAIL_EX);
 	}
 	
 	/**
@@ -96,7 +117,7 @@ public class WeddingPlannerHelper {
 	 */
 	public static void validateTelephone(final String field) throws IncorrectTelephoneException {
 		if (field!=null && !field.equals("") && !Patterns.PHONE.matcher(field).matches())
-			throw new IncorrectTelephoneException(ILLEGAL_PHONE_MSG);
+			throw new IncorrectTelephoneException(ILLEGAL_PHONE_EX);
 	}
 	
 	/**
@@ -129,6 +150,7 @@ public class WeddingPlannerHelper {
 		Fragment fgt = null;
 		int resId;
 		
+		// TODO use tag native field to store the enum instead of private attribute in every fragment
 		switch (tag) {
 		case TAG_FGT_GUESTLIST:
 			fgt = GuestListFragment.newInstance();

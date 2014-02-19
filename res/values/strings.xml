@@ -78,6 +78,7 @@
     <string name="contact_mandatory_validator_message">Les champs nom, prénom sont obligatoires. Veuillez les renseigner svp.</string>
     <string name="task_alert_dialog_title">Informations manquantes</string>
     <string name="task_mandatory_validator_message">La description de la tâche est obligatoire. Veuillez la renseigner svp.</string>
+    <string name="task_inconsistent_validator_message">Un rappel ne peut être défini sans échéance</string>
     
     <!-- Autres -->
     <string name="placeholder">placeholder</string>

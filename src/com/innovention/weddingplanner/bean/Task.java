@@ -1,12 +1,18 @@
 package com.innovention.weddingplanner.bean;
 
 import static com.innovention.weddingplanner.utils.WeddingPlannerHelper.validateMandatory;
+import static com.innovention.weddingplanner.utils.WeddingPlannerHelper.getStringResource;
+import static com.innovention.weddingplanner.Constantes.*;
 import static com.google.common.base.Preconditions.*;
 
 import org.joda.time.DateTime;
 
+import android.content.Context;
+
 import com.google.common.base.Objects;
 import com.google.common.base.Strings;
+import com.innovention.weddingplanner.R;
+import com.innovention.weddingplanner.exception.InconsistentFieldException;
 import com.innovention.weddingplanner.exception.MissingMandatoryFieldException;
 
 public class Task implements IDtoBean {
@@ -39,7 +45,6 @@ public class Task implements IDtoBean {
 		}
 		
 		public Builder withId(final int id) {
-			checkArgument(id > 0, "Id should be greater than 0");
 			this.id = id;
 			return this;
 		}
@@ -107,8 +112,13 @@ public class Task implements IDtoBean {
 	}
 
 	@Override
-	public void validate() throws MissingMandatoryFieldException {
+	public void validate(Context ctx) throws MissingMandatoryFieldException, InconsistentFieldException {
+		checkNotNull(ctx, "Context can not be null");
 		validateMandatory(getDescription());
+		// Enforce consistency between due date date and reminder
+		if ( null == getDueDate() && !getRemindChoice().equals(getStringResource(ctx, R.string.task_spinner_item1)) ) {
+			throw new InconsistentFieldException(INCONSISTENT_FIELD_EX);
+		}
 	}
 
 	@Override

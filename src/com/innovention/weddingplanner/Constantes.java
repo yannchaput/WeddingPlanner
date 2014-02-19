@@ -16,6 +16,7 @@ public interface Constantes {
 		TAG_FGT_GUESTALERT("guestAlertFgt"),
 		TAG_FGT_MAINDATEPICKER("mainDatePickerDlgFgt"),
 		TAG_FGT_TASKDATEPICKER("taskDatePickerDlgFgt"),
+		TAG_FGT_TASKDATEPICKER_UPDATE("taskDatePickerUpdateDlgFgt"),
 		TAG_FGT_CREATETASK("createTaskFgt"),
 		TAG_FGT_UPDATETASK("updateTaskFgt"),
 		TAG_FGT_DELETETASK("deleteTaskFgt"),
@@ -44,9 +45,10 @@ public interface Constantes {
 	String FONT_CURVED = "GreatVibes-Regular.otf";
 
 	// Exception messages
-	String MISSING_MANADTORY_FIELD_MSG="Champs obligatoire manquant";
-	String ILLEGAL_EMAIL_MSG="Adresse mail incorrecte";
-	String ILLEGAL_PHONE_MSG="Numéro de téléphone incorrect";
-	String INCORRECT_NUMBER_ARGS="Incorrect number of arguments";
+	String MISSING_MANADTORY_FIELD_EX="Champs obligatoire manquant";
+	String ILLEGAL_EMAIL_EX="Adresse mail incorrecte";
+	String ILLEGAL_PHONE_EX="Numéro de téléphone incorrect";
+	String INCORRECT_NUMBER_ARGS_EX="Incorrect number of arguments";
+	String INCONSISTENT_FIELD_EX = "Iconsistent combination of fields";
 	
 }

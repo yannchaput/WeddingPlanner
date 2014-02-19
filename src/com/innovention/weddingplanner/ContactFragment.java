@@ -125,7 +125,7 @@ public class ContactFragment extends Fragment {
 			// TODO Make a helper out of it
 			Log.d(TAG, "Build contact object" + bean);
 			try {
-				bean.validate();
+				bean.validate(ContactFragment.this.getActivity());
 				mListener
 						.onValidateContact(bean, ContactFragment.this.getTag());
 			} catch (MissingMandatoryFieldException e) {

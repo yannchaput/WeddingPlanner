@@ -7,6 +7,7 @@ import static com.innovention.weddingplanner.dao.ConstantesDAO.NUM_COL_TASK_STAT
 import static com.innovention.weddingplanner.dao.ConstantesDAO.NUM_COL_TASK_DESC;
 import static com.innovention.weddingplanner.dao.ConstantesDAO.NUM_COL_TASK_DUEDATE;
 import static com.innovention.weddingplanner.dao.ConstantesDAO.NUM_COL_TASK_REMINDDATE;
+import static com.innovention.weddingplanner.utils.WeddingPlannerHelper.isEmpty;
 
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
@@ -15,6 +16,7 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.Bundle;
 import android.util.Log;
@@ -29,6 +31,7 @@ import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
@@ -138,6 +141,7 @@ public class TaskListFragment extends Fragment implements AbsListView.OnItemLong
 			private CheckBox check;
 			private ImageView alarmIcon;
 			private TextView remindDateTxt;
+			boolean isExpired = false;
 		}
 
 		public TaskCursorAdapter(Context context, int layout, Cursor c,
@@ -151,27 +155,63 @@ public class TaskListFragment extends Fragment implements AbsListView.OnItemLong
 			View row = convertView;
 			ViewHolder holder;
 			
+			/**
+			 * Local class overriding the behavior of checkboxes
+			 * @author YCH
+			 *
+			 */
+			class OnCheckedChangeListener implements CompoundButton.OnCheckedChangeListener {
+				
+				private ViewHolder view;
+				
+				OnCheckedChangeListener(final ViewHolder holder) {
+					this.view = holder;
+				}
+				
+				@Override
+				public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+					int color = getResources().getColor(R.color.Black);
+					int icon = R.drawable.ic_alarm_icon;
+					
+					// Task is completed
+					if (isChecked) {
+						// Strike through text
+						buttonView.setPaintFlags(buttonView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+						view.remindDateTxt.setPaintFlags(buttonView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+						color = getResources().getColor(R.color.DarkGray);
+						icon = R.drawable.ic_alarm_icon;
+					}
+					// Task not completed => normal behavior
+					else {
+						buttonView.setPaintFlags(buttonView.getPaintFlags() & ~Paint.STRIKE_THRU_TEXT_FLAG);
+						view.remindDateTxt.setPaintFlags(buttonView.getPaintFlags() & ~Paint.STRIKE_THRU_TEXT_FLAG);
+						
+						// Case maturity date expired
+						if (view.isExpired) {
+				
+								color = getResources().getColor(R.color.Crimson);
+								icon = R.drawable.ic_alarm_icon_red;
+						}
+						// Case normal
+						else {
+							// Normal text
+							color = getResources().getColor(R.color.Black);
+							icon = R.drawable.ic_alarm_icon;
+						}
+					}
+					buttonView.setTextColor(color);
+					view.remindDateTxt.setTextColor(color);
+					view.alarmIcon.setImageResource(icon);
+				}
+			}
+			
 			// If view does not already exists we create it
 			if (row == null) {
 				row = View.inflate(context, R.layout.fragment_task_adapter, null);
 				holder = new ViewHolder();
 				holder.check = (CheckBox) row.findViewById(R.id.checkboxTaskList);
 				// Listener on check box
-				holder.check.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-					
-					@Override
-					public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-						if (isChecked) {
-							// Strike through text
-							buttonView.setPaintFlags(buttonView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-						}
-						else {
-							// Normal text
-							buttonView.setPaintFlags(buttonView.getPaintFlags() & ~Paint.STRIKE_THRU_TEXT_FLAG);
-						}
-						buttonView.setText(buttonView.getText());		
-					}
-				});
+				holder.check.setOnCheckedChangeListener(new OnCheckedChangeListener(holder));
 				holder.alarmIcon = (ImageView) row.findViewById(R.id.iconAlarmTaskList);
 				holder.remindDateTxt = (TextView) row.findViewById(R.id.textReminderTaskList);
 				row.setTag(holder);
@@ -184,14 +224,17 @@ public class TaskListFragment extends Fragment implements AbsListView.OnItemLong
 			CheckBox check = holder.check;
 			ImageView icon = holder.alarmIcon;
 			TextView dateTxt = holder.remindDateTxt;
+			
 			String remindDate = c.getString(NUM_COL_TASK_REMINDDATE);
+			String description = c.getString(NUM_COL_TASK_DESC);
+			String expiryTxt = c.getString(NUM_COL_TASK_DUEDATE);
 			boolean isActive = DatabaseHelper.convertIntToBool(c.getInt(NUM_COL_TASK_STATUS));
 			
-			check.setText(c.getString(NUM_COL_TASK_DESC));
+			check.setText(description);
 			check.setChecked(!isActive);
 			
 			// Set visibility of reminder
-			if (null != remindDate && !remindDate.isEmpty()) {
+			if (!WeddingPlannerHelper.isEmpty(remindDate)) {
 				icon.setVisibility(View.VISIBLE);
 				dateTxt.setVisibility(View.VISIBLE);
 				DateTime parsedDate = DateTime.parse(remindDate);
@@ -203,18 +246,24 @@ public class TaskListFragment extends Fragment implements AbsListView.OnItemLong
 			}
 			
 			// Set color according to expiration date
-			String expiryTxt = c.getString(NUM_COL_TASK_DUEDATE);
-			if (null != expiryTxt && !expiryTxt.isEmpty()) {
+			int color = getResources().getColor(R.color.Black);
+			if (!WeddingPlannerHelper.isEmpty(expiryTxt)) {
 				DateTime today = DateTime.now();
 				DateTime expiry = DateTime.parse(expiryTxt);
 				
+				// Due date is overdue
 				if (expiry.compareTo(today) < 0) {
-					int color = getResources().getColor(R.color.Crimson);
-					check.setTextColor(color);
-					dateTxt.setTextColor(color);
+					color = getResources().getColor(R.color.Crimson);
 					icon.setImageResource(R.drawable.ic_alarm_icon_red);
+					holder.isExpired = true;
 				}
+				else {
+					icon.setImageResource(R.drawable.ic_alarm_icon);
+					holder.isExpired = false;
+				}	
 			}
+			check.setTextColor(color);
+			dateTxt.setTextColor(color);
 			
 			return row;
 		}
@@ -234,6 +283,7 @@ public class TaskListFragment extends Fragment implements AbsListView.OnItemLong
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
+		Log.v(TAG, "onCreate");
 		// Gets cursor from db
 		Cursor c = ((TasksDao) DaoLocator.getInstance(
 				getActivity().getApplicationContext()).get(SERVICES.TASK))

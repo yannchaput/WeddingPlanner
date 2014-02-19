@@ -1,6 +1,7 @@
 package com.innovention.weddingplanner.dao;
 
 import static com.innovention.weddingplanner.dao.ConstantesDAO.*;
+import static com.innovention.weddingplanner.utils.WeddingPlannerHelper.isEmpty;
 import static com.innovention.weddingplanner.dao.DatabaseHelper.convertIntToBool;
 import static com.google.common.base.Preconditions.*;
 import java.util.List;
@@ -37,9 +38,9 @@ public class TasksDao implements IDao<Task> {
 		ContentValues values = new ContentValues();
 		values.put(COL_TASK_STATUS, bean.getActive());
 		values.put(COL_TASK_DESC, bean.getDescription());
-		if (null != bean.getDueDate()) values.put(COL_TASK_DUEDATE, bean.getDueDate().toString());
-		if (null != bean.getRemindDate()) values.put(COL_TASK_REMINDDATE, bean.getRemindDate().toString());
-		if (null != bean.getRemindChoice()) values.put(COL_TASK_REMINDOPTION, bean.getRemindChoice());
+		values.put(COL_TASK_DUEDATE, (null != bean.getDueDate()) ? bean.getDueDate().toString() : "");
+		values.put(COL_TASK_REMINDDATE, (null != bean.getRemindDate()) ? bean.getRemindDate().toString() : "");
+		values.put(COL_TASK_REMINDOPTION, (null != bean.getRemindChoice()) ? bean.getRemindChoice() : "");
 		return db.insert(TABLE_TASKS, null, values);
 	}
 
@@ -51,13 +52,15 @@ public class TasksDao implements IDao<Task> {
 	 */
 	@Override
 	public int update(int id, Task bean) {
+		checkNotNull(bean,"Task bean to save can not be null");
+		checkArgument(id > 0, "An id can not be negative");
 		Log.d(TAG, "update - " + "Update table with id " + id + " and bean " + bean.toString());
 		ContentValues values = new ContentValues();
 		values.put(COL_TASK_STATUS, bean.getActive());
 		values.put(COL_TASK_DESC, bean.getDescription());
-		if (null != bean.getDueDate()) values.put(COL_TASK_DUEDATE, bean.getDueDate().toString());
-		if (null != bean.getRemindDate()) values.put(COL_TASK_REMINDDATE, bean.getRemindDate().toString());
-		if (null != bean.getRemindChoice()) values.put(COL_TASK_REMINDOPTION, bean.getRemindChoice());
+		values.put(COL_TASK_DUEDATE, (null != bean.getDueDate()) ? bean.getDueDate().toString() : "");
+		values.put(COL_TASK_REMINDDATE, (null != bean.getRemindDate()) ? bean.getRemindDate().toString() : "");
+		values.put(COL_TASK_REMINDOPTION, (null != bean.getRemindChoice()) ? bean.getRemindChoice() : "");
 		int result = db.update(TABLE_TASKS, values, COL_ID + "=?", new String[] {String.valueOf(id)});
 		Log.d(TAG, "" + result + "rows affected");
 		return result;
@@ -92,12 +95,15 @@ public class TasksDao implements IDao<Task> {
 		}
 		
 		if (c.moveToFirst()) {
+			String dueDateTxt = c.getString(NUM_COL_TASK_DUEDATE);
+			String remindTxt = c.getString(NUM_COL_TASK_REMINDDATE);
+			String remindOptionTxt = c.getString(NUM_COL_TASK_REMINDOPTION);
 			entity = new Task.Builder().withId(c.getInt(NUM_COL_ID))
 			.setActive(convertIntToBool(c.getInt(NUM_COL_TASK_STATUS)))
 			.withDesc(c.getString(NUM_COL_TASK_DESC))
-			.dueDate(c.getString(NUM_COL_TASK_DUEDATE) != null ? DateTime.parse(c.getString(NUM_COL_TASK_DUEDATE)) : null)
-			.remind(c.getString(NUM_COL_TASK_REMINDDATE) != null ? DateTime.parse(c.getString(NUM_COL_TASK_REMINDDATE)): null)
-			.remindOption(c.getString(NUM_COL_TASK_REMINDOPTION))
+			.dueDate( !isEmpty(dueDateTxt) ? DateTime.parse(c.getString(NUM_COL_TASK_DUEDATE)) : null)
+			.remind( !isEmpty(remindTxt) ? DateTime.parse(c.getString(NUM_COL_TASK_REMINDDATE)): null)
+			.remindOption(remindOptionTxt)
 			.build();
 		}
 		

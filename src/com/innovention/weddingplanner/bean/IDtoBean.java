@@ -1,8 +1,8 @@
 package com.innovention.weddingplanner.bean;
 
-import com.innovention.weddingplanner.exception.IncorrectMailException;
-import com.innovention.weddingplanner.exception.IncorrectTelephoneException;
-import com.innovention.weddingplanner.exception.MissingMandatoryFieldException;
+import android.content.Context;
+
+import com.innovention.weddingplanner.exception.WeddingPlannerException;
 
 public interface IDtoBean {
 
@@ -19,9 +19,8 @@ public interface IDtoBean {
 	/**
 	 * Validate the bean inputs
 	 * @throws UnsupportedOperationException if not implemented
-	 * @throws IncorrectMailException 
-	 * @throws IncorrectTelephoneException 
+	 * @throws WeddingPlannerException 
 	 */
-	void validate() throws UnsupportedOperationException, IncorrectMailException, MissingMandatoryFieldException, IncorrectTelephoneException;
+	void validate(Context ctx) throws UnsupportedOperationException, WeddingPlannerException;
 
 }

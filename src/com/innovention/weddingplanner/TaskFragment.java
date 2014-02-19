@@ -9,7 +9,10 @@ import com.innovention.weddingplanner.Constantes.FragmentTags;
 import com.innovention.weddingplanner.ContactFragment.OnValidateContactListener;
 import com.innovention.weddingplanner.bean.IDtoBean;
 import com.innovention.weddingplanner.bean.Task;
-import com.innovention.weddingplanner.utils.WeddingPlannerHelper;
+import com.innovention.weddingplanner.exception.InconsistentFieldException;
+import com.innovention.weddingplanner.exception.MissingMandatoryFieldException;
+
+import static com.innovention.weddingplanner.utils.WeddingPlannerHelper.*;
 
 import android.app.Activity;
 import android.app.DatePickerDialog;
@@ -25,6 +28,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.webkit.WebView.FindListener;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -50,14 +54,14 @@ public class TaskFragment extends Fragment implements OnDateSetListener {
 	// Due date field
 	private EditText dueDateTxt;
 	// Reminder field
-	private Spinner remindTxt;
+	private Spinner remindSpinner;
 	// Validate button
 	private Button validateBtn;
 	// listener on validate button
 	private OnValidateTask mListener;
 	
 	interface OnValidateTask {
-		void onValidateTask(View v, FragmentTags tag);  
+		void onValidateTask(final IDtoBean bean, FragmentTags tag);  
 	}
 
 	/**
@@ -70,11 +74,17 @@ public class TaskFragment extends Fragment implements OnDateSetListener {
 			OnDateSetListener {
 
 		private OnDateSetListener listener = null;
+		private DateTime initialDate;
+		private FragmentTags mode = FragmentTags.TAG_FGT_TASKDATEPICKER;
 
 		public static DatePickerFragment newInstance(
-				final OnDateSetListener callback) {
+				final OnDateSetListener callback, 
+				final FragmentTags mode,
+				final DateTime setupDate) {
 			DatePickerFragment instance = new DatePickerFragment();
 			instance.listener = callback;
+			instance.mode = mode;
+			instance.initialDate = (FragmentTags.TAG_FGT_TASKDATEPICKER_UPDATE.equals(mode) && null != setupDate) ?  setupDate : DateTime.now();
 			return instance;
 		}
 
@@ -89,16 +99,16 @@ public class TaskFragment extends Fragment implements OnDateSetListener {
 			Log.d(TAG, "onCreateDialog - "
 					+ "Create dialog fragment for the first time");
 
-			DateTime now = DateTime.now();
-
 			// deduct 1 month from the months to add as beacuase referential is
 			// not the same between Joda and regular JDK
 			DatePickerDialog pickDlg = new DatePickerDialog(getActivity(),
-					this, now.getYear(), now.getMonthOfYear() - 1,
-					now.getDayOfMonth());
-			pickDlg.getDatePicker().setMinDate(now.getMillis());
+					this, initialDate.getYear(), initialDate.getMonthOfYear() - 1,
+					initialDate.getDayOfMonth());
+			// substract 1 second from now so as to min date < displayed date
+			// otherwise we have an exception
+			pickDlg.getDatePicker().setMinDate(DateTime.now().getMillis()-1000);
 
-			Log.d(TAG, "Set date to " + now);
+			Log.d(TAG, "Set date to " + initialDate);
 
 			return pickDlg;
 		}
@@ -131,6 +141,7 @@ public class TaskFragment extends Fragment implements OnDateSetListener {
 	public static TaskFragment newInstance() {
 		TaskFragment fgt = new TaskFragment();
 		fgt.mode = FragmentTags.TAG_FGT_CREATETASK;
+		fgt.bean = null;
 		return fgt;
 	}
 	
@@ -141,6 +152,7 @@ public class TaskFragment extends Fragment implements OnDateSetListener {
 	 * @return
 	 */
 	public static TaskFragment newInstance(FragmentTags action, final Task bean) {
+		Log.v(TAG, String.format("newInstance - create new instance in mode %s and with bean %s", action.toString(), bean.toString()));
 		TaskFragment fgt = newInstance();
 		fgt.mode = action;
 		fgt.bean = bean;
@@ -163,14 +175,53 @@ public class TaskFragment extends Fragment implements OnDateSetListener {
 		validateBtn = (Button) view.findViewById(R.id.taskButtonSave);
 		dueDateTxt = (EditText) view.findViewById(R.id.taskEditDateEcheance);
 		descriptionTxt = (EditText) view.findViewById(R.id.taskEditDescription);
-		remindTxt = (Spinner) view.findViewById(R.id.taskSpinnerRemindDate);
+		remindSpinner = (Spinner) view.findViewById(R.id.taskSpinnerRemindDate);
+		
+		// Case update task
+		if (mode.equals(FragmentTags.TAG_FGT_UPDATETASK) && null != bean) {
+			descriptionTxt.setText(bean.getDescription());
+			if (bean.getDueDate() != null) 
+				dueDateTxt.setText(DateTimeFormat.shortDate().print(bean.getDueDate()));
+			ArrayAdapter<String> spinAdapter = (ArrayAdapter<String>) remindSpinner.getAdapter();
+			int spinnerPos = spinAdapter.getPosition(bean.getRemindChoice());
+			remindSpinner.setSelection(spinnerPos);
+		}
 		
 		validateBtn.setOnClickListener(new View.OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
 				if (mListener != null) {
-					mListener.onValidateTask(v, FragmentTags.TAG_FGT_CREATETASK);
+					DateTime dueDate = null;
+					DateTime remindDate = null;
+					
+					if ( !isEmpty(dueDateTxt.getText().toString()) ) {
+						dueDate = DateTimeFormat.shortDate().parseDateTime(dueDateTxt.getText().toString());
+						remindDate = calculateReminder(dueDate, (String) remindSpinner.getSelectedItem());
+						Log.v(TAG, "Due date = " + dueDate);
+						Log.v(TAG, "remindDate = " + remindDate);
+					}
+					// Build task bean
+					Task task = new Task.Builder()
+							.withId(FragmentTags.TAG_FGT_UPDATETASK.equals(mode) ? bean.getId() : -1)
+							.withDesc(descriptionTxt.getText().toString())
+							.dueDate(dueDate)
+							.remind(remindDate)
+							.remindOption((String) remindSpinner.getSelectedItem())
+							.build();
+					// Validate task
+					try {
+						task.validate(TaskFragment.this.getActivity());
+						mListener.onValidateTask(task, TaskFragment.this.mode);
+					} catch (MissingMandatoryFieldException e) {
+						showAlert(R.string.task_alert_dialog_title,
+								R.string.task_mandatory_validator_message,
+								getFragmentManager());
+					} catch (InconsistentFieldException e) {
+						showAlert(R.string.task_alert_dialog_title,
+								R.string.task_inconsistent_validator_message,
+								getFragmentManager());
+					}
 				}
 				
 			}
@@ -179,32 +230,42 @@ public class TaskFragment extends Fragment implements OnDateSetListener {
 
 			@Override
 			public void onClick(View v) {
-				showDatePickerDialog(v);
-
+				if (FragmentTags.TAG_FGT_UPDATETASK.equals(TaskFragment.this.mode)) {
+					showDatePickerDialog(FragmentTags.TAG_FGT_TASKDATEPICKER_UPDATE, bean.getDueDate());
+				}
+				else {
+					showDatePickerDialog(FragmentTags.TAG_FGT_TASKDATEPICKER);
+				}
 			}
 		});
 		
-		if (mode.equals(FragmentTags.TAG_FGT_UPDATETASK) && null != bean) {
-			descriptionTxt.setText(bean.getDescription());
-			dueDateTxt.setText(DateTimeFormat.shortDate().print(bean.getDueDate()));
-		}
-		
 		return view;
 	}
-
+	
 	/**
-	 * Callback called when one clicked on the wedding date
+	 * Callback called when one clicked on the due date field in create mode
 	 * 
 	 * @param v
 	 *            view
 	 */
-	private void showDatePickerDialog(View v) {
+	private void showDatePickerDialog(final FragmentTags mode) {
+
+		showDatePickerDialog(mode, null);
+	}
+
+	/**
+	 * Callback called when one clicked on the due date field in update mode
+	 * 
+	 * @param v
+	 *            view
+	 */
+	private void showDatePickerDialog(final FragmentTags mode, final DateTime dueDate) {
 
 		Log.d(TAG, "showDatePickerDialog - " + "show date picker fragment");
 
-		DialogFragment datePicker = DatePickerFragment.newInstance(this);
-		WeddingPlannerHelper.showFragmentDialog(getActivity(), datePicker,
-				FragmentTags.TAG_FGT_TASKDATEPICKER);
+		DialogFragment datePicker = DatePickerFragment.newInstance(this, mode, dueDate);
+		showFragmentDialog(getActivity(), datePicker,
+				mode);
 	}
 
 	/**
@@ -239,6 +300,69 @@ public class TaskFragment extends Fragment implements OnDateSetListener {
 		super.onDetach();
 		mListener = null;
 		dueDateTxt = null;
+		mode = null;
+		bean = null;
+	}
+	
+	/**
+	 * Calculate reminder date from due date
+	 * @param dueDate
+	 * @param option
+	 * @return reminder date
+	 */
+	private DateTime calculateReminder(DateTime dueDate, String option) {
+
+		DateTime remindDate = dueDate;
+		
+		// Hard set time to midday
+		remindDate = remindDate.withHourOfDay(12);
+
+		// Default case
+		if ((null == remindDate) || (option.equals(getResources().getString(R.string.task_spinner_item1)))) {
+			remindDate = null;
+		}
+		// 1 month
+		else if (option
+				.equals(getResources().getString(R.string.task_spinner_item2))) {
+			remindDate = remindDate.minusMonths(1);
+		}
+		// 2 weeks
+		else if (option.equals(getResources().getString(
+				R.string.task_spinner_item3))) {
+			remindDate = remindDate.minusWeeks(2);
+		}
+		// 1 week
+		else if (option.equals(getResources().getString(
+				R.string.task_spinner_item4))) {
+			remindDate = remindDate.minusWeeks(1);
+		}
+		// 3 days
+		else if (option.equals(getResources().getString(
+				R.string.task_spinner_item5))) {
+			remindDate = remindDate.minusDays(3);
+		}
+		// 1 day
+		else if (option.equals(getResources().getString(
+				R.string.task_spinner_item6))) {
+			remindDate = remindDate.minusDays(1);
+		}
+		// 6 hours
+		else if (option.equals(getResources().getString(
+				R.string.task_spinner_item7))) {
+			remindDate = remindDate.minusHours(6);
+		}
+		// 2 hours
+		else if (option.equals(getResources().getString(
+				R.string.task_spinner_item8))) {
+			remindDate = remindDate.minusHours(2);
+		}
+		// 1 hour
+		else if (option.equals(getResources().getString(
+				R.string.task_spinner_item9))) {
+			remindDate = remindDate.minusHours(1);
+		}
+
+		return remindDate;
 	}
 
 }

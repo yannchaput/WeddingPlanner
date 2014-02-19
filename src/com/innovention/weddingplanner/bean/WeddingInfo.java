@@ -3,6 +3,8 @@ package com.innovention.weddingplanner.bean;
 
 import org.joda.time.DateTime;
 
+import android.content.Context;
+
 
 
 
@@ -62,7 +64,7 @@ public class WeddingInfo implements IDtoBean {
 	}
 
 	@Override
-	public void validate() throws UnsupportedOperationException {
+	public void validate(Context ctx) throws UnsupportedOperationException {
 		throw new UnsupportedOperationException();
 	}
 	

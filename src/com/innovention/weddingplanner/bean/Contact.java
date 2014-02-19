@@ -1,6 +1,8 @@
 package com.innovention.weddingplanner.bean;
 
 
+import android.content.Context;
+
 import com.google.common.base.Objects;
 import com.innovention.weddingplanner.ContactFragment;
 import com.innovention.weddingplanner.exception.IncorrectMailException;
@@ -173,7 +175,7 @@ public class Contact implements IDtoBean {
 	 * Validate contact bean
 	 * @return 
 	 */
-	public void validate() throws IncorrectMailException, MissingMandatoryFieldException, IncorrectTelephoneException {
+	public void validate(Context ctx) throws IncorrectMailException, MissingMandatoryFieldException, IncorrectTelephoneException {
 		
 		validateMandatory(this.getSurname());
 		validateMandatory(this.getName());

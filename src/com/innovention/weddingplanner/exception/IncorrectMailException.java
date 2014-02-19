@@ -1,6 +1,6 @@
 package com.innovention.weddingplanner.exception;
 
-public class IncorrectMailException extends Exception {
+public class IncorrectMailException extends WeddingPlannerException {
 
 	/**
 	 * 
