@@ -8,6 +8,7 @@ import org.joda.time.format.DateTimeFormat;
 
 import com.innovention.weddingplanner.Constantes.FragmentTags;
 import com.innovention.weddingplanner.TaskFragment.OnValidateTask;
+import com.innovention.weddingplanner.TaskListFragment.OnTaskCheckListener;
 import com.innovention.weddingplanner.TaskListFragment.OnTaskSelectedListener;
 import com.innovention.weddingplanner.bean.IDtoBean;
 import com.innovention.weddingplanner.bean.Task;
@@ -70,7 +71,8 @@ public class TaskActivity extends Activity implements
 						android.R.id.text1, new String[] {
 								getString(R.string.title_section1),
 								getString(R.string.title_section2),
-								getString(R.string.title_section3), }), this);
+								getString(R.string.title_section3), 
+								getString(R.string.title_section4)}), this);
 	}
 
 	/**
@@ -137,7 +139,7 @@ public class TaskActivity extends Activity implements
 		// container view.
 		android.app.Fragment fragment = new TaskListFragment();
 		Bundle args = new Bundle();
-		args.putInt(TaskListFragment.ARG_SECTION_NUMBER, position + 1);
+		args.putInt(TaskListFragment.ARG_SECTION_NUMBER, position);
 		fragment.setArguments(args);
 		getFragmentManager().beginTransaction()
 				.replace(R.id.layoutTask, fragment).commit();
@@ -169,6 +171,20 @@ public class TaskActivity extends Activity implements
 			case TAG_FGT_DELETETASK:
 				Log.v(TAG, "Delete task with id " + id);
 				int count = service.removeWithId((int) id);
+				if (count > 1)
+					showAlert(R.string.delete_task_alert_dialog_title,
+							R.string.delete_guest_multiple_alert_message,
+							getFragmentManager());
+				else if (count == 0){
+					showAlert(R.string.delete_task_alert_dialog_title,
+							R.string.delete_guest_0_alert_message,
+							getFragmentManager());
+				}
+				else {
+					showAlert(R.string.delete_task_alert_dialog_title,
+							R.string.delete_guest_OK_alert_message,
+							getFragmentManager());
+				}
 				break;
 			default:
 				return;

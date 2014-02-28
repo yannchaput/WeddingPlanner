@@ -170,4 +170,9 @@ public class GuestsDao implements IDao<Contact> {
 		return list;
 	}
 
+	@Override
+	public Cursor getCursor(String selectionClause, String[] selectionArgs) {
+		throw new UnsupportedOperationException();
+	}
+
 }

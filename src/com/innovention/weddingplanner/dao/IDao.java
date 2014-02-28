@@ -52,6 +52,14 @@ public interface IDao<T extends IDtoBean> {
 	Cursor getCursor();
 	
 	/**
+	 * Gets a cursor with a where clause statement
+	 * @param selectionClause
+	 * @param selectionArgs
+	 * @return
+	 */
+	Cursor getCursor(String selectionClause, String[] selectionArgs);
+	
+	/**
 	 * Returns the list of beans stored in db
 	 * @return
 	 */

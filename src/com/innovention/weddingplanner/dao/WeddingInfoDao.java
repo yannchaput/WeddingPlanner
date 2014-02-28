@@ -145,4 +145,9 @@ public class WeddingInfoDao implements IDao<WeddingInfo> {
 		return bean;
 	}
 	
+	@Override
+	public Cursor getCursor(String selectionClause, String[] selectionArgs) {
+		throw new UnsupportedOperationException();
+	}
+	
 }

@@ -196,7 +196,7 @@ public class GuestListFragment extends Fragment implements
 			surname.setText(c.getString(NUM_COL_SURNAME));
 			name.setText(c.getString(NUM_COL_NAME));
 			
-			Boolean invite = Boolean.valueOf(DatabaseHelper.convertIntToBool(c.getInt(NUM_COL_INVITATION)));
+			Boolean invite = DatabaseHelper.convertIntToBool(c.getInt(NUM_COL_INVITATION));
 			ResponseType rsvp = ResponseType.toEnum(c.getString(NUM_COL_RSVP));
 			
 			int resId;

@@ -35,6 +35,14 @@
     <string name="contact_item_attend">Présent</string>
     <string name="contact_item_absent">Absent</string>
     <string name="contact_button_validate">Valider</string>
+    
+    <!-- Task activity -->
+    <string name="title_activity_task">Tâche en cours</string>
+    <string name="title_section1">Liste des tâches</string>
+    <string name="title_section2">Tâches en cours</string>
+    <string name="title_section3">Tâches terminées</string>
+    <string name="title_section4">Tâches en retard</string>
+    
     <!-- Task form -->
     <string name="task_hint_field_description">Contenu de la tâche</string>
     <string name="task_label_dates">Echeance \u0026 rappels</string>
@@ -90,11 +98,10 @@
     <string name="delete_guest_multiple_alert_message">Plusieurs enregistrements correspondants à l\'invité sélectionné ont été trouvés</string>
     <string name="delete_guest_OK_alert_message">Contact supprimé de la liste!</string>
     <string name="update_task_alert_dialog_title">Erreur mise à jour</string>
-    <string name="update_task_0_alert_message">Aucun enregistrement correspondant à la tâche sélectionnée n\'a été trouvé</string> 
-    
-    <string name="title_activity_task">To-do liste</string>
-    <string name="title_section1">Tâches en cours</string>
-    <string name="title_section2">Tâches terminées</string>
-    <string name="title_section3">Tâches en retard</string>
+    <string name="update_task_0_alert_message">Aucun enregistrement correspondant à la tâche sélectionnée n\'a été trouvé</string>
+    <string name="delete_task_alert_dialog_title">Erreur suppression</string> 
+    <string name="delete_task_0_alert_message">Aucun enregistrement correspondant à la tâche sélectionnée n\'a été trouvé</string>
+    <string name="delete_task_multiple_alert_message">Plusieurs enregistrements correspondants à la tâche sélectionnée ont été trouvés</string>
+    <string name="delete_task_OK_alert_message">Tâche supprimée de la liste!</string>
 
 </resources>

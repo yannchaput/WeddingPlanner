@@ -41,4 +41,12 @@
         android:focusable="false"
         android:textAppearance="?android:attr/textAppearanceSmall" />
 
+    <TextView
+        android:id="@+id/textDueDateTaskHidden"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/placeholder"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:visibility="gone" />
+
 </LinearLayout>

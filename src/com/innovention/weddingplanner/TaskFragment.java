@@ -14,6 +14,7 @@ import com.innovention.weddingplanner.exception.MissingMandatoryFieldException;
 
 import static com.innovention.weddingplanner.utils.WeddingPlannerHelper.*;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.DatePickerDialog.OnDateSetListener;
@@ -171,6 +172,11 @@ public class TaskFragment extends Fragment implements OnDateSetListener {
 		// Inflate the layout for this fragment
 		View view = inflater.inflate(R.layout.fragment_task_form, container,
 				false);
+		
+		// Customize action bar for task form template
+		final ActionBar actionBar = getActivity().getActionBar();
+		actionBar.setDisplayShowTitleEnabled(true);
+		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
 		
 		validateBtn = (Button) view.findViewById(R.id.taskButtonSave);
 		dueDateTxt = (EditText) view.findViewById(R.id.taskEditDateEcheance);

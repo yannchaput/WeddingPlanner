@@ -121,6 +121,13 @@ public class TasksDao implements IDao<Task> {
 				COL_TASK_DUEDATE, COL_TASK_REMINDDATE, COL_TASK_REMINDOPTION }, null, null, null,
 				null, null);
 	}
+	
+	@Override
+	public Cursor getCursor(String selectionClause, String[] selectionArgs) {
+		return db.query(TABLE_TASKS, new String[] { COL_ID, COL_TASK_STATUS, COL_TASK_DESC,
+				COL_TASK_DUEDATE, COL_TASK_REMINDDATE, COL_TASK_REMINDOPTION }, selectionClause, selectionArgs, null,
+				null, null);
+	}
 
 	@Override
 	public List<Task> getList() {
