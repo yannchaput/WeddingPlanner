@@ -3,11 +3,11 @@
 
     <!-- General -->
     <string name="app_name">WeddingPlanner</string>
-    
+
     <!-- Tests -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="hello_world">Hello world!</string>
-    
+
     <!-- dashboard -->
     <string name="days_to_wedding">jours avant le Grand Jour!</string>
     <string name="initial_date_to_update">Quand est le grand jour?</string>
@@ -18,12 +18,12 @@
     <string name="item_recreateDb_action">Reset DB</string>
     <string name="title_activity_guest">Invitations</string>
     <string name="action_settings">Settings</string>
-    
+
     <!-- Contact list -->
     <string name="action_add_contact">Ajouter invité</string>
     <string name="action_delete_contact">Supprimer invité</string>
     <string name="action_update_contact">Modifier invité</string>
-    
+
     <!-- Contact form -->
     <string name="contact_field_surname">Nom</string>
     <string name="contact_field_name">Prénom</string>
@@ -42,14 +42,14 @@
     <string name="contact_item_attend">Présent</string>
     <string name="contact_item_absent">Absent</string>
     <string name="contact_button_validate">Valider</string>
-    
+
     <!-- Task activity -->
     <string name="title_activity_task">Tâches</string>
     <string name="title_section1">Liste des tâches</string>
     <string name="title_section2">Tâches en cours</string>
     <string name="title_section3">Tâches terminées</string>
     <string name="title_section4">Tâches en retard</string>
-    
+
     <!-- Task form -->
     <string name="task_hint_field_description">Contenu de la tâche</string>
     <string name="task_label_dates">Echeance \u0026 rappels</string>
@@ -58,7 +58,7 @@
     <string name="task_button_validate">Valider</string>
     <string name="task_label_remind_date">Rappel</string>
     <string name="task_spinner_prompt">Rappel avant échéance</string>
-    
+
     <!-- spinner -->
     <string name="task_spinner_item1">Aucun</string>
     <string name="task_spinner_item2">1 mois avant</string>
@@ -69,6 +69,7 @@
     <string name="task_spinner_item7">6 heures avant</string>
     <string name="task_spinner_item8">2 heures avant</string>
     <string name="task_spinner_item9">1 heure avant</string>
+
     <string-array name="task_spinner_entries">
         <item>@string/task_spinner_item1</item>
         <item>@string/task_spinner_item2</item>
@@ -80,12 +81,12 @@
         <item>@string/task_spinner_item8</item>
         <item>@string/task_spinner_item9</item>
     </string-array>
-    
+
     <!-- Tasks list -->
     <string name="action_add_task">Nouvelle tâche</string>
     <string name="action_delete_task">Supprimer tâche</string>
     <string name="action_update_task">Modifier tâche</string>
-    
+
     <!-- Validators -->
     <string name="alert_dialog_validate">OK</string>
     <string name="contact_alert_dialog_title">Informations manquantes</string>
@@ -95,11 +96,11 @@
     <string name="task_alert_dialog_title">Informations manquantes</string>
     <string name="task_mandatory_validator_message">La description de la tâche est obligatoire. Veuillez la renseigner svp.</string>
     <string name="task_inconsistent_validator_message">Un rappel ne peut être défini sans échéance</string>
-    
+
     <!-- Autres -->
     <string name="placeholder">placeholder</string>
     <string name="empty">Vide</string>
-    
+
     <!-- Alerts -->
     <string name="delete_guest_alert_dialog_title">Erreur suppression</string>
     <string name="delete_guest_0_alert_message">Aucun enregistrement correspondant à l\'invité sélectionné n\'a été trouvé</string>
@@ -107,12 +108,15 @@
     <string name="delete_guest_OK_alert_message">Contact supprimé de la liste!</string>
     <string name="update_task_alert_dialog_title">Erreur mise à jour</string>
     <string name="update_task_0_alert_message">Aucun enregistrement correspondant à la tâche sélectionnée n\'a été trouvé</string>
-    <string name="delete_task_alert_dialog_title">Erreur suppression</string> 
+    <string name="delete_task_alert_dialog_title">Erreur suppression</string>
     <string name="delete_task_0_alert_message">Aucun enregistrement correspondant à la tâche sélectionnée n\'a été trouvé</string>
     <string name="delete_task_multiple_alert_message">Plusieurs enregistrements correspondants à la tâche sélectionnée ont été trouvés</string>
     <string name="delete_task_OK_alert_message">Tâche supprimée de la liste!</string>
-    
+
     <!-- Notifications -->
     <string name="task_notification_title">Rappel</string>
+    
+    <!-- Vendors -->
+    <string name="title_activity_vendor">Prestations</string>
 
 </resources>

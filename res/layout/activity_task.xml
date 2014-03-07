@@ -3,7 +3,6 @@
     android:id="@+id/layoutTask"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/Bisque"
     tools:context=".TaskActivity"
     tools:ignore="MergeRootFrame" />
 

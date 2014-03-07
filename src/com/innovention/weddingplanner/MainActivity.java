@@ -67,6 +67,10 @@ public class MainActivity extends Activity {
 		Typeface font = getFont(this, FONT_CURVED);
 		days2WeddingTxt.setTypeface(font);
 		
+		int titleId = getResources().getIdentifier("action_bar_title", "id", "android");
+		TextView titleView = (TextView) findViewById(titleId);
+		titleView.setTypeface(font);
+		
 		// Init services and DAO
 		initServices();
 		
@@ -154,6 +158,16 @@ public class MainActivity extends Activity {
 	public void showTaskActivity(View v) {
 		Log.d(TAG, "Start To do list activity");
 		Intent intent = new Intent(this, TaskActivity.class);
+		startActivity(intent);
+	}
+	
+	/**
+	 * Display to do list activity
+	 * @param v the triggering view
+	 */
+	public void showVendorActivity(View v) {
+		Log.d(TAG, "Start Vendor list activity");
+		Intent intent = new Intent(this, VendorActivity.class);
 		startActivity(intent);
 	}
 	
