@@ -64,5 +64,13 @@ public interface IDao<T extends IDtoBean> {
 	 * @return
 	 */
 	List<T> getList();
+	
+	/**
+	 * Returns the list of beans stored in db
+	 * @param selectionClause
+	 * @param selectionArgs
+	 * @return list of tasks
+	 */
+	List<T> getList(String selectionClause, String[] selectionArgs);
 
 }

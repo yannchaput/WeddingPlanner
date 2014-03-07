@@ -90,7 +90,7 @@ public class GuestActivity extends Activity implements OnGuestSelectedListener, 
 	public void onSelectGuest(long id, final FragmentTags action) {
 		// TODO Auto-generated method stub
 		Log.d(TAG, "onSelectGuest - Selected item with id:" + id);
-		GuestsDao dao = (GuestsDao) DaoLocator.getInstance(getApplication())
+		GuestsDao dao = DaoLocator.getInstance(getApplication())
 				.get(SERVICES.GUEST);
 		
 		if (FragmentTags.TAG_FGT_UPDATECONTACT.equals(action)) {
@@ -129,7 +129,7 @@ public class GuestActivity extends Activity implements OnGuestSelectedListener, 
 		Preconditions.checkNotNull(bean, "Contact bean can't be null on validation");
 		Preconditions.checkArgument(!Strings.isNullOrEmpty(tag), "Fragment tag passed is empty which is incorrect");
 		
-		GuestsDao dao = (GuestsDao) DaoLocator
+		GuestsDao dao = DaoLocator
 				.getInstance(getApplication()).get(SERVICES.GUEST);
 		
 		if (FragmentTags.TAG_FGT_CREATECONTACT.getValue().equals(tag)) {

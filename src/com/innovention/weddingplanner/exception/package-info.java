@@ -1,7 +1,5 @@
 /**
- * 
- */
-/**
+ * Contains all custom exceptions
  * @author YCH
  *
  */

@@ -149,5 +149,11 @@ public class WeddingInfoDao implements IDao<WeddingInfo> {
 	public Cursor getCursor(String selectionClause, String[] selectionArgs) {
 		throw new UnsupportedOperationException();
 	}
+
+	@Override
+	public List<WeddingInfo> getList(String selectionClause,
+			String[] selectionArgs) {
+		throw new UnsupportedOperationException();
+	}
 	
 }

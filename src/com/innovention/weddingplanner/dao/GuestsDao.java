@@ -175,4 +175,9 @@ public class GuestsDao implements IDao<Contact> {
 		throw new UnsupportedOperationException();
 	}
 
+	@Override
+	public List<Contact> getList(String selectionClause, String[] selectionArgs) {
+		throw new UnsupportedOperationException();
+	}
+
 }

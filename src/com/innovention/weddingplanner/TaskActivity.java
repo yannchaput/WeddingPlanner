@@ -155,7 +155,7 @@ public class TaskActivity extends Activity implements
 	public void onSelectTask(long id, FragmentTags action) {
 		Log.d(TAG, String.format("onSelectTask - task with id %d was selected for %s", id, action.getValue()));
 		
-		TasksDao service = (TasksDao) DaoLocator.getInstance(getApplicationContext()).get(SERVICES.TASK);
+		TasksDao service = DaoLocator.getInstance(getApplicationContext()).get(SERVICES.TASK);
 		
 		switch(action) {
 			case TAG_FGT_UPDATETASK:
@@ -206,7 +206,7 @@ public class TaskActivity extends Activity implements
 				InputMethodManager.HIDE_NOT_ALWAYS);
 
 			Log.v(TAG, "saveTask - build task bean: " + bean);
-			TasksDao dao = (TasksDao) DaoLocator.getInstance(getApplication())
+			TasksDao dao = DaoLocator.getInstance(getApplication())
 					.get(SERVICES.TASK);
 			if (FragmentTags.TAG_FGT_CREATETASK.equals(tag)) {
 				Log.d(TAG, "Save task in creation mode : " + bean);

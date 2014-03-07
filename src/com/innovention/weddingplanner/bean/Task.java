@@ -8,6 +8,8 @@ import static com.google.common.base.Preconditions.*;
 import org.joda.time.DateTime;
 
 import android.content.Context;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 import com.google.common.base.Objects;
 import com.google.common.base.Strings;
@@ -15,9 +17,10 @@ import com.innovention.weddingplanner.R;
 import com.innovention.weddingplanner.exception.InconsistentFieldException;
 import com.innovention.weddingplanner.exception.MissingMandatoryFieldException;
 
-public class Task implements IDtoBean {
+public class Task implements IDtoBean, Parcelable {
 
 	private final static String TAG = Task.class.getSimpleName();
+	public static final String KEY_VALUE = "task_content";
 
 	private int id;
 	private Boolean active = Boolean.TRUE;
@@ -79,8 +82,38 @@ public class Task implements IDtoBean {
 			return new Task(this);
 		}
 	}
+	
+	/**
+	 * Builder for Parcelable feature
+	 */
+	public static final Parcelable.Creator<Task> CREATOR = new Parcelable.Creator<Task>() {
+
+		@Override
+		public Task createFromParcel(Parcel source) {
+			return new Task(source);
+		}
+
+		@Override
+		public Task[] newArray(int size) {
+			return new Task[size];
+		}
+		
+	};
 
 	private Task() {
+	}
+	
+	/**
+	 * Special constructor fro Parcelable implementation
+	 * @param in
+	 */
+	private Task(Parcel in) {
+		this.id = in.readInt();
+		this.active = (Boolean) in.readValue(null);
+		this.description = in.readString();
+		this.dueDate = DateTime.parse(in.readString());
+		this.remindDate = DateTime.parse(in.readString());
+		this.remindChoice = in.readString();
 	}
 	
 	private Task(final Builder builder) {
@@ -162,6 +195,27 @@ public class Task implements IDtoBean {
 
 	public void setRemindChoice(String remindChoice) {
 		this.remindChoice = remindChoice;
+	}
+
+	/**
+	 * Implements parcelable interface
+	 */
+	@Override
+	public int describeContents() {
+		return 0;
+	}
+
+	/**
+	 * Implements parcelable interface
+	 */
+	@Override
+	public void writeToParcel(Parcel dest, int flags) {
+		dest.writeInt(id);
+		dest.writeValue(active);
+		dest.writeString(description);
+		dest.writeString(dueDate.toString());
+		dest.writeString(remindDate.toString());
+		dest.writeString(remindChoice);
 	}
 
 }

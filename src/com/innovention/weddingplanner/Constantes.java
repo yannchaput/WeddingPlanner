@@ -20,7 +20,8 @@ public interface Constantes {
 		TAG_FGT_CREATETASK("createTaskFgt"),
 		TAG_FGT_UPDATETASK("updateTaskFgt"),
 		TAG_FGT_DELETETASK("deleteTaskFgt"),
-		TAG_FGT_TASKLIST("taskListFgt");
+		TAG_FGT_TASKLIST("taskListFgt"),
+		TAG_SERV_TASKALARM("taskAlarmService");
 		
 		private final String tag;
 		
@@ -40,6 +41,13 @@ public interface Constantes {
 	String KEY_DTPICKER_D = "Day";
 	String KEY_ALERT_TITLE="alert_title";
 	String KEY_MSG="validator_message";
+	
+	// Values
+	int TASK_DEFAULT_REMIND_HOUR = 12;
+	
+	// Intents
+	String TASK_SCHEDULE_NOTIF_ACTION = "scheduleNotifTask"; 
+	String TASK_REMOVE_NOTIF_ACTION = "RemoveNotifTask";
 	
 	// Ressources
 	String FONT_CURVED = "GreatVibes-Regular.otf";

@@ -393,9 +393,13 @@ public class TaskListFragment extends Fragment implements AbsListView.OnItemLong
 			break;
 		// Tasks overdue
 		case 3:
+			StringBuilder query = new StringBuilder();
+			query.append("date(").append(COL_TASK_DUEDATE).append(")").append("<= date('now') AND ");
+			query.append(COL_TASK_DUEDATE).append("<> '' AND ");
+			query.append(COL_TASK_STATUS).append("=1");
 			c = ((TasksDao) DaoLocator.getInstance(
 					getActivity().getApplicationContext()).get(SERVICES.TASK))
-					.getCursor(COL_TASK_DUEDATE + "<= datetime(?) AND " + COL_TASK_DUEDATE + "<> ''", new String[] {DateTime.now().toString()});
+					.getCursor(query.toString(), null);
 			break;
 		default:
 			 c = ((TasksDao) DaoLocator.getInstance(
@@ -466,7 +470,7 @@ public class TaskListFragment extends Fragment implements AbsListView.OnItemLong
 	private void refresh() {
 		Log.v(TAG, "Refresh list");
 		// refreshes list
-		Cursor c = ((TasksDao) DaoLocator.getInstance(getActivity().getApplication()).get(SERVICES.TASK)).getCursor();
+		Cursor c = (DaoLocator.getInstance(getActivity().getApplication()).get(SERVICES.TASK)).getCursor();
 		mAdapter.changeCursor(c);
 		mAdapter.notifyDataSetChanged();
 	}
@@ -497,7 +501,7 @@ public class TaskListFragment extends Fragment implements AbsListView.OnItemLong
 	public void onPause() {
 		super.onPause();
 		Log.d(TAG, "onPause - save all modified items of the list");
-		TasksDao service = (TasksDao) DaoLocator.getInstance(getActivity().getApplicationContext()).get(SERVICES.TASK);
+		TasksDao service = DaoLocator.getInstance(getActivity().getApplicationContext()).get(SERVICES.TASK);
 		Task task = null;
 		for (TaskCursorAdapter.Mapping elt : mAdapter.mappingList) {
 				Log.v(TAG, "Item " + elt.id + " is saved with a check " + elt.checked);

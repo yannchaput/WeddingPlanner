@@ -13,6 +13,7 @@ import com.innovention.weddingplanner.exception.InconsistentFieldException;
 import com.innovention.weddingplanner.exception.MissingMandatoryFieldException;
 
 import static com.innovention.weddingplanner.utils.WeddingPlannerHelper.*;
+import static com.innovention.weddingplanner.Constantes.TASK_DEFAULT_REMIND_HOUR;
 
 import android.app.ActionBar;
 import android.app.Activity;
@@ -321,7 +322,7 @@ public class TaskFragment extends Fragment implements OnDateSetListener {
 		DateTime remindDate = dueDate;
 		
 		// Hard set time to midday
-		remindDate = remindDate.withHourOfDay(12);
+		remindDate = remindDate.withHourOfDay(TASK_DEFAULT_REMIND_HOUR);
 
 		// Default case
 		if ((null == remindDate) || (option.equals(getResources().getString(R.string.task_spinner_item1)))) {

@@ -52,8 +52,12 @@ public class DaoLocator {
 	 * @param service
 	 * @return
 	 */
-	public IDao<? extends IDtoBean> get(SERVICES service) {
-		return services.get(service);
+//	public IDao<? extends IDtoBean> get(SERVICES service) {
+//		return services.get(service);
+//	}
+	
+	public <T extends IDao<? extends IDtoBean>> T get(SERVICES service) {
+		return (T) services.get(service);
 	}
 
 	public DatabaseHelper getDbHelper() {

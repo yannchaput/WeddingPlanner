@@ -4,6 +4,8 @@ import static com.innovention.weddingplanner.dao.ConstantesDAO.*;
 import static com.innovention.weddingplanner.utils.WeddingPlannerHelper.isEmpty;
 import static com.innovention.weddingplanner.dao.DatabaseHelper.convertIntToBool;
 import static com.google.common.base.Preconditions.*;
+
+import java.util.ArrayList;
 import java.util.List;
 
 import org.joda.time.DateTime;
@@ -13,6 +15,7 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.innovention.weddingplanner.bean.Task;
 
@@ -114,6 +117,8 @@ public class TasksDao implements IDao<Task> {
 
 	/**
 	 * Returns a cursor with the table content
+	 * Take care of closing it
+	 * @return the cursor
 	 */
 	@Override
 	public Cursor getCursor() {
@@ -131,7 +136,34 @@ public class TasksDao implements IDao<Task> {
 
 	@Override
 	public List<Task> getList() {
-		throw new UnsupportedOperationException();
+		return getList(null, null);
+	}
+
+	/**
+	 * Returns a list of tasks
+	 * @param the where clause
+	 * @param the optional argument widlcards
+	 */
+	@Override
+	public List<Task> getList(String selectionClause, String[] selectionArgs) {
+		
+		Cursor c = getCursor(selectionClause, selectionArgs);
+		ArrayList<Task> list = new ArrayList<Task>();
+		Task current = null;
+		
+		for (c.moveToFirst(); !c.isAfterLast(); c.moveToNext()) {
+			current = new Task.Builder().withId(c.getInt(NUM_COL_ID))
+					.withDesc(c.getString(NUM_COL_TASK_DESC))
+					.dueDate(DateTime.parse(c.getString(NUM_COL_TASK_DUEDATE)))
+					.remind(DateTime.parse(c.getString(NUM_COL_TASK_REMINDDATE)))
+					.remindOption(c.getString(NUM_COL_TASK_REMINDDATE))
+					.setActive(convertIntToBool(c.getInt(NUM_COL_TASK_STATUS)))
+					.build();
+			list.add(current);
+		}
+		c.close();
+		
+		return list;
 	}
 
 }
