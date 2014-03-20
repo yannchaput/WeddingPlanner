@@ -13,7 +13,7 @@ import android.util.Log;
  * @author YCH
  * 
  */
-public class DatabaseHelper extends SQLiteOpenHelper {
+public final class DatabaseHelper extends SQLiteOpenHelper {
 
 	private final static String TAG = DatabaseHelper.class.getSimpleName();
 
@@ -36,14 +36,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
 		Log.d(TAG, "onUpgrade : " + "recreate DB after upgrade from "
 				+ oldVersion + "to " + newVersion);
-		dropDb(db);
-		onCreate(db);
+		recreateDb(db);
 	}
 
 	public void recreateDb(SQLiteDatabase db) {
-		Log.d(TAG, "recreateDb : " + "recreate DB on user action");
 		dropDb(db);
-		onCreate(db);
+		createDb(db);
 	}
 
 	/**
@@ -58,6 +56,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		db.execSQL(CREATE_GUEST_TABLE);
 		Log.v(TAG, "Create tasks table");
 		db.execSQL(CREATE_TASK_TABLE);
+		Log.v(TAG, "Create vendors table");
+		db.execSQL(CREATE_VENDOR_TABLE);
 	}
 
 	/**
@@ -70,6 +70,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		db.execSQL(DROP_WEDDINGINFO_TABLE);
 		db.execSQL(DROP_GUEST_TABLE);
 		db.execSQL(DROP_TASK_TABLE);
+		db.execSQL(DROP_VENDOR_TABLE);
 	}
 	
 	/**

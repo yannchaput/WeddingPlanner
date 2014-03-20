@@ -86,6 +86,9 @@
     <string name="action_add_task">Nouvelle tâche</string>
     <string name="action_delete_task">Supprimer tâche</string>
     <string name="action_update_task">Modifier tâche</string>
+    
+    <!--  Vendor list -->
+    <string name="action_add_vendor">Nouveau prestataire</string>
 
     <!-- Validators -->
     <string name="alert_dialog_validate">OK</string>
@@ -96,6 +99,8 @@
     <string name="task_alert_dialog_title">Informations manquantes</string>
     <string name="task_mandatory_validator_message">La description de la tâche est obligatoire. Veuillez la renseigner svp.</string>
     <string name="task_inconsistent_validator_message">Un rappel ne peut être défini sans échéance</string>
+    <string name="vendor_alert_dialog_title">Informations manquantes</string>
+    <string name="vendor_mandatory_validator_message">Le nom de la société est obligatoire. Veuillez le renseigner svp.</string>
 
     <!-- Autres -->
     <string name="placeholder">placeholder</string>
@@ -118,5 +123,30 @@
     
     <!-- Vendors -->
     <string name="title_activity_vendor">Prestations</string>
+    <string name="vendor_label_company">Société</string>
+    <string name="vendor_label_contact">Nom &amp; prénom du contact</string>
+    <string name="vendor_spinner_label_category">Catégorie</string>
+    <string-array name="vendor_spinner_categories_entries">
+        <item>Alimentation</item>
+        <item>Animation</item>
+        <item>Bijouterie</item>
+        <item>Boisson</item>
+        <item>Cadeaux</item>
+        <item>Coiffeur</item>
+        <item>Décoration</item>
+        <item>Divers</item>
+        <item>Location</item>
+        <item>Logement</item>
+        <item>Papeterie</item>
+        <item>Photographe</item>
+        <item>Service</item>
+        <item>Traiteur</item>
+        <item>Transport</item>
+    </string-array>
+    <string name="vendor_label_address">Adresse</string>
+    <string name="vendor_label_mail">E-Mail</string>
+    <string name="vendor_label_note">Note</string>
+    <string name="vendor_button_validate">Valider</string>
+    <string name="vendor_label_phone">Tel.</string>
 
 </resources>

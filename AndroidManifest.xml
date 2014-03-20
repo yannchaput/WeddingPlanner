@@ -63,6 +63,11 @@
             android:parentActivityName="com.innovention.weddingplanner.MainActivity"
             android:windowSoftInputMode="adjustResize" >
         </activity>
+        
+        <provider android:name="com.innovention.weddingplanner.contentprovider.DbContentProvider"
+            android:authorities="com.innovention.weddingplanner.contentprovider" 
+            android:exported="false">"
+        </provider>
     </application>
 
 </manifest>

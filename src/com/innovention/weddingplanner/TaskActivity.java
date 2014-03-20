@@ -200,10 +200,7 @@ public class TaskActivity extends Activity implements
 		Log.d(TAG, "validateTask - click on validate task button");
 
 		// Hide virtual keyboard if opened
-		InputMethodManager inputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-		inputManager.hideSoftInputFromWindow(
-				getCurrentFocus().getWindowToken(),
-				InputMethodManager.HIDE_NOT_ALWAYS);
+		hideKeyboard(this);
 
 			Log.v(TAG, "saveTask - build task bean: " + bean);
 			TasksDao dao = DaoLocator.getInstance(getApplication())

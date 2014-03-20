@@ -23,6 +23,7 @@ import android.support.v4.app.FragmentTabHost;
 import android.text.TextUtils;
 import android.util.Patterns;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 
 import com.innovention.weddingplanner.AlertDialogFragment;
 import com.innovention.weddingplanner.ContactFragment;
@@ -30,6 +31,8 @@ import com.innovention.weddingplanner.GuestListFragment;
 import com.innovention.weddingplanner.R;
 import com.innovention.weddingplanner.TaskFragment;
 import com.innovention.weddingplanner.TaskListFragment;
+import com.innovention.weddingplanner.VendorFragment;
+import com.innovention.weddingplanner.VendorListFragment;
 import com.innovention.weddingplanner.bean.Contact;
 import com.innovention.weddingplanner.bean.IDtoBean;
 import com.innovention.weddingplanner.bean.Task;
@@ -94,7 +97,7 @@ public class WeddingPlannerHelper {
 	 * @param field
 	 * @return boolean
 	 */
-	public static <T> void validateMandatory(T field) throws MissingMandatoryFieldException {
+	public static <T extends CharSequence> void validateMandatory(T field) throws MissingMandatoryFieldException {
 
 		if ( (field == null) || (field.equals("")) )
 			throw new MissingMandatoryFieldException(MISSING_MANADTORY_FIELD_EX);
@@ -180,6 +183,14 @@ public class WeddingPlannerHelper {
 			fgt = TaskFragment.newInstance(tag, (Task) params[0]);
 			resId = R.id.layoutTask;
 			break;
+		case TAG_FGT_CREATE_VENDOR:
+			fgt = VendorFragment.newInstance();
+			resId = R.id.LayoutVendor;
+			break;
+		case TAG_FGT_VENDORLIST:
+			fgt = VendorListFragment.newInstance();
+			resId = R.id.LayoutVendor;
+			break;
 		default:
 			// do nothing
 			return;
@@ -201,4 +212,15 @@ public class WeddingPlannerHelper {
 		dialog.show(ft, tag.getValue());
 	}
 	
+	/**
+	 * Hide the virtual keyboard if still open
+	 * @param activity
+	 */
+	public static void hideKeyboard(final Activity activity) {
+		// Hide virtual keyboard if opened
+		InputMethodManager inputManager = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+		inputManager.hideSoftInputFromWindow(
+				activity.getCurrentFocus().getWindowToken(),
+				InputMethodManager.HIDE_NOT_ALWAYS);
+	}
 }

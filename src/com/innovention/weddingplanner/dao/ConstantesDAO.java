@@ -6,10 +6,13 @@ public interface ConstantesDAO {
 	String TABLE_WEDDINGINFO = "table_weddingInfo";
 	String TABLE_GUESTS = "table_guests";
 	String TABLE_TASKS = "table_tasks";
+	String TABLE_VENDORS = "table_vendors";
 	
-	// Columns wedding info
+	// General
 	String COL_ID ="_id";
 	byte NUM_COL_ID = 0;
+	
+	// Columns wedding info
 	String COL_WEDDATE = "weddate";
 	byte NUM_COL_WEDDATE = 1;
 	
@@ -49,8 +52,24 @@ public interface ConstantesDAO {
 	String COL_TASK_REMINDOPTION = "remindoption";
 	byte NUM_COL_TASK_REMINDOPTION = NUM_COL_TASK_REMINDDATE + 1;
 	
+	// Vendor table
+	String COL_VENDOR_COMPANY = "company";
+	byte NUM_COL_VENDOR_COMPANY = NUM_COL_ID + 1;
+	String COL_VENDOR_CONTACT = "contact";
+	byte NUM_COL_VENDOR_CONTACT = NUM_COL_VENDOR_COMPANY + 1;
+	String COL_VENDOR_ADDRESS = "address";
+	byte NUM_COL_VENDOR_ADDRESS = NUM_COL_VENDOR_CONTACT + 1;
+	String COL_VENDOR_PHONE = "telephone";
+	byte NUM_COL_VENDOR_PHONE = NUM_COL_VENDOR_ADDRESS + 1;
+	String COL_VENDOR_MAIL = "email";
+	byte NUM_COL_VENDOR_MAIL = NUM_COL_VENDOR_PHONE + 1;
+	String COL_VENDOR_CATEGORY = "category";
+	byte NUM_COL_VENDOR_CATEGORY = NUM_COL_VENDOR_MAIL + 1;
+	String COL_VENDOR_NOTE = "note";
+	byte NUM_COL_VENDOR_NOTE = NUM_COL_VENDOR_CATEGORY + 1;
+	
 	// General
-	int VERSION_BDD = 6;
+	int VERSION_BDD = 7;
 	String NOM_BDD = "wedplanner.db";
 	
 	String CREATE_WEDDINGINFO_TABLE= new StringBuilder()
@@ -114,6 +133,29 @@ public interface ConstantesDAO {
 	.append(");")
 	.toString();
 	
+	String CREATE_VENDOR_TABLE = new StringBuilder()
+	.append("CREATE TABLE IF NOT EXISTS ")
+	.append(TABLE_VENDORS)
+	.append(" (")
+	.append(COL_ID)
+	.append(" INTEGER PRIMARY KEY AUTOINCREMENT, ")
+	.append(COL_VENDOR_COMPANY)
+	.append(" TEXT NOT NULL, ")
+	.append(COL_VENDOR_CONTACT)
+	.append(" TEXT, ")
+	.append(COL_VENDOR_ADDRESS)
+	.append(" TEXT, ")
+	.append(COL_VENDOR_PHONE)
+	.append( " TEXT, ")
+	.append(COL_VENDOR_MAIL)
+	.append(" TEXT, ")
+	.append(COL_VENDOR_CATEGORY)
+	.append(" TEXT, ")
+	.append(COL_VENDOR_NOTE)
+	.append(" TEXT")
+	.append(");")
+	.toString();
+	
 	
 	String DROP_WEDDINGINFO_TABLE = new StringBuilder()
 	.append("DROP TABLE IF EXISTS ")
@@ -130,6 +172,12 @@ public interface ConstantesDAO {
 	String DROP_TASK_TABLE = new StringBuilder()
 	.append("DROP TABLE IF EXISTS ")
 	.append(TABLE_TASKS)
+	.append(";")
+	.toString();
+	
+	String DROP_VENDOR_TABLE = new StringBuilder()
+	.append("DROP TABLE IF EXISTS ")
+	.append(TABLE_VENDORS)
 	.append(";")
 	.toString();
 }

@@ -1,13 +1,13 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
 
- <!--    <item
+   <!--  <item
         android:id="@+id/action_settings"
         android:orderInCategory="100"
         android:showAsAction="never"
         android:title="@string/action_settings"/> -->
-    <item android:id="@+id/action_add_task"
+    <item android:id="@+id/action_add_vendor"
           android:icon="@drawable/ic_action_new"
-          android:title="@string/action_add_task"
+          android:title="@string/action_add_vendor"
           android:showAsAction="ifRoom"/>
 
 </menu>

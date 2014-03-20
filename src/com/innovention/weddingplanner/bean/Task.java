@@ -104,7 +104,7 @@ public class Task implements IDtoBean, Parcelable {
 	}
 	
 	/**
-	 * Special constructor fro Parcelable implementation
+	 * Special constructor for Parcelable implementation
 	 * @param in
 	 */
 	private Task(Parcel in) {

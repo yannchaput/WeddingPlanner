@@ -21,6 +21,6 @@ public interface IDtoBean {
 	 * @throws UnsupportedOperationException if not implemented
 	 * @throws WeddingPlannerException 
 	 */
-	void validate(Context ctx) throws UnsupportedOperationException, WeddingPlannerException;
+	void validate(Context ctx) throws WeddingPlannerException;
 
 }

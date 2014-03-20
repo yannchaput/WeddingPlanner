@@ -21,7 +21,9 @@ public interface Constantes {
 		TAG_FGT_UPDATETASK("updateTaskFgt"),
 		TAG_FGT_DELETETASK("deleteTaskFgt"),
 		TAG_FGT_TASKLIST("taskListFgt"),
-		TAG_SERV_TASKALARM("taskAlarmService");
+		TAG_SERV_TASKALARM("taskAlarmService"),
+		TAG_FGT_CREATE_VENDOR("createVendorFgt"),
+		TAG_FGT_VENDORLIST("vendorListFgt");
 		
 		private final String tag;
 		

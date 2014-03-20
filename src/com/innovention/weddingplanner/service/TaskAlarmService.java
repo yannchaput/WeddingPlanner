@@ -56,7 +56,10 @@ public class TaskAlarmService extends Service {
 		super();
 	}
 
-
+	
+	/**
+	 * Executed when service is requested for scheduling tasks or delete them
+	 */
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
 
@@ -65,6 +68,7 @@ public class TaskAlarmService extends Service {
 		TasksDao dao = DaoLocator.getInstance(this).get(
 				SERVICES.TASK);
 
+		// Schedules tasks
 		if (Constantes.TASK_SCHEDULE_NOTIF_ACTION.equals(intent.getAction())) {
 			
 			Log.d(TAG, "Schedule tasks");
@@ -89,6 +93,7 @@ public class TaskAlarmService extends Service {
 						task.getRemindDate().getMillis(), alarmIntent);
 			}
 		}
+		// Deschedule task upon notification tap
 		else if (Constantes.TASK_REMOVE_NOTIF_ACTION.equals(intent.getAction())) {
 			Log.d(TAG, "Remove reminder upon notification delete");
 			Task task = intent.getExtras().getParcelable(Task.KEY_VALUE);

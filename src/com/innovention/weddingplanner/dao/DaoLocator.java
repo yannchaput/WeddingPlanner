@@ -25,7 +25,7 @@ public class DaoLocator {
 	private static DaoLocator instance = null;
 	
 	public enum SERVICES {
-		INFO, GUEST, TASK;
+		INFO, GUEST, TASK, VENDOR;
 	}
 	
 	private DaoLocator(Context context) {
@@ -36,6 +36,7 @@ public class DaoLocator {
 		services.put(SERVICES.INFO, new WeddingInfoDao(database));
 		services.put(SERVICES.GUEST, new GuestsDao(database));
 		services.put(SERVICES.TASK, new TasksDao(database));
+		services.put(SERVICES.VENDOR, new VendorDao(database));
 		
 	}
 	
@@ -52,10 +53,7 @@ public class DaoLocator {
 	 * @param service
 	 * @return
 	 */
-//	public IDao<? extends IDtoBean> get(SERVICES service) {
-//		return services.get(service);
-//	}
-	
+	@SuppressWarnings("unchecked")
 	public <T extends IDao<? extends IDtoBean>> T get(SERVICES service) {
 		return (T) services.get(service);
 	}

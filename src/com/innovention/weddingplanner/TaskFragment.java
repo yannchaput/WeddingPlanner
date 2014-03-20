@@ -79,7 +79,7 @@ public class TaskFragment extends Fragment implements OnDateSetListener {
 		private DateTime initialDate;
 		private FragmentTags mode = FragmentTags.TAG_FGT_TASKDATEPICKER;
 
-		public static DatePickerFragment newInstance(
+		static DatePickerFragment newInstance(
 				final OnDateSetListener callback, 
 				final FragmentTags mode,
 				final DateTime setupDate) {
