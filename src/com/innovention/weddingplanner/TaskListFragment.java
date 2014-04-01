@@ -1,6 +1,5 @@
 package com.innovention.weddingplanner;
 
-
 import static com.innovention.weddingplanner.dao.ConstantesDAO.COL_TASK_DESC;
 import static com.innovention.weddingplanner.dao.ConstantesDAO.NUM_COL_ID;
 import static com.innovention.weddingplanner.dao.ConstantesDAO.NUM_COL_TASK_STATUS;
@@ -54,9 +53,9 @@ import com.innovention.weddingplanner.dao.DaoLocator.SERVICES;
 import com.innovention.weddingplanner.dao.TasksDao;
 import com.innovention.weddingplanner.utils.WeddingPlannerHelper;
 
-public class TaskListFragment extends Fragment implements AbsListView.OnItemLongClickListener {
+public class TaskListFragment extends Fragment implements
+		AbsListView.OnItemLongClickListener, Refreshable {
 
-	
 	private static final String TAG = TaskListFragment.class.getSimpleName();
 	/**
 	 * The fragment argument representing the section number for this fragment.
@@ -67,7 +66,7 @@ public class TaskListFragment extends Fragment implements AbsListView.OnItemLong
 	 * The list adapter
 	 */
 	private TaskCursorAdapter mAdapter;
-	
+
 	// Listener on "select" action
 	private OnTaskSelectedListener mListener = null;
 
@@ -75,7 +74,7 @@ public class TaskListFragment extends Fragment implements AbsListView.OnItemLong
 	 * The fragment's ListView/GridView.
 	 */
 	private AbsListView mListView;
-	
+
 	// Contextual action mode in activity
 	private ActionMode mActionMode = null;
 
@@ -104,11 +103,12 @@ public class TaskListFragment extends Fragment implements AbsListView.OnItemLong
 		public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
 
 			long id = mAdapter.currentSelectionId;
-			
+
 			switch (item.getItemId()) {
 			case R.id.action_update_task:
 				Log.d(TAG,
-						"ActionMode.Callback - onActionItemClicked - edit item with db id " + id);
+						"ActionMode.Callback - onActionItemClicked - edit item with db id "
+								+ id);
 				if (mListener != null) {
 					mListener.onSelectTask(id, FragmentTags.TAG_FGT_UPDATETASK);
 				}
@@ -117,7 +117,8 @@ public class TaskListFragment extends Fragment implements AbsListView.OnItemLong
 				return true;
 			case R.id.action_delete_task:
 				Log.d(TAG,
-						"ActionMode.Callback - onActionItemClicked - delete item with db id " + id);
+						"ActionMode.Callback - onActionItemClicked - delete item with db id "
+								+ id);
 				if (mListener != null) {
 					mListener.onSelectTask(id, FragmentTags.TAG_FGT_DELETETASK);
 				}
@@ -131,16 +132,17 @@ public class TaskListFragment extends Fragment implements AbsListView.OnItemLong
 			}
 		}
 	};
-	
+
 	/**
 	 * Triggered when a task is selected by a long click
+	 * 
 	 * @author YCH
-	 *
+	 * 
 	 */
 	interface OnTaskSelectedListener {
 		void onSelectTask(long id, final FragmentTags action);
 	}
-	
+
 	interface OnTaskCheckListener {
 		void onCheckTask(int id, boolean isChecked);
 	}
@@ -158,15 +160,17 @@ public class TaskListFragment extends Fragment implements AbsListView.OnItemLong
 		// Saves current item on a long click action
 		private int currentSelectionPos = -1;
 		private long currentSelectionId = -1;
-		// Saves the mapping id <-> status in a list ordered by the position in the list view
+		// Saves the mapping id <-> status in a list ordered by the position in
+		// the list view
 		private ArrayList<Mapping> mappingList = new ArrayList<Mapping>();
-		
+
 		/**
-		 * Internal holder object
-		 * Holds a reference to a "row" view of the list
-		 * Be careful the row view is reused every time the viewport changed so the view holder should be stateless
+		 * Internal holder object Holds a reference to a "row" view of the list
+		 * Be careful the row view is reused every time the viewport changed so
+		 * the view holder should be stateless
+		 * 
 		 * @author YCH
-		 *
+		 * 
 		 */
 		private class ViewHolder {
 			// Views
@@ -175,11 +179,13 @@ public class TaskListFragment extends Fragment implements AbsListView.OnItemLong
 			private TextView remindDateTxt;
 			private TextView dueDateTxt;
 		}
-		
+
 		/**
-		 * Holds element in the arraylist with the id of the task and its state (checked/uncheked)
+		 * Holds element in the arraylist with the id of the task and its state
+		 * (checked/uncheked)
+		 * 
 		 * @author YCH
-		 *
+		 * 
 		 */
 		private class Mapping {
 			private int id;
@@ -190,14 +196,15 @@ public class TaskListFragment extends Fragment implements AbsListView.OnItemLong
 				String[] from, int[] to, int flags) {
 			super(context, layout, c, from, to, flags);
 			this.context = context;
-			
+
 			// init array of checkbox status
 			Mapping bean = null;
 			while (c.moveToNext()) {
 				int pos = c.getPosition();
 				bean = new Mapping();
 				bean.id = c.getInt(NUM_COL_ID);
-				bean.checked = !DatabaseHelper.convertIntToBool(c.getInt(NUM_COL_TASK_STATUS));
+				bean.checked = !DatabaseHelper.convertIntToBool(c
+						.getInt(NUM_COL_TASK_STATUS));
 				mappingList.add(bean);
 			}
 		}
@@ -206,108 +213,124 @@ public class TaskListFragment extends Fragment implements AbsListView.OnItemLong
 		public View getView(int position, View convertView, ViewGroup parent) {
 			View row = convertView;
 			ViewHolder holder;
-			
+
 			/**
 			 * Local class overriding the behavior of checkboxes
+			 * 
 			 * @author YCH
-			 *
+			 * 
 			 */
-			class OnCheckedChangeListener implements CompoundButton.OnCheckedChangeListener {
-				
+			class OnCheckedChangeListener implements
+					CompoundButton.OnCheckedChangeListener {
+
 				// Holds reference of views inside the row view
 				private ViewHolder view;
-				
+
 				/**
 				 * Constructor
+				 * 
 				 * @param holder
 				 */
 				private OnCheckedChangeListener(final ViewHolder holder) {
 					view = holder;
 				}
-				
+
 				/**
 				 * Triggered on a change of the state of the checkbox
 				 */
 				@Override
-				public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-					
+				public void onCheckedChanged(CompoundButton buttonView,
+						boolean isChecked) {
+
 					int position = (Integer) buttonView.getTag();
 					mappingList.get(position).checked = isChecked;
-					displayCheck(isChecked, view, view.dueDateTxt.getText().toString());
+					displayCheck(isChecked, view, view.dueDateTxt.getText()
+							.toString());
 				}
 			}
-			
+
 			// If view does not already exists we create it
 			if (row == null) {
-				row = View.inflate(context, R.layout.fragment_task_adapter, null);
+				row = View.inflate(context, R.layout.fragment_task_adapter,
+						null);
 				holder = new ViewHolder();
-				holder.check = (CheckBox) row.findViewById(R.id.checkboxTaskList);
+				holder.check = (CheckBox) row
+						.findViewById(R.id.checkboxTaskList);
 				// Listener on check box
-				holder.check.setOnCheckedChangeListener(new OnCheckedChangeListener(holder));
-				holder.alarmIcon = (ImageView) row.findViewById(R.id.iconAlarmTaskList);
-				holder.remindDateTxt = (TextView) row.findViewById(R.id.textReminderTaskList);
-				holder.dueDateTxt = (TextView) row.findViewById(R.id.textDueDateTaskHidden);
+				holder.check
+						.setOnCheckedChangeListener(new OnCheckedChangeListener(
+								holder));
+				holder.alarmIcon = (ImageView) row
+						.findViewById(R.id.iconAlarmTaskList);
+				holder.remindDateTxt = (TextView) row
+						.findViewById(R.id.textReminderTaskList);
+				holder.dueDateTxt = (TextView) row
+						.findViewById(R.id.textDueDateTaskHidden);
 				row.setTag(holder);
 			}
-			
+
 			holder = (ViewHolder) row.getTag();
 			Cursor c = getCursor();
 			c.moveToPosition(position);
-			
+
 			CheckBox check = holder.check;
 			ImageView icon = holder.alarmIcon;
 			TextView dateTxt = holder.remindDateTxt;
 			TextView dueDateTxt = holder.dueDateTxt;
-			
+
 			String remindDate = c.getString(NUM_COL_TASK_REMINDDATE);
 			String description = c.getString(NUM_COL_TASK_DESC);
 			String expiryTxt = c.getString(NUM_COL_TASK_DUEDATE);
-			
+
 			// Saves the id of the item in a hidden field for future reference
 			dueDateTxt.setText(expiryTxt);
 			check.setText(description);
-			
+
 			// Set visibility of reminder
 			if (!WeddingPlannerHelper.isEmpty(remindDate)) {
 				icon.setVisibility(View.VISIBLE);
 				dateTxt.setVisibility(View.VISIBLE);
 				DateTime parsedDate = DateTime.parse(remindDate);
 				dateTxt.setText(DateTimeFormat.mediumDate().print(parsedDate));
-			}
-			else{
+			} else {
 				icon.setVisibility(View.GONE);
 				dateTxt.setVisibility(View.GONE);
 			}
-			
+
 			// Handle check/uncheck mechanism
 			displayCheck(mappingList.get(position).checked, holder, expiryTxt);
-			
+
 			// Saves position of the current view to apply the right check
 			check.setTag(position);
 			// Sets the state of the checkbox according to array
 			check.setChecked(mappingList.get(position).checked);
-			
+
 			return row;
 		}
-		
+
 		/**
-		 * Manage shape and color of the checkboxes according to its state and other field values
+		 * Manage shape and color of the checkboxes according to its state and
+		 * other field values
+		 * 
 		 * @param check
 		 * @param holder
 		 */
-		private void displayCheck(boolean check, final ViewHolder holder, String dueDate) {
-			
+		private void displayCheck(boolean check, final ViewHolder holder,
+				String dueDate) {
+
 			int color = getResources().getColor(R.color.Black);
 			int iconDrawable = R.drawable.ic_alarm_icon;
-			
+
 			CheckBox checkbox = holder.check;
 			TextView reminderTxt = holder.remindDateTxt;
 			ImageView icon = holder.alarmIcon;
-			
+
 			if (check) {
 				// Strike through text
-				checkbox.setPaintFlags(checkbox.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-				reminderTxt.setPaintFlags(reminderTxt.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+				checkbox.setPaintFlags(checkbox.getPaintFlags()
+						| Paint.STRIKE_THRU_TEXT_FLAG);
+				reminderTxt.setPaintFlags(reminderTxt.getPaintFlags()
+						| Paint.STRIKE_THRU_TEXT_FLAG);
 				color = getResources().getColor(R.color.DarkGray);
 				iconDrawable = R.drawable.ic_alarm_icon;
 				checkbox.setTextColor(color);
@@ -316,15 +339,18 @@ public class TaskListFragment extends Fragment implements AbsListView.OnItemLong
 			}
 			// Task not completed => normal behavior
 			else {
-				checkbox.setPaintFlags(checkbox.getPaintFlags() & ~Paint.STRIKE_THRU_TEXT_FLAG);
-				reminderTxt.setPaintFlags(reminderTxt.getPaintFlags() & ~Paint.STRIKE_THRU_TEXT_FLAG);
+				checkbox.setPaintFlags(checkbox.getPaintFlags()
+						& ~Paint.STRIKE_THRU_TEXT_FLAG);
+				reminderTxt.setPaintFlags(reminderTxt.getPaintFlags()
+						& ~Paint.STRIKE_THRU_TEXT_FLAG);
 				// Reestablish the former view state
 				setColorAndIcon(holder, dueDate);
 			}
 		}
-		
+
 		/**
 		 * Sets color of a row according to its state
+		 * 
 		 * @param holder
 		 * @param dueDate
 		 */
@@ -359,19 +385,18 @@ public class TaskListFragment extends Fragment implements AbsListView.OnItemLong
 		return new TaskListFragment();
 	}
 
-
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
 		Log.v(TAG, "onCreate");
-		
+
 		int dropdownItem = 0;
 		Cursor c;
-		if(getArguments() != null) {
+		if (getArguments() != null) {
 			dropdownItem = getArguments().getInt(ARG_SECTION_NUMBER);
 		}
-		
+
 		switch (dropdownItem) {
 		// Total list
 		case 0:
@@ -381,9 +406,9 @@ public class TaskListFragment extends Fragment implements AbsListView.OnItemLong
 			break;
 		// Tasks in progress
 		case 1:
-			 c = ((TasksDao) DaoLocator.getInstance(
-						getActivity().getApplicationContext()).get(SERVICES.TASK))
-						.getCursor(COL_TASK_STATUS + "=1", null);
+			c = ((TasksDao) DaoLocator.getInstance(
+					getActivity().getApplicationContext()).get(SERVICES.TASK))
+					.getCursor(COL_TASK_STATUS + "=1", null);
 			break;
 		// completed tasks
 		case 2:
@@ -394,7 +419,8 @@ public class TaskListFragment extends Fragment implements AbsListView.OnItemLong
 		// Tasks overdue
 		case 3:
 			StringBuilder query = new StringBuilder();
-			query.append("date(").append(COL_TASK_DUEDATE).append(")").append("<= date('now') AND ");
+			query.append("date(").append(COL_TASK_DUEDATE).append(")")
+					.append("<= date('now') AND ");
 			query.append(COL_TASK_DUEDATE).append("<> '' AND ");
 			query.append(COL_TASK_STATUS).append("=1");
 			c = ((TasksDao) DaoLocator.getInstance(
@@ -402,11 +428,11 @@ public class TaskListFragment extends Fragment implements AbsListView.OnItemLong
 					.getCursor(query.toString(), null);
 			break;
 		default:
-			 c = ((TasksDao) DaoLocator.getInstance(
-						getActivity().getApplicationContext()).get(SERVICES.TASK))
-						.getCursor();
+			c = ((TasksDao) DaoLocator.getInstance(
+					getActivity().getApplicationContext()).get(SERVICES.TASK))
+					.getCursor();
 		}
-		
+
 		// TODO update to CursorLoader
 		getActivity().startManagingCursor(c);
 		// TODO Use a CursorLoader
@@ -424,7 +450,7 @@ public class TaskListFragment extends Fragment implements AbsListView.OnItemLong
 
 		// Necessary to set the menu visible for fragment
 		setHasOptionsMenu(true);
-		
+
 		final ActionBar actionBar = getActivity().getActionBar();
 		actionBar.setDisplayShowTitleEnabled(false);
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
@@ -434,6 +460,8 @@ public class TaskListFragment extends Fragment implements AbsListView.OnItemLong
 		((AdapterView<ListAdapter>) mListView).setAdapter(mAdapter);
 		mListView.setChoiceMode(AbsListView.CHOICE_MODE_SINGLE);
 		mListView.setOnItemLongClickListener(this);
+		// Set the empty view
+		mListView.setEmptyView(rootView.findViewById(R.id.empty));
 
 		return rootView;
 	}
@@ -448,29 +476,34 @@ public class TaskListFragment extends Fragment implements AbsListView.OnItemLong
 	@Override
 	public boolean onItemLongClick(AdapterView<?> parent, View view,
 			int position, long id) {
-		Log.v(TAG, String.format("onItemLongClick - perform long click on item of the list [id=%d, pos=%d]", id, position));
-		
+		Log.v(TAG,
+				String.format(
+						"onItemLongClick - perform long click on item of the list [id=%d, pos=%d]",
+						id, position));
+
 		if ((null != mListener) && (mActionMode != null)) {
 			return false;
 		}
-		
+
 		// Starts the CAB using the ActionMode.Callbakc defined above
 		mActionMode = getActivity().startActionMode(mActionModeCallback);
 		mListView.setItemChecked(position, true);
 		((TaskCursorAdapter) mAdapter).currentSelectionPos = position;
 		((TaskCursorAdapter) mAdapter).currentSelectionId = id;
 		view.setSelected(true);
-		
+
 		return true;
 	}
-	
+
 	/**
 	 * Refresh the adapter with an updated cursor
 	 */
-	private void refresh() {
+	@Override
+	public void refresh() {
 		Log.v(TAG, "Refresh list");
 		// refreshes list
-		Cursor c = (DaoLocator.getInstance(getActivity().getApplication()).get(SERVICES.TASK)).getCursor();
+		Cursor c = (DaoLocator.getInstance(getActivity().getApplication())
+				.get(SERVICES.TASK)).getCursor();
 		mAdapter.changeCursor(c);
 		mAdapter.notifyDataSetChanged();
 	}
@@ -494,21 +527,23 @@ public class TaskListFragment extends Fragment implements AbsListView.OnItemLong
 	}
 
 	/**
-	 * Called when the fragment is replaced or no more visible
-	 * Save the item if it was checked as "completed"
+	 * Called when the fragment is replaced or no more visible Save the item if
+	 * it was checked as "completed"
 	 */
 	@Override
 	public void onPause() {
 		super.onPause();
 		Log.d(TAG, "onPause - save all modified items of the list");
-		TasksDao service = DaoLocator.getInstance(getActivity().getApplicationContext()).get(SERVICES.TASK);
+		TasksDao service = DaoLocator.getInstance(
+				getActivity().getApplicationContext()).get(SERVICES.TASK);
 		Task task = null;
 		for (TaskCursorAdapter.Mapping elt : mAdapter.mappingList) {
-				Log.v(TAG, "Item " + elt.id + " is saved with a check " + elt.checked);
-				task = service.get(elt.id);
-				task.setActive(!elt.checked);
-				service.update(elt.id, task);
+			Log.v(TAG, "Item " + elt.id + " is saved with a check "
+					+ elt.checked);
+			task = service.get(elt.id);
+			task.setActive(!elt.checked);
+			service.update(elt.id, task);
 		}
-		
+
 	}
 }

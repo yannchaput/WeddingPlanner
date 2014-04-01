@@ -21,6 +21,7 @@ import android.content.res.Resources;
 import android.graphics.Typeface;
 import android.support.v4.app.FragmentTabHost;
 import android.text.TextUtils;
+import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -36,6 +37,7 @@ import com.innovention.weddingplanner.VendorListFragment;
 import com.innovention.weddingplanner.bean.Contact;
 import com.innovention.weddingplanner.bean.IDtoBean;
 import com.innovention.weddingplanner.bean.Task;
+import com.innovention.weddingplanner.bean.Vendor;
 import com.innovention.weddingplanner.exception.IncorrectMailException;
 import com.innovention.weddingplanner.exception.IncorrectTelephoneException;
 import com.innovention.weddingplanner.exception.MissingMandatoryFieldException;
@@ -187,8 +189,22 @@ public class WeddingPlannerHelper {
 			fgt = VendorFragment.newInstance();
 			resId = R.id.LayoutVendor;
 			break;
+		case TAG_FGT_UPDATE_VENDOR:
+			checkNotNull(params, "The vendor object passed in parameter should not be null");
+			checkArgument(params.length == 1, "There should be exactly one vendor to update");
+			fgt = VendorFragment.newInstance(tag, (Vendor) params[0]);
+			resId = R.id.LayoutVendor;
+			break;
 		case TAG_FGT_VENDORLIST:
-			fgt = VendorListFragment.newInstance();
+			fgt = parent.getFragmentManager().findFragmentByTag(tag.getValue());
+			if (null == fgt) {
+				Log.v(TAG, "Create new VendorListFragment instance");
+				fgt = VendorListFragment.newInstance();
+			}
+			else {
+				Log.v(TAG, "Reuse existing VendorListFragment instance");
+				((VendorListFragment) fgt).refresh();
+			}
 			resId = R.id.LayoutVendor;
 			break;
 		default:

@@ -43,6 +43,12 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.innovention.weddingplanner.MainActivity" />
         </activity>
+        <activity
+            android:name="com.innovention.weddingplanner.VendorActivity"
+            android:label="@string/title_activity_vendor"
+            android:parentActivityName="com.innovention.weddingplanner.MainActivity"
+            android:windowSoftInputMode="adjustResize" >
+        </activity>
 
         <receiver android:name="com.innovention.weddingplanner.service.BootstrapReceiver" >
             <intent-filter>
@@ -56,16 +62,9 @@
             android:name="com.innovention.weddingplanner.service.TaskAlarmService"
             android:exported="false" >
         </service>
-
-        <activity
-            android:name="com.innovention.weddingplanner.VendorActivity"
-            android:label="@string/title_activity_vendor"
-            android:parentActivityName="com.innovention.weddingplanner.MainActivity"
-            android:windowSoftInputMode="adjustResize" >
-        </activity>
         
-        <provider android:name="com.innovention.weddingplanner.contentprovider.DbContentProvider"
-            android:authorities="com.innovention.weddingplanner.contentprovider" 
+        <provider android:name=".contentprovider.VendorContentProvider"
+            android:authorities="com.innovention.weddingplanner.contentprovider.VendorContentProvider" 
             android:exported="false">"
         </provider>
     </application>

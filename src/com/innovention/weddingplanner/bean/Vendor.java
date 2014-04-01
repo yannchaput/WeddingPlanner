@@ -8,8 +8,10 @@ import static com.innovention.weddingplanner.utils.WeddingPlannerHelper.validate
 import static com.innovention.weddingplanner.utils.WeddingPlannerHelper.validateTelephone;
 import static com.innovention.weddingplanner.utils.WeddingPlannerHelper.validateEmail;
 import android.content.Context;
+import android.database.Cursor;
 
 import com.google.common.base.Objects;
+import com.innovention.weddingplanner.dao.ConstantesDAO;
 import com.innovention.weddingplanner.exception.IncorrectMailException;
 import com.innovention.weddingplanner.exception.IncorrectTelephoneException;
 import com.innovention.weddingplanner.exception.MissingMandatoryFieldException;
@@ -30,6 +32,44 @@ public class Vendor implements IDtoBean {
 	private String mail;
 	private String category;
 	private String note;
+	
+	/**
+	 * Transformer/Factory class. Creates a vendor object from a cursor
+	 * @author YCH
+	 *
+	 */
+	public static class Transformer {
+		
+		/**
+		 * Constructor not visible
+		 */
+		private Transformer() {
+			
+		}
+		
+		/**
+		 * Transform a cursor into a vendor object
+		 * @param c
+		 * @return
+		 */
+		public static Vendor transform(final Cursor c) {
+			checkNotNull(c, "Cursor is null");
+			checkArgument(c.getCount() > 0, "Cursor can not be empty");
+			c.moveToFirst();
+			Vendor transformee = new Builder()
+				.addId(c.getInt(ConstantesDAO.NUM_COL_ID))
+				.addCompany(c.getString(ConstantesDAO.NUM_COL_VENDOR_COMPANY))
+				.addContact(c.getString(ConstantesDAO.NUM_COL_VENDOR_CONTACT))
+				.addAddress(c.getString(ConstantesDAO.NUM_COL_VENDOR_ADDRESS))
+				.addMail(c.getString(ConstantesDAO.NUM_COL_VENDOR_MAIL))
+				.addTelephone(c.getString(ConstantesDAO.NUM_COL_VENDOR_PHONE))
+				.addCategory(c.getString(ConstantesDAO.NUM_COL_VENDOR_CATEGORY))
+				.addNote(c.getString(ConstantesDAO.NUM_COL_VENDOR_NOTE))
+				.build();
+			
+			return transformee;
+		}
+	}
 	
 	/**
 	 * Builder utility class

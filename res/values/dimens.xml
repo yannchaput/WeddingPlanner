@@ -22,4 +22,7 @@
 	<!-- Vendor -->
 	<dimen name="vendor_form_field_inbetween">20dp</dimen>
 	<dimen name="vendor_list_row_padding">5dp</dimen>
+	<dimen name="vendor_list_item_font_size">17sp</dimen>
+	<dimen name="vendor_list_header_font_size">17sp</dimen>
+	<dimen name="vendor_list_padding">8dp</dimen>
 </resources>

@@ -5,6 +5,7 @@ import static com.innovention.weddingplanner.dao.ConstantesDAO.VERSION_BDD;
 
 import java.util.HashMap;
 
+import com.google.common.net.InternetDomainName;
 import com.innovention.weddingplanner.bean.IDtoBean;
 
 import android.content.Context;
@@ -57,6 +58,8 @@ public class DaoLocator {
 	public <T extends IDao<? extends IDtoBean>> T get(SERVICES service) {
 		return (T) services.get(service);
 	}
+	
+	
 
 	public DatabaseHelper getDbHelper() {
 		return dbHelper;

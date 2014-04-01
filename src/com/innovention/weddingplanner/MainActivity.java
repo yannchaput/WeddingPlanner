@@ -24,6 +24,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.innovention.weddingplanner.bean.IDtoBean;
 import com.innovention.weddingplanner.bean.WeddingInfo;
@@ -104,6 +105,7 @@ public class MainActivity extends Activity {
 		case R.id.action_recreateDb: 
 			// TODO call db connector recreate db
 			locator.getDbHelper().recreateDb(locator.getDbHelper().getWritableDatabase());
+			Toast.makeText(this, R.string.item_recreateDb_toast, Toast.LENGTH_LONG).show();
 		default:
 			return super.onOptionsItemSelected(item);
 		}

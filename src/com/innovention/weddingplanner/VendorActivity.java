@@ -24,17 +24,18 @@ public class VendorActivity extends Activity implements OnValidateVendor {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		Log.v(TAG, "onCreate");
 		setContentView(R.layout.activity_vendor);
 		// At start, display list fragment
 		getFragmentManager().beginTransaction().add(R.id.LayoutVendor, VendorListFragment.newInstance(), FragmentTags.TAG_FGT_VENDORLIST.getValue()).commit();
 	}
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.vendor, menu);
-		return true;
-	}
+//	@Override
+//	public boolean onCreateOptionsMenu(Menu menu) {
+//		// Inflate the menu; this adds items to the action bar if it is present.
+//		getMenuInflater().inflate(R.menu.vendor, menu);
+//		return true;
+//	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
@@ -65,10 +66,15 @@ public class VendorActivity extends Activity implements OnValidateVendor {
 		hideKeyboard(this);
 		
 		VendorDao dao = DaoLocator.getInstance(getApplicationContext()).get(SERVICES.VENDOR);
-		Log.v(TAG, "Save vendor: " + vendor);
+		Log.v(TAG, "Save vendor: " + vendor + " in mode " + source.toString());
 		// Create vendor
 		if (FragmentTags.TAG_FGT_CREATE_VENDOR.equals(source)) {
+			// TODO use content provider
 			dao.insert(vendor);
+		}
+		else if (FragmentTags.TAG_FGT_UPDATE_VENDOR.equals(source)) {
+			// TODO use content provider
+			dao.update(vendor.getId(), vendor);
 		}
 		
 		replaceFragment(this, FragmentTags.TAG_FGT_VENDORLIST);

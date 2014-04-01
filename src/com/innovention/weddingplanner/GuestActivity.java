@@ -129,6 +129,8 @@ public class GuestActivity extends Activity implements OnGuestSelectedListener, 
 		Preconditions.checkNotNull(bean, "Contact bean can't be null on validation");
 		Preconditions.checkArgument(!Strings.isNullOrEmpty(tag), "Fragment tag passed is empty which is incorrect");
 		
+		hideKeyboard(this);
+		
 		GuestsDao dao = DaoLocator
 				.getInstance(getApplication()).get(SERVICES.GUEST);
 		

@@ -23,6 +23,7 @@ public interface Constantes {
 		TAG_FGT_TASKLIST("taskListFgt"),
 		TAG_SERV_TASKALARM("taskAlarmService"),
 		TAG_FGT_CREATE_VENDOR("createVendorFgt"),
+		TAG_FGT_UPDATE_VENDOR("updateVenodrFgt"),
 		TAG_FGT_VENDORLIST("vendorListFgt");
 		
 		private final String tag;
@@ -59,6 +60,7 @@ public interface Constantes {
 	String ILLEGAL_EMAIL_EX="Adresse mail incorrecte";
 	String ILLEGAL_PHONE_EX="Numéro de téléphone incorrect";
 	String INCORRECT_NUMBER_ARGS_EX="Incorrect number of arguments";
-	String INCONSISTENT_FIELD_EX = "Iconsistent combination of fields";
+	String INCONSISTENT_FIELD_EX = "Inconsistent combination of fields";
+	String ILLEGAL_URI = "Unsupported URI";
 	
 }

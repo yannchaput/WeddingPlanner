@@ -2,16 +2,19 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
-    
-    <ListView
-        android:id="@android:id/list"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
 
+
+    <ExpandableListView
+        android:id="@+id/expandableListVendor"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+    </ExpandableListView>
+    
     <TextView
-        android:id="@android:id/empty"
+        android:id="@+id/empty"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center" />
-
+        android:gravity="center"
+        android:text="@string/empty_list" />
+ 
 </FrameLayout>

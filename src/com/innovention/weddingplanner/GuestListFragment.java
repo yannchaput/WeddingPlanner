@@ -21,6 +21,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebView.FindListener;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
@@ -289,7 +290,9 @@ public class GuestListFragment extends Fragment implements
 		// Set OnItemClickListener so we can be notified on item clicks
 		mListView.setOnItemLongClickListener(this);
 		
-
+		// Set empty view
+		mListView.setEmptyView(view.findViewById(R.id.empty));
+		
 		return view;
 	}
 
