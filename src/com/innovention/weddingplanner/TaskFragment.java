@@ -1,19 +1,12 @@
 package com.innovention.weddingplanner;
 
+import static com.innovention.weddingplanner.Constantes.TASK_DEFAULT_REMIND_HOUR;
+import static com.innovention.weddingplanner.utils.WeddingPlannerHelper.isEmpty;
+import static com.innovention.weddingplanner.utils.WeddingPlannerHelper.showAlert;
+import static com.innovention.weddingplanner.utils.WeddingPlannerHelper.showFragmentDialog;
+
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
-import org.joda.time.format.DateTimeFormatterBuilder;
-
-import com.innovention.weddingplanner.Constantes.FragmentTags;
-import com.innovention.weddingplanner.ContactFragment.OnValidateContactListener;
-import com.innovention.weddingplanner.bean.IDtoBean;
-import com.innovention.weddingplanner.bean.Task;
-import com.innovention.weddingplanner.exception.InconsistentFieldException;
-import com.innovention.weddingplanner.exception.MissingMandatoryFieldException;
-
-import static com.innovention.weddingplanner.utils.WeddingPlannerHelper.*;
-import static com.innovention.weddingplanner.Constantes.TASK_DEFAULT_REMIND_HOUR;
 
 import android.app.ActionBar;
 import android.app.Activity;
@@ -22,19 +15,22 @@ import android.app.DatePickerDialog.OnDateSetListener;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.app.Fragment;
-import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
-import android.webkit.WebView.FindListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
+
+import com.innovention.weddingplanner.Constantes.FragmentTags;
+import com.innovention.weddingplanner.bean.IDtoBean;
+import com.innovention.weddingplanner.bean.Task;
+import com.innovention.weddingplanner.exception.InconsistentFieldException;
+import com.innovention.weddingplanner.exception.MissingMandatoryFieldException;
 
 /**
  * Task fragment

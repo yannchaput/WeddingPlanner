@@ -1,11 +1,33 @@
 package com.innovention.weddingplanner.dao;
 
-import static com.innovention.weddingplanner.dao.ConstantesDAO.*;
+import static com.innovention.weddingplanner.dao.ConstantesDAO.COL_ADDRESS;
+import static com.innovention.weddingplanner.dao.ConstantesDAO.COL_CHURCH;
+import static com.innovention.weddingplanner.dao.ConstantesDAO.COL_COCKTAIL;
+import static com.innovention.weddingplanner.dao.ConstantesDAO.COL_EMAIL;
+import static com.innovention.weddingplanner.dao.ConstantesDAO.COL_ID;
+import static com.innovention.weddingplanner.dao.ConstantesDAO.COL_INVITATION;
+import static com.innovention.weddingplanner.dao.ConstantesDAO.COL_NAME;
+import static com.innovention.weddingplanner.dao.ConstantesDAO.COL_PARTY;
+import static com.innovention.weddingplanner.dao.ConstantesDAO.COL_RSVP;
+import static com.innovention.weddingplanner.dao.ConstantesDAO.COL_SURNAME;
+import static com.innovention.weddingplanner.dao.ConstantesDAO.COL_TEL;
+import static com.innovention.weddingplanner.dao.ConstantesDAO.COL_TOWNHALL;
+import static com.innovention.weddingplanner.dao.ConstantesDAO.NUM_COL_ADDRESS;
+import static com.innovention.weddingplanner.dao.ConstantesDAO.NUM_COL_CHURCH;
+import static com.innovention.weddingplanner.dao.ConstantesDAO.NUM_COL_COCKTAIL;
+import static com.innovention.weddingplanner.dao.ConstantesDAO.NUM_COL_ID;
+import static com.innovention.weddingplanner.dao.ConstantesDAO.NUM_COL_INVITATION;
+import static com.innovention.weddingplanner.dao.ConstantesDAO.NUM_COL_MAIL;
+import static com.innovention.weddingplanner.dao.ConstantesDAO.NUM_COL_NAME;
+import static com.innovention.weddingplanner.dao.ConstantesDAO.NUM_COL_PARTY;
+import static com.innovention.weddingplanner.dao.ConstantesDAO.NUM_COL_RSVP;
+import static com.innovention.weddingplanner.dao.ConstantesDAO.NUM_COL_SURNAME;
+import static com.innovention.weddingplanner.dao.ConstantesDAO.NUM_COL_TEL;
+import static com.innovention.weddingplanner.dao.ConstantesDAO.NUM_COL_TOWNHALL;
+import static com.innovention.weddingplanner.dao.ConstantesDAO.TABLE_GUESTS;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import org.joda.time.DateTime;
 
 import android.content.ContentValues;
 import android.database.Cursor;
@@ -15,7 +37,6 @@ import android.util.Log;
 import com.google.common.base.Objects;
 import com.innovention.weddingplanner.bean.Contact;
 import com.innovention.weddingplanner.bean.Contact.ResponseType;
-import com.innovention.weddingplanner.bean.WeddingInfo;
 
 /**
  * DAO class to store and retrieve contacts from db

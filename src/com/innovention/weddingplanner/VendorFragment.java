@@ -3,37 +3,27 @@
  */
 package com.innovention.weddingplanner;
 
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
 import static com.innovention.weddingplanner.utils.WeddingPlannerHelper.showAlert;
-import static com.google.common.base.Preconditions.*;
-
-import com.innovention.weddingplanner.Constantes.FragmentTags;
-import com.innovention.weddingplanner.bean.Vendor;
-import com.innovention.weddingplanner.bean.Vendor.Builder;
-import com.innovention.weddingplanner.contentprovider.VendorContentProvider;
-import com.innovention.weddingplanner.contentprovider.VendorContentProvider.Vendors;
-import com.innovention.weddingplanner.dao.DaoLocator;
-import com.innovention.weddingplanner.dao.VendorDao;
-import com.innovention.weddingplanner.dao.DaoLocator.SERVICES;
-import com.innovention.weddingplanner.exception.IncorrectMailException;
-import com.innovention.weddingplanner.exception.IncorrectTelephoneException;
-import com.innovention.weddingplanner.exception.MissingMandatoryFieldException;
-
 import android.app.Activity;
 import android.app.Fragment;
-import android.content.ContentUris;
-import android.database.Cursor;
-import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.WebView.FindListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
-import android.widget.SpinnerAdapter;
+
+import com.innovention.weddingplanner.Constantes.FragmentTags;
+import com.innovention.weddingplanner.bean.Vendor;
+import com.innovention.weddingplanner.bean.Vendor.Builder;
+import com.innovention.weddingplanner.exception.IncorrectMailException;
+import com.innovention.weddingplanner.exception.IncorrectTelephoneException;
+import com.innovention.weddingplanner.exception.MissingMandatoryFieldException;
 
 /**
  * Template for a new vendor

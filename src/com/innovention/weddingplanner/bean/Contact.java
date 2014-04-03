@@ -1,14 +1,15 @@
 package com.innovention.weddingplanner.bean;
 
 
+import static com.innovention.weddingplanner.utils.WeddingPlannerHelper.validateEmail;
+import static com.innovention.weddingplanner.utils.WeddingPlannerHelper.validateMandatory;
+import static com.innovention.weddingplanner.utils.WeddingPlannerHelper.validateTelephone;
 import android.content.Context;
 
 import com.google.common.base.Objects;
-import com.innovention.weddingplanner.ContactFragment;
 import com.innovention.weddingplanner.exception.IncorrectMailException;
 import com.innovention.weddingplanner.exception.IncorrectTelephoneException;
 import com.innovention.weddingplanner.exception.MissingMandatoryFieldException;
-import static com.innovention.weddingplanner.utils.WeddingPlannerHelper.*;
 
 /**
  * Contact bean

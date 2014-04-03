@@ -26,6 +26,16 @@
 			<version>19.0.1</version>
 		</dependency>
 		<dependency>
+			<groupId>android.support</groupId>
+			<artifactId>compatibility-v7</artifactId>
+			<version>19.0.1</version>
+		</dependency>
+		<dependency>
+			<groupId>android.support</groupId>
+			<artifactId>compatibility-v7-appcompat</artifactId>
+			<version>19.0.1</version>
+		</dependency>
+		<dependency>
 			<groupId>joda-time</groupId>
 			<artifactId>joda-time</artifactId>
 			<version>2.3</version>

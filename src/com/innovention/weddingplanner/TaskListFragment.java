@@ -1,18 +1,15 @@
 package com.innovention.weddingplanner;
 
 import static com.innovention.weddingplanner.dao.ConstantesDAO.COL_TASK_DESC;
+import static com.innovention.weddingplanner.dao.ConstantesDAO.COL_TASK_DUEDATE;
+import static com.innovention.weddingplanner.dao.ConstantesDAO.COL_TASK_STATUS;
 import static com.innovention.weddingplanner.dao.ConstantesDAO.NUM_COL_ID;
-import static com.innovention.weddingplanner.dao.ConstantesDAO.NUM_COL_TASK_STATUS;
 import static com.innovention.weddingplanner.dao.ConstantesDAO.NUM_COL_TASK_DESC;
 import static com.innovention.weddingplanner.dao.ConstantesDAO.NUM_COL_TASK_DUEDATE;
 import static com.innovention.weddingplanner.dao.ConstantesDAO.NUM_COL_TASK_REMINDDATE;
-import static com.innovention.weddingplanner.dao.ConstantesDAO.COL_TASK_STATUS;
-import static com.innovention.weddingplanner.dao.ConstantesDAO.COL_TASK_DUEDATE;
+import static com.innovention.weddingplanner.dao.ConstantesDAO.NUM_COL_TASK_STATUS;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
 
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
@@ -22,7 +19,6 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
 import android.database.Cursor;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.Bundle;
 import android.util.Log;
@@ -37,19 +33,16 @@ import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
-import android.widget.CompoundButton.OnCheckedChangeListener;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListAdapter;
-import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 
 import com.innovention.weddingplanner.Constantes.FragmentTags;
 import com.innovention.weddingplanner.bean.Task;
 import com.innovention.weddingplanner.dao.DaoLocator;
-import com.innovention.weddingplanner.dao.DatabaseHelper;
 import com.innovention.weddingplanner.dao.DaoLocator.SERVICES;
+import com.innovention.weddingplanner.dao.DatabaseHelper;
 import com.innovention.weddingplanner.dao.TasksDao;
 import com.innovention.weddingplanner.utils.WeddingPlannerHelper;
 

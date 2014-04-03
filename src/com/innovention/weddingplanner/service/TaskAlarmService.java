@@ -3,41 +3,25 @@
  */
 package com.innovention.weddingplanner.service;
 
-import java.util.ArrayList;
-import java.util.Calendar;
+import static com.innovention.weddingplanner.dao.ConstantesDAO.COL_TASK_REMINDDATE;
+import static com.innovention.weddingplanner.dao.ConstantesDAO.COL_TASK_STATUS;
+
 import java.util.List;
 
-import org.joda.time.DateTime;
-
-import static com.innovention.weddingplanner.dao.ConstantesDAO.COL_TASK_DESC;
-import static com.innovention.weddingplanner.dao.ConstantesDAO.COL_TASK_DUEDATE;
-import static com.innovention.weddingplanner.dao.ConstantesDAO.COL_TASK_REMINDDATE;
-import static com.innovention.weddingplanner.dao.ConstantesDAO.COL_TASK_REMINDOPTION;
-import static com.innovention.weddingplanner.dao.ConstantesDAO.COL_TASK_STATUS;
-import static com.innovention.weddingplanner.dao.ConstantesDAO.NUM_COL_ID;
-import static com.innovention.weddingplanner.dao.ConstantesDAO.NUM_COL_TASK_REMINDDATE;
-
-import com.innovention.weddingplanner.Constantes;
-import com.innovention.weddingplanner.R;
-import com.innovention.weddingplanner.TaskActivity;
-import com.innovention.weddingplanner.bean.Task;
-import com.innovention.weddingplanner.dao.DaoLocator;
-import com.innovention.weddingplanner.dao.DaoLocator.SERVICES;
-import com.innovention.weddingplanner.dao.TasksDao;
-
 import android.app.AlarmManager;
-import android.app.Notification;
-import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
-import android.graphics.BitmapFactory;
 import android.os.IBinder;
-import android.support.v4.app.NotificationCompat;
 import android.util.Log;
-import android.widget.Toast;
+
+import com.innovention.weddingplanner.Constantes;
+import com.innovention.weddingplanner.R;
+import com.innovention.weddingplanner.bean.Task;
+import com.innovention.weddingplanner.dao.DaoLocator;
+import com.innovention.weddingplanner.dao.DaoLocator.SERVICES;
+import com.innovention.weddingplanner.dao.TasksDao;
 
 /**
  * TaskAlarmService aims at loading all ongoing tasks and schedule them inside the 

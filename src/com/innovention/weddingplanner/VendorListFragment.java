@@ -4,33 +4,17 @@
 package com.innovention.weddingplanner;
 
 import static com.innovention.weddingplanner.dao.ConstantesDAO.COL_ID;
-import static com.innovention.weddingplanner.dao.ConstantesDAO.COL_VENDOR_COMPANY;
 import static com.innovention.weddingplanner.dao.ConstantesDAO.COL_VENDOR_CATEGORY;
-import static com.innovention.weddingplanner.dao.ConstantesDAO.NUM_COL_VENDOR_CATEGORY;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
-import com.innovention.weddingplanner.Constantes.FragmentTags;
-import com.innovention.weddingplanner.bean.Vendor;
-import com.innovention.weddingplanner.contentprovider.VendorContentProvider;
-import com.innovention.weddingplanner.contentprovider.VendorContentProvider.Vendors;
-import com.innovention.weddingplanner.dao.ConstantesDAO;
-import com.innovention.weddingplanner.utils.WeddingPlannerHelper;
-
+import static com.innovention.weddingplanner.dao.ConstantesDAO.COL_VENDOR_COMPANY;
 import android.app.Fragment;
-import android.app.ListFragment;
 import android.app.LoaderManager.LoaderCallbacks;
 import android.content.ContentUris;
 import android.content.Context;
 import android.content.CursorLoader;
 import android.content.Loader;
 import android.database.Cursor;
-import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.widget.SimpleCursorAdapter;
 import android.util.Log;
 import android.view.ActionMode;
 import android.view.LayoutInflater;
@@ -39,15 +23,20 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.WebView.FindListener;
-import android.widget.BaseExpandableListAdapter;
 import android.widget.CursorTreeAdapter;
 import android.widget.ExpandableListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.innovention.weddingplanner.Constantes.FragmentTags;
+import com.innovention.weddingplanner.bean.Vendor;
+import com.innovention.weddingplanner.contentprovider.VendorContentProvider;
+import com.innovention.weddingplanner.contentprovider.VendorContentProvider.Vendors;
+import com.innovention.weddingplanner.dao.ConstantesDAO;
+import com.innovention.weddingplanner.utils.WeddingPlannerHelper;
+
 /**
- * Vendor list fragment class Displays the list of vendor's contacts
+ * Vendor list fragment class displays the list of vendor's contacts
  * 
  * @author YCH
  * 

@@ -1,21 +1,32 @@
 package com.innovention.weddingplanner.dao;
 
-import static com.innovention.weddingplanner.dao.ConstantesDAO.*;
-import static com.innovention.weddingplanner.utils.WeddingPlannerHelper.isEmpty;
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
+import static com.innovention.weddingplanner.dao.ConstantesDAO.COL_ID;
+import static com.innovention.weddingplanner.dao.ConstantesDAO.COL_TASK_DESC;
+import static com.innovention.weddingplanner.dao.ConstantesDAO.COL_TASK_DUEDATE;
+import static com.innovention.weddingplanner.dao.ConstantesDAO.COL_TASK_REMINDDATE;
+import static com.innovention.weddingplanner.dao.ConstantesDAO.COL_TASK_REMINDOPTION;
+import static com.innovention.weddingplanner.dao.ConstantesDAO.COL_TASK_STATUS;
+import static com.innovention.weddingplanner.dao.ConstantesDAO.NUM_COL_ID;
+import static com.innovention.weddingplanner.dao.ConstantesDAO.NUM_COL_TASK_DESC;
+import static com.innovention.weddingplanner.dao.ConstantesDAO.NUM_COL_TASK_DUEDATE;
+import static com.innovention.weddingplanner.dao.ConstantesDAO.NUM_COL_TASK_REMINDDATE;
+import static com.innovention.weddingplanner.dao.ConstantesDAO.NUM_COL_TASK_REMINDOPTION;
+import static com.innovention.weddingplanner.dao.ConstantesDAO.NUM_COL_TASK_STATUS;
+import static com.innovention.weddingplanner.dao.ConstantesDAO.TABLE_TASKS;
 import static com.innovention.weddingplanner.dao.DatabaseHelper.convertIntToBool;
-import static com.google.common.base.Preconditions.*;
+import static com.innovention.weddingplanner.utils.WeddingPlannerHelper.isEmpty;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.joda.time.DateTime;
-import org.joda.time.format.DateTimeFormat;
 
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.innovention.weddingplanner.bean.Task;
 

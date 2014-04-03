@@ -16,7 +16,7 @@
     <string name="budget_option">Budget</string>
     <string name="prestations_option">Prestataires</string>
     <string name="title_activity_guest">Invitations</string>
-    
+
     <!-- settings -->
     <string name="action_settings">Settings</string>
     <string name="item_recreateDb_action">Reset DB</string>
@@ -89,11 +89,14 @@
     <string name="action_add_task">Nouvelle tâche</string>
     <string name="action_delete_task">Supprimer tâche</string>
     <string name="action_update_task">Modifier tâche</string>
-    
-    <!--  Vendor list -->
+
+    <!-- Vendor list -->
     <string name="action_add_vendor">Nouveau prestataire</string>
     <string name="action_delete_vendor">Supprimer prestataire</string>
     <string name="action_update_vendor">Modifier prestataire</string>
+    
+    <!--  budget list -->
+    <string name="action_add_budget_item">Nouvel élément budgétaire</string>
 
     <!-- Validators -->
     <string name="alert_dialog_validate">OK</string>
@@ -127,12 +130,13 @@
 
     <!-- Notifications -->
     <string name="task_notification_title">Rappel</string>
-    
+
     <!-- Vendors -->
     <string name="title_activity_vendor">Prestations</string>
     <string name="vendor_label_company">Société</string>
     <string name="vendor_label_contact">Nom &amp; prénom du contact</string>
     <string name="vendor_spinner_label_category">Catégorie</string>
+
     <string-array name="vendor_spinner_categories_entries">
         <item>Alimentation</item>
         <item>Animation</item>
@@ -150,10 +154,15 @@
         <item>Traiteur</item>
         <item>Transport</item>
     </string-array>
+
     <string name="vendor_label_address">Adresse</string>
     <string name="vendor_label_mail">E-Mail</string>
     <string name="vendor_label_note">Note</string>
     <string name="vendor_button_validate">Valider</string>
     <string name="vendor_label_phone">Tel.</string>
+    
+    <!--  Budget -->
+    <string name="title_activity_budget">BudgetActivity</string>
+    <string name="budget_label_vendor">Prestataire</string>
 
 </resources>

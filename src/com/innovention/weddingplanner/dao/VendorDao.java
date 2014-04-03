@@ -6,13 +6,13 @@ package com.innovention.weddingplanner.dao;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.innovention.weddingplanner.dao.ConstantesDAO.COL_ID;
+import static com.innovention.weddingplanner.dao.ConstantesDAO.COL_VENDOR_ADDRESS;
+import static com.innovention.weddingplanner.dao.ConstantesDAO.COL_VENDOR_CATEGORY;
 import static com.innovention.weddingplanner.dao.ConstantesDAO.COL_VENDOR_COMPANY;
 import static com.innovention.weddingplanner.dao.ConstantesDAO.COL_VENDOR_CONTACT;
-import static com.innovention.weddingplanner.dao.ConstantesDAO.COL_VENDOR_ADDRESS;
-import static com.innovention.weddingplanner.dao.ConstantesDAO.COL_VENDOR_PHONE;
 import static com.innovention.weddingplanner.dao.ConstantesDAO.COL_VENDOR_MAIL;
-import static com.innovention.weddingplanner.dao.ConstantesDAO.COL_VENDOR_CATEGORY;
 import static com.innovention.weddingplanner.dao.ConstantesDAO.COL_VENDOR_NOTE;
+import static com.innovention.weddingplanner.dao.ConstantesDAO.COL_VENDOR_PHONE;
 import static com.innovention.weddingplanner.dao.ConstantesDAO.TABLE_VENDORS;
 
 import java.util.List;

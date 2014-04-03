@@ -1,12 +1,11 @@
 package com.innovention.weddingplanner.utils;
 
 
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
 import static com.innovention.weddingplanner.Constantes.ILLEGAL_EMAIL_EX;
 import static com.innovention.weddingplanner.Constantes.ILLEGAL_PHONE_EX;
 import static com.innovention.weddingplanner.Constantes.MISSING_MANADTORY_FIELD_EX;
-
-import static com.google.common.base.Preconditions.*;
-import com.innovention.weddingplanner.Constantes.FragmentTags;
 
 import org.joda.time.DateTime;
 import org.joda.time.Days;
@@ -17,9 +16,7 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
-import android.content.res.Resources;
 import android.graphics.Typeface;
-import android.support.v4.app.FragmentTabHost;
 import android.text.TextUtils;
 import android.util.Log;
 import android.util.Patterns;
@@ -27,6 +24,9 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
 import com.innovention.weddingplanner.AlertDialogFragment;
+import com.innovention.weddingplanner.BudgetFragment;
+import com.innovention.weddingplanner.BudgetListFragment;
+import com.innovention.weddingplanner.Constantes.FragmentTags;
 import com.innovention.weddingplanner.ContactFragment;
 import com.innovention.weddingplanner.GuestListFragment;
 import com.innovention.weddingplanner.R;
@@ -196,6 +196,7 @@ public class WeddingPlannerHelper {
 			resId = R.id.LayoutVendor;
 			break;
 		case TAG_FGT_VENDORLIST:
+			// Reuse existing fragment if possible
 			fgt = parent.getFragmentManager().findFragmentByTag(tag.getValue());
 			if (null == fgt) {
 				Log.v(TAG, "Create new VendorListFragment instance");
@@ -206,6 +207,18 @@ public class WeddingPlannerHelper {
 				((VendorListFragment) fgt).refresh();
 			}
 			resId = R.id.LayoutVendor;
+			break;
+		case TAG_FGT_BUDGET_LIST:
+			fgt = parent.getFragmentManager().findFragmentByTag(tag.getValue());
+			if (null == fgt) {
+				fgt = BudgetListFragment.newInstance();
+			}
+			resId = R.id.LayoutBudget;
+			break;
+		case TAG_FGT_CREATE_BUDGET:
+			Log.v(TAG, "Create new BudgetFragment instance");
+			fgt = BudgetFragment.newInstance();
+			resId = R.id.LayoutBudget;
 			break;
 		default:
 			// do nothing

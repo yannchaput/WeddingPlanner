@@ -2,20 +2,18 @@ package com.innovention.weddingplanner;
 
 import static com.innovention.weddingplanner.utils.WeddingPlannerHelper.hideKeyboard;
 import static com.innovention.weddingplanner.utils.WeddingPlannerHelper.replaceFragment;
+import android.app.Activity;
+import android.os.Bundle;
+import android.support.v4.app.NavUtils;
+import android.util.Log;
+import android.view.MenuItem;
 
 import com.innovention.weddingplanner.Constantes.FragmentTags;
 import com.innovention.weddingplanner.VendorFragment.OnValidateVendor;
 import com.innovention.weddingplanner.bean.Vendor;
 import com.innovention.weddingplanner.dao.DaoLocator;
-import com.innovention.weddingplanner.dao.VendorDao;
 import com.innovention.weddingplanner.dao.DaoLocator.SERVICES;
-
-import android.os.Bundle;
-import android.app.Activity;
-import android.support.v4.app.NavUtils;
-import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
+import com.innovention.weddingplanner.dao.VendorDao;
 
 public class VendorActivity extends Activity implements OnValidateVendor {
 	

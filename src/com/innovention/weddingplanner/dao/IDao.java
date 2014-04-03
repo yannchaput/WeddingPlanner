@@ -4,7 +4,6 @@ package com.innovention.weddingplanner.dao;
 import java.util.List;
 
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 
 import com.innovention.weddingplanner.bean.IDtoBean;
 

@@ -1,14 +1,11 @@
 package com.innovention.weddingplanner.service;
 
-import org.joda.time.DateTime;
-
-import com.innovention.weddingplanner.Constantes;
-
-import android.app.AlarmManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
+
+import com.innovention.weddingplanner.Constantes;
 
 /**
  * {@code BootstrapReceiver} is loaded upon startup completion so as to be able

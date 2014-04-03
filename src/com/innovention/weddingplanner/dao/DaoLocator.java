@@ -5,12 +5,11 @@ import static com.innovention.weddingplanner.dao.ConstantesDAO.VERSION_BDD;
 
 import java.util.HashMap;
 
-import com.google.common.net.InternetDomainName;
-import com.innovention.weddingplanner.bean.IDtoBean;
-
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
+
+import com.innovention.weddingplanner.bean.IDtoBean;
 
 /**
  * DAO Service locator

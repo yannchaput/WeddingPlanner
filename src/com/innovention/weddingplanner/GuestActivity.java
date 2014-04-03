@@ -1,29 +1,24 @@
 package com.innovention.weddingplanner;
 
-import com.innovention.weddingplanner.Constantes.FragmentTags;
-import static com.innovention.weddingplanner.utils.WeddingPlannerHelper.*;
+import static com.innovention.weddingplanner.utils.WeddingPlannerHelper.hideKeyboard;
+import static com.innovention.weddingplanner.utils.WeddingPlannerHelper.replaceFragment;
+import static com.innovention.weddingplanner.utils.WeddingPlannerHelper.showAlert;
 import android.app.Activity;
-import android.app.Fragment;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.util.Log;
-import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Checkable;
-import android.widget.Toast;
 
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
+import com.innovention.weddingplanner.Constantes.FragmentTags;
 import com.innovention.weddingplanner.ContactFragment.OnValidateContactListener;
 import com.innovention.weddingplanner.GuestListFragment.OnGuestSelectedListener;
 import com.innovention.weddingplanner.bean.Contact;
 import com.innovention.weddingplanner.bean.IDtoBean;
 import com.innovention.weddingplanner.dao.DaoLocator;
-import com.innovention.weddingplanner.dao.GuestsDao;
-import com.innovention.weddingplanner.dao.IDao;
 import com.innovention.weddingplanner.dao.DaoLocator.SERVICES;
+import com.innovention.weddingplanner.dao.GuestsDao;
 
 public class GuestActivity extends Activity implements OnGuestSelectedListener, OnValidateContactListener {
 	

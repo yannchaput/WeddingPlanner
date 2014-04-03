@@ -5,11 +5,6 @@ package com.innovention.weddingplanner.service;
 
 import org.joda.time.format.DateTimeFormat;
 
-import com.innovention.weddingplanner.Constantes;
-import com.innovention.weddingplanner.R;
-import com.innovention.weddingplanner.TaskActivity;
-import com.innovention.weddingplanner.bean.Task;
-
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -17,10 +12,13 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
-import android.widget.Toast;
+
+import com.innovention.weddingplanner.Constantes;
+import com.innovention.weddingplanner.R;
+import com.innovention.weddingplanner.TaskActivity;
+import com.innovention.weddingplanner.bean.Task;
 
 /**
  * This class handles the alarm received from the Task scheduled in AlarmManager

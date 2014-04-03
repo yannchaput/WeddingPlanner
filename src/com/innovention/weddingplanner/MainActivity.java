@@ -1,20 +1,17 @@
 package com.innovention.weddingplanner;
 
 
+import static com.innovention.weddingplanner.Constantes.FONT_CURVED;
 import static com.innovention.weddingplanner.Constantes.KEY_DTPICKER_D;
 import static com.innovention.weddingplanner.Constantes.KEY_DTPICKER_M;
 import static com.innovention.weddingplanner.Constantes.KEY_DTPICKER_Y;
-import static com.innovention.weddingplanner.Constantes.FragmentTags;
-import static com.innovention.weddingplanner.Constantes.FONT_CURVED;
-import static com.innovention.weddingplanner.dao.ConstantesDAO.NOM_BDD;
-import static com.innovention.weddingplanner.dao.ConstantesDAO.VERSION_BDD;
+import static com.innovention.weddingplanner.utils.WeddingPlannerHelper.computeDate;
+import static com.innovention.weddingplanner.utils.WeddingPlannerHelper.getFont;
+import static com.innovention.weddingplanner.utils.WeddingPlannerHelper.showFragmentDialog;
 import android.app.Activity;
 import android.app.DialogFragment;
-import android.app.Fragment;
-import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.content.res.Resources;
-import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.Log;
@@ -26,14 +23,12 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.innovention.weddingplanner.Constantes.FragmentTags;
 import com.innovention.weddingplanner.bean.IDtoBean;
 import com.innovention.weddingplanner.bean.WeddingInfo;
 import com.innovention.weddingplanner.dao.DaoLocator;
-import com.innovention.weddingplanner.dao.DatabaseHelper;
-import com.innovention.weddingplanner.dao.GuestsDao;
-import com.innovention.weddingplanner.dao.WeddingInfoDao;
 import com.innovention.weddingplanner.dao.DaoLocator.SERVICES;
-import static com.innovention.weddingplanner.utils.WeddingPlannerHelper.*;
+import com.innovention.weddingplanner.dao.WeddingInfoDao;
 
 public class MainActivity extends Activity {
 	
@@ -45,7 +40,6 @@ public class MainActivity extends Activity {
 	private ImageButton vendorBtn;
 	
 	private TextView days2WeddingTxt;
-	private ViewGroup days2WeddingLayout;
 	
 	private DaoLocator locator = null;
 
@@ -106,6 +100,7 @@ public class MainActivity extends Activity {
 			// TODO call db connector recreate db
 			locator.getDbHelper().recreateDb(locator.getDbHelper().getWritableDatabase());
 			Toast.makeText(this, R.string.item_recreateDb_toast, Toast.LENGTH_LONG).show();
+			return true;
 		default:
 			return super.onOptionsItemSelected(item);
 		}
@@ -129,7 +124,7 @@ public class MainActivity extends Activity {
 		
 		DialogFragment datePicker = new DatePickerFragment();
 		WeddingInfo info = null;
-		WeddingInfoDao infoDao = (WeddingInfoDao) DaoLocator.getInstance(getApplication()).get(SERVICES.INFO);
+		WeddingInfoDao infoDao = DaoLocator.getInstance(getApplication()).get(SERVICES.INFO);
 		if ( (info = (WeddingInfo) infoDao.get()) != null ) {
 			Log.d(TAG, "showDatePickerDialog - " + "Fetch info : " + info);
 			Bundle parameters = new Bundle();
@@ -164,7 +159,17 @@ public class MainActivity extends Activity {
 	}
 	
 	/**
-	 * Display to do list activity
+	 * Display Budget Review activity
+	 * @param v the triggering view
+	 */
+	public void showBudgetActivity(View v) {
+		Log.d(TAG, "Start Budget Review activity");
+		Intent intent = new Intent(this, BudgetActivity.class);
+		startActivity(intent);
+	}
+	
+	/**
+	 * Display Vendor list activity
 	 * @param v the triggering view
 	 */
 	public void showVendorActivity(View v) {
@@ -184,7 +189,7 @@ public class MainActivity extends Activity {
 
 		WeddingInfo info = null;
 
-		WeddingInfoDao infoDao = (WeddingInfoDao) DaoLocator.getInstance(getApplication()).get(SERVICES.INFO);
+		WeddingInfoDao infoDao = DaoLocator.getInstance(getApplication()).get(SERVICES.INFO);
 		if ((info = (WeddingInfo) infoDao.get()) != null) {
 			Log.d(TAG, "Date get from db " + info.getWeddingDate());
 			updateGUIWeddingDate(computeDate(info

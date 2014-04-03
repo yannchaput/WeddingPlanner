@@ -25,4 +25,6 @@
 	<dimen name="vendor_list_item_font_size">17sp</dimen>
 	<dimen name="vendor_list_header_font_size">17sp</dimen>
 	<dimen name="vendor_list_padding">8dp</dimen>
+	<!-- Budget -->
+	<dimen name="budget_form_field_inbetween">20dp</dimen>
 </resources>

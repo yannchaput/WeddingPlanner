@@ -3,10 +3,11 @@
  */
 package com.innovention.weddingplanner.bean;
 
-import static com.google.common.base.Preconditions.*;
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
+import static com.innovention.weddingplanner.utils.WeddingPlannerHelper.validateEmail;
 import static com.innovention.weddingplanner.utils.WeddingPlannerHelper.validateMandatory;
 import static com.innovention.weddingplanner.utils.WeddingPlannerHelper.validateTelephone;
-import static com.innovention.weddingplanner.utils.WeddingPlannerHelper.validateEmail;
 import android.content.Context;
 import android.database.Cursor;
 
@@ -15,7 +16,6 @@ import com.innovention.weddingplanner.dao.ConstantesDAO;
 import com.innovention.weddingplanner.exception.IncorrectMailException;
 import com.innovention.weddingplanner.exception.IncorrectTelephoneException;
 import com.innovention.weddingplanner.exception.MissingMandatoryFieldException;
-import com.innovention.weddingplanner.exception.WeddingPlannerException;
 
 /**
  * Vendor bean class

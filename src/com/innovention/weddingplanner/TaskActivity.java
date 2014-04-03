@@ -1,44 +1,27 @@
 package com.innovention.weddingplanner;
 
-import static com.innovention.weddingplanner.utils.WeddingPlannerHelper.*;
-
-import org.joda.time.DateTime;
-import org.joda.time.DateTimeConstants;
-import org.joda.time.format.DateTimeFormat;
+import static com.innovention.weddingplanner.utils.WeddingPlannerHelper.hideKeyboard;
+import static com.innovention.weddingplanner.utils.WeddingPlannerHelper.replaceFragment;
+import static com.innovention.weddingplanner.utils.WeddingPlannerHelper.showAlert;
+import android.annotation.TargetApi;
+import android.app.ActionBar;
+import android.app.Activity;
+import android.content.Context;
+import android.os.Build;
+import android.os.Bundle;
+import android.support.v4.app.NavUtils;
+import android.util.Log;
+import android.view.MenuItem;
+import android.widget.ArrayAdapter;
 
 import com.innovention.weddingplanner.Constantes.FragmentTags;
 import com.innovention.weddingplanner.TaskFragment.OnValidateTask;
-import com.innovention.weddingplanner.TaskListFragment.OnTaskCheckListener;
 import com.innovention.weddingplanner.TaskListFragment.OnTaskSelectedListener;
 import com.innovention.weddingplanner.bean.IDtoBean;
 import com.innovention.weddingplanner.bean.Task;
 import com.innovention.weddingplanner.dao.DaoLocator;
-import com.innovention.weddingplanner.dao.TasksDao;
 import com.innovention.weddingplanner.dao.DaoLocator.SERVICES;
-import com.innovention.weddingplanner.exception.MissingMandatoryFieldException;
-import com.innovention.weddingplanner.utils.WeddingPlannerHelper;
-
-import android.annotation.TargetApi;
-import android.app.ActionBar;
-import android.app.Activity;
-import android.app.Fragment;
-import android.os.Bundle;
-import android.content.Context;
-import android.os.Build;
-import android.support.v4.app.NavUtils;
-import android.util.Log;
-import android.view.Gravity;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.ArrayAdapter;
-import android.widget.EditText;
-import android.widget.Spinner;
-import android.widget.TextView;
+import com.innovention.weddingplanner.dao.TasksDao;
 
 public class TaskActivity extends Activity implements
 		ActionBar.OnNavigationListener, OnValidateTask, OnTaskSelectedListener {

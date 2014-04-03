@@ -1,6 +1,13 @@
 package com.innovention.weddingplanner.dao;
 
-import static com.innovention.weddingplanner.dao.ConstantesDAO.*;
+import static com.innovention.weddingplanner.dao.ConstantesDAO.CREATE_GUEST_TABLE;
+import static com.innovention.weddingplanner.dao.ConstantesDAO.CREATE_TASK_TABLE;
+import static com.innovention.weddingplanner.dao.ConstantesDAO.CREATE_VENDOR_TABLE;
+import static com.innovention.weddingplanner.dao.ConstantesDAO.CREATE_WEDDINGINFO_TABLE;
+import static com.innovention.weddingplanner.dao.ConstantesDAO.DROP_GUEST_TABLE;
+import static com.innovention.weddingplanner.dao.ConstantesDAO.DROP_TASK_TABLE;
+import static com.innovention.weddingplanner.dao.ConstantesDAO.DROP_VENDOR_TABLE;
+import static com.innovention.weddingplanner.dao.ConstantesDAO.DROP_WEDDINGINFO_TABLE;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteDatabase.CursorFactory;

@@ -23,8 +23,11 @@ public interface Constantes {
 		TAG_FGT_TASKLIST("taskListFgt"),
 		TAG_SERV_TASKALARM("taskAlarmService"),
 		TAG_FGT_CREATE_VENDOR("createVendorFgt"),
-		TAG_FGT_UPDATE_VENDOR("updateVenodrFgt"),
-		TAG_FGT_VENDORLIST("vendorListFgt");
+		TAG_FGT_UPDATE_VENDOR("updateVendorFgt"),
+		TAG_FGT_VENDORLIST("vendorListFgt"),
+		TAG_FGT_BUDGET_LIST("budgetListFgt"),
+		TAG_FGT_CREATE_BUDGET("createBudgetFgt"),
+		TAG_FGT_UPDATE_BUDGET("updateBudgetFgt");
 		
 		private final String tag;
 		

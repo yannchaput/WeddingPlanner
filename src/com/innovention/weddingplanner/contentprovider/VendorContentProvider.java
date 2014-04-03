@@ -3,20 +3,21 @@
  */
 package com.innovention.weddingplanner.contentprovider;
 
-import static com.innovention.weddingplanner.dao.ConstantesDAO.*;
+import static com.innovention.weddingplanner.dao.ConstantesDAO.COL_ID;
+import static com.innovention.weddingplanner.dao.ConstantesDAO.COL_VENDOR_ADDRESS;
+import static com.innovention.weddingplanner.dao.ConstantesDAO.COL_VENDOR_CATEGORY;
+import static com.innovention.weddingplanner.dao.ConstantesDAO.COL_VENDOR_COMPANY;
+import static com.innovention.weddingplanner.dao.ConstantesDAO.COL_VENDOR_CONTACT;
+import static com.innovention.weddingplanner.dao.ConstantesDAO.COL_VENDOR_MAIL;
+import static com.innovention.weddingplanner.dao.ConstantesDAO.COL_VENDOR_NOTE;
+import static com.innovention.weddingplanner.dao.ConstantesDAO.COL_VENDOR_PHONE;
+import static com.innovention.weddingplanner.dao.ConstantesDAO.TABLE_VENDORS;
 
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.regex.Matcher;
-
-import com.innovention.weddingplanner.Constantes;
-import com.innovention.weddingplanner.dao.ConstantesDAO;
-import com.innovention.weddingplanner.dao.DaoLocator;
-import com.innovention.weddingplanner.utils.WeddingPlannerHelper;
 
 import android.content.ContentProvider;
 import android.content.ContentResolver;
-import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.UriMatcher;
 import android.database.Cursor;
@@ -25,7 +26,11 @@ import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 import android.provider.BaseColumns;
 import android.util.Log;
-import android.widget.SeekBar;
+
+import com.innovention.weddingplanner.Constantes;
+import com.innovention.weddingplanner.dao.ConstantesDAO;
+import com.innovention.weddingplanner.dao.DaoLocator;
+import com.innovention.weddingplanner.utils.WeddingPlannerHelper;
 
 /**
  * Content provider to access persistent data

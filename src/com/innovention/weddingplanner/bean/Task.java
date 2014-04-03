@@ -1,9 +1,9 @@
 package com.innovention.weddingplanner.bean;
 
-import static com.innovention.weddingplanner.utils.WeddingPlannerHelper.validateMandatory;
+import static com.google.common.base.Preconditions.checkNotNull;
+import static com.innovention.weddingplanner.Constantes.INCONSISTENT_FIELD_EX;
 import static com.innovention.weddingplanner.utils.WeddingPlannerHelper.getStringResource;
-import static com.innovention.weddingplanner.Constantes.*;
-import static com.google.common.base.Preconditions.*;
+import static com.innovention.weddingplanner.utils.WeddingPlannerHelper.validateMandatory;
 
 import org.joda.time.DateTime;
 
@@ -12,7 +12,6 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.google.common.base.Objects;
-import com.google.common.base.Strings;
 import com.innovention.weddingplanner.R;
 import com.innovention.weddingplanner.exception.InconsistentFieldException;
 import com.innovention.weddingplanner.exception.MissingMandatoryFieldException;
