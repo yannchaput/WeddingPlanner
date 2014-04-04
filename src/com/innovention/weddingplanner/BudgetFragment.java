@@ -17,6 +17,7 @@ import android.webkit.WebView.FindListener;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.CursorAdapter;
+import android.widget.FilterQueryProvider;
 import android.widget.MultiAutoCompleteTextView;
 import android.widget.SimpleCursorAdapter;
 
@@ -33,6 +34,9 @@ public final class BudgetFragment extends Fragment {
 
 	// Edit mode
 	private FragmentTags mode = FragmentTags.TAG_FGT_CREATE_BUDGET;
+
+	// AutoCompleteTextView adapter
+	private CursorAdapter adapter;
 
 	/**
 	 * Default constructor
@@ -60,16 +64,40 @@ public final class BudgetFragment extends Fragment {
 		View view = inflater.inflate(R.layout.fragment_budget_form, container,
 				false);
 
-
 		Cursor c = getActivity().getContentResolver().query(
 				Vendors.CONTENT_URI,
-				new String[] { ConstantesDAO.COL_ID, ConstantesDAO.COL_VENDOR_COMPANY }, null, null,
-				null);
-		
-		CursorAdapter adapter = new SimpleCursorAdapter(getActivity(), android.R.layout.simple_dropdown_item_1line, c, new String[] {ConstantesDAO.COL_VENDOR_COMPANY}, new int[] {android.R.id.text1}, 0);
+				new String[] { ConstantesDAO.COL_ID,
+						ConstantesDAO.COL_VENDOR_COMPANY }, null, null, null);
+
+		adapter = new SimpleCursorAdapter(getActivity(),
+				android.R.layout.simple_dropdown_item_1line, null,
+				new String[] { ConstantesDAO.COL_VENDOR_COMPANY },
+				new int[] { android.R.id.text1 }, 0);
 		AutoCompleteTextView textView = (AutoCompleteTextView) view
 				.findViewById(R.id.budgetMultiAutoCompleteContact);
 		textView.setAdapter(adapter);
+
+		// Triggered every time a change occured in the text view
+		adapter.setFilterQueryProvider(new FilterQueryProvider() {
+
+			@Override
+			public Cursor runQuery(CharSequence constraint) {
+				// TODO Auto-generated method stub
+				return getCursor(constraint);
+			}
+
+			private Cursor getCursor(CharSequence str) {
+				StringBuilder select = new StringBuilder().append(
+						ConstantesDAO.COL_VENDOR_COMPANY).append(" LIKE ?");
+				String[] selectArgs = { "%" + str + "%" };
+				Cursor c = getActivity().getContentResolver().query(
+						Vendors.CONTENT_URI,
+						new String[] { ConstantesDAO.COL_ID,
+								ConstantesDAO.COL_VENDOR_COMPANY },
+						select.toString(), selectArgs, null);
+				return c;
+			}
+		});
 
 		return view;
 	}
