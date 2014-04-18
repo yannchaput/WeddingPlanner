@@ -162,7 +162,12 @@
     <string name="vendor_label_phone">Tel.</string>
     
     <!--  Budget -->
-    <string name="title_activity_budget">BudgetActivity</string>
+    <string name="title_activity_budget">Budget</string>
     <string name="budget_label_vendor">Prestataire</string>
-
+    <string name="budget_label_total_amount">Total</string>
+    <string name="budget_label_paid_amount">Payé</string>
+    <string name="budget_hint_field_total_amount">Montant dû</string>
+    <string name="budget_hint_field_paid_amount">Montant payé</string>
+    <string name="budget_hint_field_note">Note</string>
+	<string name="budget_button_validate">Valider</string>
 </resources>

@@ -7,6 +7,7 @@ public interface ConstantesDAO {
 	String TABLE_GUESTS = "table_guests";
 	String TABLE_TASKS = "table_tasks";
 	String TABLE_VENDORS = "table_vendors";
+	String TABLE_BUDGET = "table_budget";
 	
 	// General
 	String COL_ID ="_id";
@@ -68,8 +69,20 @@ public interface ConstantesDAO {
 	String COL_VENDOR_NOTE = "note";
 	byte NUM_COL_VENDOR_NOTE = NUM_COL_VENDOR_CATEGORY + 1;
 	
+	// Budget table
+	String COL_BUDGET_VENDOR = "vendor";
+	byte NUM_COL_BUDGET_VENDOR = NUM_COL_ID + 1;
+	String COL_BUDGET_CATEGORY = "category";
+	byte NUM_COL_BUDGET_CATEGORY = NUM_COL_BUDGET_VENDOR + 1;
+	String COL_BUDGET_TOTAL_AMOUNT = "total_amount";
+	byte NUM_COL_BUDGET_TOTAL_AMOUNT = NUM_COL_BUDGET_CATEGORY + 1;
+	String COL_BUDGET_PAID_AMOUNT = "paid_amount";
+	byte NUM_COL_BUDGET_PAID_AMOUNT = NUM_COL_BUDGET_TOTAL_AMOUNT + 1;
+	String COL_BUDGET_NOTE = "note";
+	byte NUM_COL_BUDGET_NOTE = NUM_COL_BUDGET_PAID_AMOUNT + 1;
+	
 	// General
-	int VERSION_BDD = 7;
+	int VERSION_BDD = 8;
 	String NOM_BDD = "wedplanner.db";
 	
 	String CREATE_WEDDINGINFO_TABLE= new StringBuilder()
@@ -156,6 +169,25 @@ public interface ConstantesDAO {
 	.append(");")
 	.toString();
 	
+	String CREATE_BUDGET_TABLE = new StringBuilder()
+	.append("CREATE TABLE IF NOT EXISTS ")
+	.append(TABLE_BUDGET)
+	.append(" ( ")
+	.append(COL_ID)
+	.append(" INTEGER PRIMARY KEY AUTOINCREMENT, ")
+	.append(COL_BUDGET_VENDOR)
+	.append(" TEXT NOT NULL, ")
+	.append(COL_BUDGET_CATEGORY)
+	.append(" TEXT NOT NULL, ")
+	.append(COL_BUDGET_TOTAL_AMOUNT)
+	.append(" REAL NOT NULL, ")
+	.append(COL_BUDGET_PAID_AMOUNT)
+	.append(" REAL, ")
+	.append(COL_BUDGET_NOTE)
+	.append(" TEXT")
+	.append(" );")
+	.toString();
+	
 	
 	String DROP_WEDDINGINFO_TABLE = new StringBuilder()
 	.append("DROP TABLE IF EXISTS ")
@@ -178,6 +210,12 @@ public interface ConstantesDAO {
 	String DROP_VENDOR_TABLE = new StringBuilder()
 	.append("DROP TABLE IF EXISTS ")
 	.append(TABLE_VENDORS)
+	.append(";")
+	.toString();
+	
+	String DROP_BUDGET_TABLE = new StringBuilder()
+	.append("DROP TABLE IF EXISTS ")
+	.append(TABLE_BUDGET)
 	.append(";")
 	.toString();
 }

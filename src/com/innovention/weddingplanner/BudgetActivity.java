@@ -1,11 +1,16 @@
 package com.innovention.weddingplanner;
 
 import static com.innovention.weddingplanner.utils.WeddingPlannerHelper.replaceFragment;
+import static com.innovention.weddingplanner.utils.WeddingPlannerHelper.hideKeyboard;
 
+import com.innovention.weddingplanner.BudgetFragment.OnValidateBudget;
 import com.innovention.weddingplanner.Constantes.FragmentTags;
+import com.innovention.weddingplanner.contentprovider.DBContentProvider.Budget;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.content.ContentValues;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.util.Log;
@@ -19,7 +24,7 @@ import android.view.ViewGroup;
  * @author YCH
  *
  */
-public final class BudgetActivity extends Activity {
+public final class BudgetActivity extends Activity implements OnValidateBudget {
 	
 	private static final String TAG = BudgetActivity.class.getSimpleName();
 
@@ -54,6 +59,13 @@ public final class BudgetActivity extends Activity {
 		default:
 		}
 		return super.onOptionsItemSelected(item);
+	}
+
+	@Override
+	public void onValidateBudget(ContentValues values, FragmentTags source) {
+		hideKeyboard(this);
+		Uri uri = getContentResolver().insert(Budget.CONTENT_URI, values);
+		replaceFragment(this, FragmentTags.TAG_FGT_BUDGET_LIST);
 	}
 
 }

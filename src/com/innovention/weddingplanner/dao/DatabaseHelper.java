@@ -4,10 +4,12 @@ import static com.innovention.weddingplanner.dao.ConstantesDAO.CREATE_GUEST_TABL
 import static com.innovention.weddingplanner.dao.ConstantesDAO.CREATE_TASK_TABLE;
 import static com.innovention.weddingplanner.dao.ConstantesDAO.CREATE_VENDOR_TABLE;
 import static com.innovention.weddingplanner.dao.ConstantesDAO.CREATE_WEDDINGINFO_TABLE;
+import static com.innovention.weddingplanner.dao.ConstantesDAO.CREATE_BUDGET_TABLE;
 import static com.innovention.weddingplanner.dao.ConstantesDAO.DROP_GUEST_TABLE;
 import static com.innovention.weddingplanner.dao.ConstantesDAO.DROP_TASK_TABLE;
 import static com.innovention.weddingplanner.dao.ConstantesDAO.DROP_VENDOR_TABLE;
 import static com.innovention.weddingplanner.dao.ConstantesDAO.DROP_WEDDINGINFO_TABLE;
+import static com.innovention.weddingplanner.dao.ConstantesDAO.DROP_BUDGET_TABLE;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteDatabase.CursorFactory;
@@ -65,6 +67,8 @@ public final class DatabaseHelper extends SQLiteOpenHelper {
 		db.execSQL(CREATE_TASK_TABLE);
 		Log.v(TAG, "Create vendors table");
 		db.execSQL(CREATE_VENDOR_TABLE);
+		Log.v(TAG, "Create budget table");
+		db.execSQL(CREATE_BUDGET_TABLE);
 	}
 
 	/**
@@ -78,6 +82,7 @@ public final class DatabaseHelper extends SQLiteOpenHelper {
 		db.execSQL(DROP_GUEST_TABLE);
 		db.execSQL(DROP_TASK_TABLE);
 		db.execSQL(DROP_VENDOR_TABLE);
+		db.execSQL(DROP_BUDGET_TABLE);
 	}
 	
 	/**

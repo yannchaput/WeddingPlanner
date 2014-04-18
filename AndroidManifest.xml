@@ -77,8 +77,8 @@
         </service>
 
         <provider
-            android:name="com.innovention.weddingplanner.contentprovider.VendorContentProvider"
-            android:authorities="com.innovention.weddingplanner.contentprovider.VendorContentProvider"
+            android:name="com.innovention.weddingplanner.contentprovider.DBContentProvider"
+            android:authorities="com.innovention.weddingplanner.contentprovider.DBContentProvider"
             android:exported="false" >
         </provider>
 

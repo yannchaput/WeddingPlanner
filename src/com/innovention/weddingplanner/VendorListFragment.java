@@ -30,8 +30,8 @@ import android.widget.Toast;
 
 import com.innovention.weddingplanner.Constantes.FragmentTags;
 import com.innovention.weddingplanner.bean.Vendor;
-import com.innovention.weddingplanner.contentprovider.VendorContentProvider;
-import com.innovention.weddingplanner.contentprovider.VendorContentProvider.Vendors;
+import com.innovention.weddingplanner.contentprovider.DBContentProvider;
+import com.innovention.weddingplanner.contentprovider.DBContentProvider.Vendors;
 import com.innovention.weddingplanner.dao.ConstantesDAO;
 import com.innovention.weddingplanner.utils.WeddingPlannerHelper;
 
@@ -164,9 +164,9 @@ public final class VendorListFragment extends Fragment implements
 					.getColumnIndex(COL_VENDOR_CATEGORY));
 			String[] projection = { COL_ID, COL_VENDOR_COMPANY };
 			Cursor c = getActivity().getContentResolver().query(
-					VendorContentProvider.Vendors.CONTENT_URI, projection,
+					DBContentProvider.Vendors.CONTENT_URI, projection,
 					COL_VENDOR_CATEGORY + "=?", new String[] { category },
-					VendorContentProvider.Vendors.SORT_ORDER_DEFAULT);
+					DBContentProvider.Vendors.SORT_ORDER_DEFAULT);
 			return c;
 		}
 
@@ -306,7 +306,7 @@ public final class VendorListFragment extends Fragment implements
 		CursorLoader loader = new CursorLoader(getActivity(),
 				Uri.withAppendedPath(Vendors.CONTENT_URI,
 						Vendors.SUFFIX_CATEGORIES), projection, null, null,
-				VendorContentProvider.Vendors.SORT_ORDER_CATEGORY);
+				DBContentProvider.Vendors.SORT_ORDER_CATEGORY);
 		return loader;
 	}
 
