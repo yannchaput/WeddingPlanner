@@ -3,6 +3,9 @@
  */
 package com.innovention.weddingplanner;
 
+import static com.innovention.weddingplanner.utils.WeddingPlannerHelper.getStringResource;
+import static com.innovention.weddingplanner.utils.WeddingPlannerHelper.showAlert;
+import static com.innovention.weddingplanner.utils.WeddingPlannerHelper.validateMandatory;
 import org.apache.commons.lang3.math.NumberUtils;
 
 import com.innovention.weddingplanner.Constantes.FragmentTags;
@@ -10,6 +13,9 @@ import com.innovention.weddingplanner.VendorFragment.OnValidateVendor;
 import com.innovention.weddingplanner.contentprovider.DBContentProvider.Budget;
 import com.innovention.weddingplanner.contentprovider.DBContentProvider.Vendors;
 import com.innovention.weddingplanner.dao.ConstantesDAO;
+import com.innovention.weddingplanner.exception.InconsistentFieldException;
+import com.innovention.weddingplanner.exception.MissingMandatoryFieldException;
+import com.innovention.weddingplanner.utils.WeddingPlannerHelper;
 
 import android.app.Activity;
 import android.app.Fragment;
@@ -52,6 +58,7 @@ public final class BudgetFragment extends Fragment {
 	private SimpleCursorAdapter adapter;
 	
 	// Widgets
+	private EditText captionTxt;
 	private AutoCompleteTextView vendorTxt;
 	private Spinner categorySpinner;
 	private EditText totalTxt;
@@ -100,9 +107,9 @@ public final class BudgetFragment extends Fragment {
 				android.R.layout.simple_dropdown_item_1line, null,
 				new String[] { ConstantesDAO.COL_VENDOR_COMPANY },
 				new int[] { android.R.id.text1 }, 0);
-		AutoCompleteTextView textView = (AutoCompleteTextView) view
+		vendorTxt = (AutoCompleteTextView) view
 				.findViewById(R.id.budgetMultiAutoCompleteContact);
-		textView.setAdapter(adapter);
+		vendorTxt.setAdapter(adapter);
 
 		// Triggered every time a change occured in the text view
 		adapter.setFilterQueryProvider(new FilterQueryProvider() {
@@ -135,7 +142,7 @@ public final class BudgetFragment extends Fragment {
 			}
 		});
 		
-		vendorTxt = (AutoCompleteTextView) view.findViewById(R.id.budgetMultiAutoCompleteContact);
+		captionTxt = (EditText) view.findViewById(R.id.budgetEditCaption);
 		categorySpinner = (Spinner) view.findViewById(R.id.budgetSpinnerCategory);
 		totalTxt = (EditText) view.findViewById(R.id.budgetEditTotalAmount);
 		paidTxt = (EditText) view.findViewById(R.id.budgetEditPaidAmount);
@@ -147,13 +154,43 @@ public final class BudgetFragment extends Fragment {
 			@Override
 			public void onClick(View v) {
 				Log.d(TAG, "validateBtn - onClick : save new budget item");
-				ContentValues values = new ContentValues();
-				values.put (ConstantesDAO.COL_BUDGET_VENDOR, vendorTxt.getText().toString());
-				values.put(ConstantesDAO.COL_BUDGET_CATEGORY, (String) categorySpinner.getSelectedItem());
-				values.put(ConstantesDAO.COL_BUDGET_TOTAL_AMOUNT, NumberUtils.toDouble(totalTxt.getText().toString()));
-				values.put(ConstantesDAO.COL_BUDGET_PAID_AMOUNT, NumberUtils.toDouble(paidTxt.getText().toString()));
-				values.put(ConstantesDAO.COL_BUDGET_NOTE, noteTxt.getText().toString());
-				validateListener.onValidateBudget(values, BudgetFragment.this.mode);
+				String caption = captionTxt.getText().toString();
+				String vendor = vendorTxt.getText().toString();
+				String total = totalTxt.getText().toString();
+				String paid = paidTxt.getText().toString();
+				double dTotal = NumberUtils.toDouble(total);
+				double dPaid = NumberUtils.toDouble(paid);
+				try {
+					validateMandatory(caption);
+					validateMandatory(vendor);
+					validateMandatory(total);
+					
+					if (dPaid > dTotal) {
+						throw new InconsistentFieldException(Constantes.INCONSISTENT_FIELD_EX);
+					}
+
+					ContentValues values = new ContentValues();
+					values.put(ConstantesDAO.COL_BUDGET_EXPENSE, caption);
+					values.put(ConstantesDAO.COL_BUDGET_VENDOR, vendor);
+					values.put(ConstantesDAO.COL_BUDGET_CATEGORY,
+							(String) categorySpinner.getSelectedItem());
+					values.put(ConstantesDAO.COL_BUDGET_TOTAL_AMOUNT,
+							dTotal);
+					values.put(ConstantesDAO.COL_BUDGET_PAID_AMOUNT,
+							dPaid);
+					values.put(ConstantesDAO.COL_BUDGET_NOTE, noteTxt.getText()
+							.toString());
+					validateListener.onValidateBudget(values,
+							BudgetFragment.this.mode);
+				} catch (MissingMandatoryFieldException e) {
+					showAlert(R.string.budget_alert_dialog_title,
+							R.string.budget_mandatory_validator_message,
+							getFragmentManager());
+				} catch (InconsistentFieldException e) {
+					showAlert(R.string.budget_alert_dialog_title,
+							R.string.inconsistent_paid_amount,
+							getFragmentManager());
+				}
 			}
 		});
 

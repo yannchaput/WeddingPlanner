@@ -70,8 +70,10 @@ public interface ConstantesDAO {
 	byte NUM_COL_VENDOR_NOTE = NUM_COL_VENDOR_CATEGORY + 1;
 	
 	// Budget table
+	String COL_BUDGET_EXPENSE="expense";
+	byte NUM_COL_BUDGET_EXPENSE = NUM_COL_ID +1;
 	String COL_BUDGET_VENDOR = "vendor";
-	byte NUM_COL_BUDGET_VENDOR = NUM_COL_ID + 1;
+	byte NUM_COL_BUDGET_VENDOR = NUM_COL_BUDGET_EXPENSE + 1;
 	String COL_BUDGET_CATEGORY = "category";
 	byte NUM_COL_BUDGET_CATEGORY = NUM_COL_BUDGET_VENDOR + 1;
 	String COL_BUDGET_TOTAL_AMOUNT = "total_amount";
@@ -82,7 +84,7 @@ public interface ConstantesDAO {
 	byte NUM_COL_BUDGET_NOTE = NUM_COL_BUDGET_PAID_AMOUNT + 1;
 	
 	// General
-	int VERSION_BDD = 8;
+	int VERSION_BDD = 9;
 	String NOM_BDD = "wedplanner.db";
 	
 	String CREATE_WEDDINGINFO_TABLE= new StringBuilder()
@@ -175,6 +177,8 @@ public interface ConstantesDAO {
 	.append(" ( ")
 	.append(COL_ID)
 	.append(" INTEGER PRIMARY KEY AUTOINCREMENT, ")
+	.append(COL_BUDGET_EXPENSE)
+	.append(" TEXT NOT NULL, ")
 	.append(COL_BUDGET_VENDOR)
 	.append(" TEXT NOT NULL, ")
 	.append(COL_BUDGET_CATEGORY)

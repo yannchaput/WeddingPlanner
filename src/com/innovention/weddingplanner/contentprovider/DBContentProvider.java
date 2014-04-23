@@ -13,6 +13,7 @@ import static com.innovention.weddingplanner.dao.ConstantesDAO.COL_VENDOR_NOTE;
 import static com.innovention.weddingplanner.dao.ConstantesDAO.COL_VENDOR_PHONE;
 import static com.innovention.weddingplanner.dao.ConstantesDAO.TABLE_VENDORS;
 import static com.innovention.weddingplanner.dao.ConstantesDAO.TABLE_BUDGET;
+import static com.innovention.weddingplanner.dao.ConstantesDAO.COL_BUDGET_EXPENSE;
 import static com.innovention.weddingplanner.dao.ConstantesDAO.COL_BUDGET_CATEGORY;
 import static com.innovention.weddingplanner.dao.ConstantesDAO.COL_BUDGET_NOTE;
 import static com.innovention.weddingplanner.dao.ConstantesDAO.COL_BUDGET_PAID_AMOUNT;
@@ -83,7 +84,7 @@ public final class DBContentProvider extends ContentProvider {
 		public static final String CONTENT_ITEM_TYPE = ContentResolver.CURSOR_ITEM_BASE_TYPE
 				+ "/vnd.com.innovention.vendors";
 		// A projection of all columns in the table
-		public static final String[] PROJECTION_ALL = { COL_ID,
+		public static final String[] PROJECTION_ALL = { COL_ID, 
 				COL_VENDOR_COMPANY, COL_VENDOR_CONTACT, COL_VENDOR_ADDRESS,
 				COL_VENDOR_MAIL, COL_VENDOR_PHONE, COL_VENDOR_CATEGORY,
 				COL_VENDOR_NOTE };
@@ -101,6 +102,7 @@ public final class DBContentProvider extends ContentProvider {
 	 */
 	public static final class Budget implements BaseColumns {
 		public static final String SUFFIX = "budget";
+		public static final String SUFFIX_CATEGORIES = "categories";
 		// Content URI for budget table
 		public static final Uri CONTENT_URI = Uri.withAppendedPath(
 						DBContentProvider.CONTENT_URI, SUFFIX);
@@ -111,11 +113,13 @@ public final class DBContentProvider extends ContentProvider {
 		public static final String CONTENT_ITEM_TYPE = ContentResolver.CURSOR_ITEM_BASE_TYPE
 				+ "/vnd.com.innovention.budget";
 		// A projection of all columns in the table
-		public static final String[] PROJECTION_ALL = { COL_ID,
+		public static final String[] PROJECTION_ALL = { COL_ID, COL_BUDGET_EXPENSE, 
 				COL_BUDGET_VENDOR, COL_BUDGET_CATEGORY, COL_BUDGET_TOTAL_AMOUNT,
 				COL_BUDGET_PAID_AMOUNT, COL_BUDGET_NOTE };
 		// Default sort order
 		public static final String SORT_ORDER_DEFAULT = COL_BUDGET_CATEGORY
+				+ " ASC";
+		public static final String SORT_ORDER_CATEGORY = COL_VENDOR_CATEGORY
 				+ " ASC";
 	}
 
@@ -127,6 +131,7 @@ public final class DBContentProvider extends ContentProvider {
 	// Budget
 	private static final int CODE_BUDGET = 100;
 	private static final int CODE_BUDGET_ITEM = 110;
+	private static final int CODE_BUDGET_CATEGORIES = 120;
 
 	// URI matcher
 	private static final UriMatcher URI_MATCHER = new UriMatcher(
@@ -142,6 +147,8 @@ public final class DBContentProvider extends ContentProvider {
 				CODE_BUDGET);
 		URI_MATCHER.addURI(AUTHORITY, BASE_PATH + "/" + Budget.SUFFIX + "/#",
 				CODE_BUDGET_ITEM);
+		URI_MATCHER.addURI(AUTHORITY, BASE_PATH + "/" + Budget.SUFFIX + "/"
+				+ Budget.SUFFIX_CATEGORIES, CODE_BUDGET_CATEGORIES);
 	}
 
 	/**
@@ -203,7 +210,7 @@ public final class DBContentProvider extends ContentProvider {
 					selectionArgs, COL_VENDOR_CATEGORY, null, sortOrder);
 			break;
 		case CODE_BUDGET:
-			queryBuilder.setTables(TABLE_VENDORS);
+			queryBuilder.setTables(TABLE_BUDGET);
 			if (WeddingPlannerHelper.isEmpty(sortOrder)) {
 				sortOrder = Budget.SORT_ORDER_DEFAULT;
 			}
@@ -221,6 +228,12 @@ public final class DBContentProvider extends ContentProvider {
 			queryBuilder.appendWhere(COL_ID + "=" + uri.getLastPathSegment());
 			cursor = queryBuilder.query(database, projection, selection,
 					selectionArgs, null, null, sortOrder);
+			break;
+		case CODE_BUDGET_CATEGORIES:
+			projection = new String[] { COL_ID, COL_BUDGET_CATEGORY };
+			queryBuilder.setTables(TABLE_BUDGET);
+			cursor = queryBuilder.query(database, projection, selection,
+					selectionArgs, COL_BUDGET_CATEGORY, null, sortOrder);
 			break;
 		default:
 			throw new IllegalArgumentException("Unknown URI: " + uri);
@@ -241,7 +254,7 @@ public final class DBContentProvider extends ContentProvider {
 
 		// Choose the right set for columns
 		List<Integer> vendorCodeList = Arrays.asList( CODE_VENDORS, CODE_VENDOR_ITEM, CODE_VENDOR_CATEGORIES);
-		List<Integer> budgetCodeList =Arrays.asList( CODE_BUDGET, CODE_BUDGET_ITEM );
+		List<Integer> budgetCodeList =Arrays.asList( CODE_BUDGET, CODE_BUDGET_ITEM, CODE_BUDGET_CATEGORIES );
 		
 		String[] available = null;
 
@@ -252,7 +265,7 @@ public final class DBContentProvider extends ContentProvider {
 			available = Budget.PROJECTION_ALL;
 		}
 		else {
-			throw new IllegalArgumentException("Unknown code passed in parameter of the function");
+			throw new IllegalArgumentException("Unknown uri passed in parameter of the function");
 		}
 		
 		if (projection != null) {
@@ -292,6 +305,8 @@ public final class DBContentProvider extends ContentProvider {
 		case CODE_BUDGET_ITEM:
 			type = Budget.CONTENT_ITEM_TYPE;
 			break;
+		case CODE_BUDGET_CATEGORIES:
+			type = Budget.CONTENT_TYPE;
 		default:
 			throw new IllegalArgumentException(Constantes.ILLEGAL_URI + uri);
 		}
@@ -313,6 +328,7 @@ public final class DBContentProvider extends ContentProvider {
 		switch (URI_MATCHER.match(uri)) {
 		case CODE_VENDORS:
 		case CODE_VENDOR_CATEGORIES:
+		case CODE_BUDGET_CATEGORIES:
 			throw new UnsupportedOperationException("Insertion for these kind of data not yet implemented");
 		case CODE_BUDGET:
 			id = db.insert(TABLE_BUDGET, null, values);

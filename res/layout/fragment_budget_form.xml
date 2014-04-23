@@ -4,78 +4,85 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:orientation="vertical" >
+        android:layout_height="0dp" 
+        android:layout_weight="1" >
 
-        <AutoCompleteTextView
-            android:id="@+id/budgetMultiAutoCompleteContact"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:ems="10"
-            android:hint="@string/budget_label_vendor" >
-
-            <requestFocus />
-        </AutoCompleteTextView>
-
-        <Spinner
-            android:id="@+id/budgetSpinnerCategory"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:entries="@array/vendor_spinner_categories_entries" />
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/budget_form_section_gap" >
-
-            <TextView
-                android:id="@+id/budgetLabelTotalAmount"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/budget_label_total_amount"
-                android:textAppearance="?android:attr/textAppearanceMedium" />
+            android:orientation="vertical" >
 
             <EditText
-                android:id="@+id/budgetEditTotalAmount"
+                android:id="@+id/budgetEditCaption"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignBaseline="@id/budgetLabelTotalAmount"
-                android:layout_marginLeft="@dimen/budget_form_field_inbetween"
-                android:layout_toRightOf="@+id/budgetLabelTotalAmount"
                 android:ems="10"
-                android:hint="@string/budget_hint_field_total_amount"
-                android:inputType="numberDecimal" >
+                android:hint="@string/budget_hint_field_caption">
+                <requestFocus />
             </EditText>
 
-            <TextView
-                android:id="@+id/budgetLabelPaidAmount"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/budgetLabelTotalAmount"
-                android:layout_marginTop="@dimen/budget_form_field_top_margin"
-                android:text="@string/budget_label_paid_amount"
-                android:textAppearance="?android:attr/textAppearanceMedium" />
-
-            <EditText
-                android:id="@+id/budgetEditPaidAmount"
+            <AutoCompleteTextView
+                android:id="@+id/budgetMultiAutoCompleteContact"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignBaseline="@id/budgetLabelPaidAmount"
-                android:layout_alignStart="@id/budgetEditTotalAmount"
-                android:layout_below="@id/budgetEditTotalAmount"
-                android:layout_toRightOf="@+id/budgetLabelPaidAmount"
                 android:ems="10"
-                android:hint="@string/budget_hint_field_paid_amount"
-                android:inputType="numberDecimal" >
-            </EditText>
-        </RelativeLayout>
+                android:hint="@string/budget_label_vendor" >
+            </AutoCompleteTextView>
 
-        <ScrollView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" >
+            <Spinner
+                android:id="@+id/budgetSpinnerCategory"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:entries="@array/vendor_spinner_categories_entries" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/budget_form_section_gap" >
+
+                <TextView
+                    android:id="@+id/budgetLabelTotalAmount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/budget_label_total_amount"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+
+                <EditText
+                    android:id="@+id/budgetEditTotalAmount"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBaseline="@id/budgetLabelTotalAmount"
+                    android:layout_marginLeft="@dimen/budget_form_field_inbetween"
+                    android:layout_toRightOf="@+id/budgetLabelTotalAmount"
+                    android:ems="10"
+                    android:hint="@string/budget_hint_field_total_amount"
+                    android:inputType="numberDecimal" >
+                </EditText>
+
+                <TextView
+                    android:id="@+id/budgetLabelPaidAmount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/budgetLabelTotalAmount"
+                    android:layout_marginTop="@dimen/budget_form_field_top_margin"
+                    android:text="@string/budget_label_paid_amount"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+
+                <EditText
+                    android:id="@+id/budgetEditPaidAmount"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBaseline="@id/budgetLabelPaidAmount"
+                    android:layout_alignStart="@id/budgetEditTotalAmount"
+                    android:layout_below="@id/budgetEditTotalAmount"
+                    android:layout_toRightOf="@+id/budgetLabelPaidAmount"
+                    android:ems="10"
+                    android:hint="@string/budget_hint_field_paid_amount"
+                    android:inputType="numberDecimal" >
+                </EditText>
+            </RelativeLayout>
 
             <EditText
                 android:id="@+id/budgetEditNote"
@@ -84,9 +91,9 @@
                 android:ems="10"
                 android:hint="@string/budget_hint_field_note"
                 android:inputType="textMultiLine" />
-        </ScrollView>
-    </LinearLayout>
-    
+        </LinearLayout>
+    </ScrollView>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

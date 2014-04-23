@@ -109,6 +109,8 @@
     <string name="task_inconsistent_validator_message">Un rappel ne peut être défini sans échéance</string>
     <string name="vendor_alert_dialog_title">Informations manquantes</string>
     <string name="vendor_mandatory_validator_message">Le nom de la société est obligatoire. Veuillez le renseigner svp.</string>
+    <string name="budget_alert_dialog_title">Informations manquantes</string>
+    <string name="budget_mandatory_validator_message">Les libellés, nom du prestataire, montants sont obligatoires. Veuillez les renseigner svp.</string>
 
     <!-- Autres -->
     <string name="placeholder">placeholder</string>
@@ -127,6 +129,7 @@
     <string name="delete_task_multiple_alert_message">Plusieurs enregistrements correspondants à la tâche sélectionnée ont été trouvés</string>
     <string name="delete_task_OK_alert_message">Tâche supprimée de la liste!</string>
     <string name="delete_vendor_OK_alert_message">Prestataire supprimé de la liste!</string>
+    <string name="inconsistent_paid_amount">La somme payée ne peut être supérieure au total</string>
 
     <!-- Notifications -->
     <string name="task_notification_title">Rappel</string>
@@ -163,6 +166,7 @@
     
     <!--  Budget -->
     <string name="title_activity_budget">Budget</string>
+    <string name="budget_hint_field_caption">Légende</string>
     <string name="budget_label_vendor">Prestataire</string>
     <string name="budget_label_total_amount">Total</string>
     <string name="budget_label_paid_amount">Payé</string>

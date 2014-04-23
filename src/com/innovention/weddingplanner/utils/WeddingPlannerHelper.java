@@ -7,6 +7,9 @@ import static com.innovention.weddingplanner.Constantes.ILLEGAL_EMAIL_EX;
 import static com.innovention.weddingplanner.Constantes.ILLEGAL_PHONE_EX;
 import static com.innovention.weddingplanner.Constantes.MISSING_MANADTORY_FIELD_EX;
 
+import java.text.NumberFormat;
+import java.util.Locale;
+
 import org.joda.time.DateTime;
 import org.joda.time.Days;
 
@@ -42,7 +45,7 @@ import com.innovention.weddingplanner.exception.IncorrectMailException;
 import com.innovention.weddingplanner.exception.IncorrectTelephoneException;
 import com.innovention.weddingplanner.exception.MissingMandatoryFieldException;
 
-public class WeddingPlannerHelper {
+public final class WeddingPlannerHelper {
 	
 	private static final String TAG = WeddingPlannerHelper.class.getSimpleName();
 	
@@ -251,5 +254,24 @@ public class WeddingPlannerHelper {
 		inputManager.hideSoftInputFromWindow(
 				activity.getCurrentFocus().getWindowToken(),
 				InputMethodManager.HIDE_NOT_ALWAYS);
+	}
+	
+	/**
+	 * Gets default regional parameter
+	 * @return default Locale instance
+	 */
+	public static Locale getDefaultLocale() {
+		return Locale.getDefault();
+	}
+	
+	/**
+	 * Format a number in the specified local currency
+	 * @param amount
+	 * @param region
+	 * @return
+	 */
+	public static String formatCurrency(final double amount, final Locale region) {
+		NumberFormat fmt = NumberFormat.getCurrencyInstance(region);
+		return fmt.format(amount);
 	}
 }
