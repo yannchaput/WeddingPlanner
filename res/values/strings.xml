@@ -54,7 +54,7 @@
     <string name="title_section4">Tâches en retard</string>
 
     <!-- Task form -->
-    <string name="task_hint_field_description">Contenu de la tâche</string>
+    <string name="task_hint_field_description">Description de la tâche</string>
     <string name="task_label_dates">Echeance \u0026 rappels</string>
     <string name="task_label_echeance">Echeance le</string>
     <string name="task_hint_field_echeance">Entrez la date</string>
@@ -97,6 +97,8 @@
     
     <!--  budget list -->
     <string name="action_add_budget_item">Nouvel élément budgétaire</string>
+    <string name="action_delete_budget_item">Supprimer dépense</string>
+    <string name="action_update_budget_item">Modifier dépense</string>
 
     <!-- Validators -->
     <string name="alert_dialog_validate">OK</string>
@@ -130,6 +132,7 @@
     <string name="delete_task_OK_alert_message">Tâche supprimée de la liste!</string>
     <string name="delete_vendor_OK_alert_message">Prestataire supprimé de la liste!</string>
     <string name="inconsistent_paid_amount">La somme payée ne peut être supérieure au total</string>
+    <string name="delete_budget_OK_alert_message">Ligne de dépense supprimés de la liste!</string>
 
     <!-- Notifications -->
     <string name="task_notification_title">Rappel</string>
@@ -174,4 +177,7 @@
     <string name="budget_hint_field_paid_amount">Montant payé</string>
     <string name="budget_hint_field_note">Note</string>
 	<string name="budget_button_validate">Valider</string>
+	<string name="budget_list_total_amount_label">Dépense totale</string>
+	<string name="budget_list_outstanding_amount_label">En cours</string>
+	<string name="budget_list_paid_amount_label">Payé</string>
 </resources>

@@ -5,7 +5,7 @@
     <dimen name="activity_vertical_margin">16dp</dimen>
     <!--  font -->
     <dimen name="days_2_wedding_font_size">26sp</dimen>
-    <dimen name="contact_list_item_font_size">28sp</dimen>
+    <dimen name="contact_list_item_font_size">17sp</dimen>
     <!-- contacts -->
 	<dimen name="contact_checkbox_space">66dp</dimen>
 	<dimen name="contact_list_item_margin">5dp</dimen>
@@ -35,4 +35,8 @@
 	<dimen name="budget_list_padding">8dp</dimen>
 	<dimen name="budget_list_item_inbetween">10dp</dimen>
 	<dimen name="budget_list_group_inbetween">10dp</dimen>
+	<dimen name="budget_list_top_top_margin">10dp</dimen>
+	<dimen name="budget_list_top_bottom_margin">20dp</dimen>
+	<dimen name="budget_list_top_item_left_margin">10dp</dimen>
+	<dimen name="budget_list_top_item_right_margin">10dp</dimen>
 </resources>

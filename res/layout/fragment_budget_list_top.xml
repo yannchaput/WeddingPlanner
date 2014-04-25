@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center_vertical"
+    android:background="@color/BurlyWood" >
+
+    <TextView
+        android:id="@+id/lblBudgetTotalAmount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:text="@string/budget_list_total_amount_label"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <TextView
+        android:id="@+id/lblBudgetTotalPaidAmount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/lblBudgetTotalAmount"
+        android:text="@string/budget_list_paid_amount_label"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <TextView
+        android:id="@+id/lblBudgetOutstandingAmount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/lblBudgetTotalPaidAmount"
+        android:text="@string/budget_list_outstanding_amount_label"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <TextView
+        android:id="@+id/lblCalculatedOutstanding"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/lblBudgetOutstandingAmount"
+        android:layout_alignBottom="@+id/lblBudgetOutstandingAmount"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="@dimen/budget_list_top_item_right_margin"
+        android:text="@string/placeholder"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <TextView
+        android:id="@+id/lblCalculatedPaid"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/lblBudgetOutstandingAmount"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="@dimen/budget_list_top_item_right_margin"
+        android:text="@string/placeholder"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textStyle="italic" />
+
+    <TextView
+        android:id="@+id/lblCalculatedTotal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/lblBudgetTotalPaidAmount"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="@dimen/budget_list_top_item_right_margin"
+        android:text="@string/placeholder"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textStyle="bold" />
+
+</RelativeLayout>

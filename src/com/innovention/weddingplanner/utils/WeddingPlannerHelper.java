@@ -37,6 +37,7 @@ import com.innovention.weddingplanner.TaskFragment;
 import com.innovention.weddingplanner.TaskListFragment;
 import com.innovention.weddingplanner.VendorFragment;
 import com.innovention.weddingplanner.VendorListFragment;
+import com.innovention.weddingplanner.bean.Budget;
 import com.innovention.weddingplanner.bean.Contact;
 import com.innovention.weddingplanner.bean.IDtoBean;
 import com.innovention.weddingplanner.bean.Task;
@@ -216,6 +217,9 @@ public final class WeddingPlannerHelper {
 			if (null == fgt) {
 				fgt = BudgetListFragment.newInstance();
 			}
+			else {
+				((BudgetListFragment) fgt).refresh();
+			}
 			resId = R.id.LayoutBudget;
 			break;
 		case TAG_FGT_CREATE_BUDGET:
@@ -223,8 +227,13 @@ public final class WeddingPlannerHelper {
 			fgt = BudgetFragment.newInstance();
 			resId = R.id.LayoutBudget;
 			break;
+		case TAG_FGT_UPDATE_BUDGET:
+			checkNotNull(params, "The budget object passed in parameter should not be null");
+			checkArgument(params.length == 1, "There should be exactly one budget to update");
+			fgt = BudgetFragment.newInstance(tag, (Budget) params[0]);
+			resId = R.id.LayoutBudget;
+			break;
 		default:
-			// do nothing
 			return;
 		}
 		tx.replace(resId, fgt, tag.getValue());

@@ -30,6 +30,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.content.ContentValues;
+import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
@@ -45,14 +46,13 @@ import com.innovention.weddingplanner.bean.Contact.ResponseType;
  */
 public class GuestsDao implements IDao<Contact> {
 	
-	// Handle on the currently open database
-	private SQLiteDatabase db;
+	private Context context;
 		
 	private static final String TAG=GuestsDao.class.getSimpleName();
 
-	public GuestsDao(final SQLiteDatabase db) {
+	public GuestsDao(Context ctxt) {
 		Log.v(TAG, "Constructor - " + "create GuestsDao service");
-		this.db = db;
+		this.context = ctxt;
 	}
 
 	/**
@@ -73,7 +73,8 @@ public class GuestsDao implements IDao<Contact> {
 		values.put(COL_COCKTAIL, bean.getCocktail());
 		values.put(COL_PARTY, bean.getParty());
 		values.put(COL_RSVP, bean.getResponse().toString());
-		return db.insert(TABLE_GUESTS, null, values);
+		return DaoLocator.getInstance(context).getWritableDatabase()
+				.insert(TABLE_GUESTS, null, values);
 	}
 
 	@Override
@@ -91,14 +92,16 @@ public class GuestsDao implements IDao<Contact> {
 		values.put(COL_COCKTAIL, bean.getCocktail());
 		values.put(COL_PARTY, bean.getParty());
 		values.put(COL_RSVP, bean.getResponse().toString());
-		int result = db.update(TABLE_GUESTS, values, COL_ID + "=?", new String[] {String.valueOf(id)});
+		int result = DaoLocator.getInstance(context).getWritableDatabase()
+				.update(TABLE_GUESTS, values, COL_ID + "=?", new String[] {String.valueOf(id)});
 		Log.d(TAG, "" + result + "rows affected");
 		return result;
 	}
 
 	@Override
 	public int removeWithId(int id) {
-		return db.delete(TABLE_GUESTS, COL_ID + " = " + id, null);
+		return DaoLocator.getInstance(context).getWritableDatabase()
+				.delete(TABLE_GUESTS, COL_ID + " = " + id, null);
 	}
 
 	@Override
@@ -112,7 +115,8 @@ public class GuestsDao implements IDao<Contact> {
 		Contact bean = null;
 		Contact.ContactBuilder builder = new Contact.ContactBuilder();
 		
-		Cursor c = db.query(TABLE_GUESTS, new String[] {COL_ID, COL_SURNAME, COL_NAME, COL_TEL, COL_EMAIL,
+		Cursor c = DaoLocator.getInstance(context).getReadDatabase()
+				.query(TABLE_GUESTS, new String[] {COL_ID, COL_SURNAME, COL_NAME, COL_TEL, COL_EMAIL,
 				COL_ADDRESS, COL_INVITATION, COL_CHURCH, COL_TOWNHALL, COL_COCKTAIL, COL_PARTY, COL_RSVP}
 		, COL_ID + "=?", new String[] {String.valueOf(id)}, null, null, null);
 		
@@ -145,7 +149,8 @@ public class GuestsDao implements IDao<Contact> {
 	@Override
 	public Cursor getCursor() {
 		// TODO Auto-generated method stub
-		return db.query(TABLE_GUESTS, new String[] {COL_ID, COL_SURNAME, COL_NAME, COL_TEL, COL_EMAIL,
+		return DaoLocator.getInstance(context).getReadDatabase()
+				.query(TABLE_GUESTS, new String[] {COL_ID, COL_SURNAME, COL_NAME, COL_TEL, COL_EMAIL,
 				COL_ADDRESS, COL_INVITATION, COL_CHURCH, COL_TOWNHALL, COL_COCKTAIL, COL_PARTY, COL_RSVP}
 		, null, null, null, null, null);
 	}

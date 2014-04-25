@@ -5,10 +5,13 @@ import static com.innovention.weddingplanner.utils.WeddingPlannerHelper.hideKeyb
 
 import com.innovention.weddingplanner.BudgetFragment.OnValidateBudget;
 import com.innovention.weddingplanner.Constantes.FragmentTags;
+import com.innovention.weddingplanner.contentprovider.DBContentProvider;
 import com.innovention.weddingplanner.contentprovider.DBContentProvider.Budget;
+import com.innovention.weddingplanner.dao.ConstantesDAO;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.content.ContentUris;
 import android.content.ContentValues;
 import android.net.Uri;
 import android.os.Bundle;
@@ -63,8 +66,18 @@ public final class BudgetActivity extends Activity implements OnValidateBudget {
 
 	@Override
 	public void onValidateBudget(ContentValues values, FragmentTags source) {
+		Uri uri = null;
+		
 		hideKeyboard(this);
-		Uri uri = getContentResolver().insert(Budget.CONTENT_URI, values);
+		if (FragmentTags.TAG_FGT_CREATE_BUDGET.equals(source)) {
+			uri = getContentResolver().insert(Budget.CONTENT_URI, values);
+		}
+		else {
+			uri = ContentUris.withAppendedId(DBContentProvider.Budget.CONTENT_URI, values.getAsLong(ConstantesDAO.COL_ID));
+			values.remove(ConstantesDAO.COL_ID);
+			getContentResolver().update(uri, values, null, null);
+		}
+			
 		replaceFragment(this, FragmentTags.TAG_FGT_BUDGET_LIST);
 	}
 

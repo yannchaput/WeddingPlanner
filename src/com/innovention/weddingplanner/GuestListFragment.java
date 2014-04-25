@@ -187,9 +187,9 @@ public class GuestListFragment extends Fragment implements
 			
 			ImageView icon = holder.icon;
 			TextView surname = holder.surname;
-			surname.setTypeface(WeddingPlannerHelper.getFont(GuestListFragment.this.getActivity(), FONT_CURVED));
+			//surname.setTypeface(WeddingPlannerHelper.getFont(GuestListFragment.this.getActivity(), FONT_CURVED));
 			TextView name = (TextView) holder.name;
-			name.setTypeface(WeddingPlannerHelper.getFont(GuestListFragment.this.getActivity(), FONT_CURVED));
+			//name.setTypeface(WeddingPlannerHelper.getFont(GuestListFragment.this.getActivity(), FONT_CURVED));
 			surname.setText(c.getString(NUM_COL_SURNAME));
 			name.setText(c.getString(NUM_COL_NAME));
 			

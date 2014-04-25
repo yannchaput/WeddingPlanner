@@ -18,6 +18,7 @@ import static com.innovention.weddingplanner.dao.ConstantesDAO.TABLE_VENDORS;
 import java.util.List;
 
 import android.content.ContentValues;
+import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
@@ -34,13 +35,13 @@ public class VendorDao implements IDao<Vendor> {
 	// Logger category
 	public static final String TAG = VendorDao.class.getSimpleName();
 	// Db  instance
-	private SQLiteDatabase db;
+	private Context context;
 	
 	/**
 	 * Default constructor
 	 */
-	public VendorDao(final SQLiteDatabase db) {
-		this.db = db;
+	public VendorDao(final Context ctxt) {
+		this.context = ctxt;
 	}
 
 	@Override
@@ -55,7 +56,8 @@ public class VendorDao implements IDao<Vendor> {
 		values.put(COL_VENDOR_PHONE, bean.getTelephone());
 		values.put(COL_VENDOR_CATEGORY, bean.getCategory());
 		values.put(COL_VENDOR_NOTE, bean.getNote());
-		return db.insert(TABLE_VENDORS, null, values);
+		return DaoLocator.getInstance(context).getWritableDatabase()
+				.insert(TABLE_VENDORS, null, values);
 	}
 
 	@Override
@@ -71,7 +73,8 @@ public class VendorDao implements IDao<Vendor> {
 		values.put(COL_VENDOR_PHONE, bean.getTelephone());
 		values.put(COL_VENDOR_CATEGORY, bean.getCategory());
 		values.put(COL_VENDOR_NOTE, bean.getNote());
-		int rows = db.update(TABLE_VENDORS, values, COL_ID + " = ?", new String[] {String.valueOf(bean.getId())});
+		int rows = DaoLocator.getInstance(context).getWritableDatabase()
+				.update(TABLE_VENDORS, values, COL_ID + " = ?", new String[] {String.valueOf(bean.getId())});
 		Log.d(TAG, "" + rows + "rows affected");
 		return rows;
 	}

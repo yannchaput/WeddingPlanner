@@ -57,11 +57,11 @@ public class MainActivity extends Activity {
 		vendorBtn = (ImageButton) findViewById(R.id.imageButton4);
 		
 		// Enregistre la police du texte en bas
-		// TODO : voir si on peut pas faire la m�me chose par les styles
 		days2WeddingTxt = (TextView) findViewById(R.id.days2WeddingText);
 		Typeface font = getFont(this, FONT_CURVED);
 		days2WeddingTxt.setTypeface(font);
 		
+		// Set title font
 		int titleId = getResources().getIdentifier("action_bar_title", "id", "android");
 		TextView titleView = (TextView) findViewById(titleId);
 		titleView.setTypeface(font);

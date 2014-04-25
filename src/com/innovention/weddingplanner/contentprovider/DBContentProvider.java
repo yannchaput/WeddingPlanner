@@ -103,6 +103,8 @@ public final class DBContentProvider extends ContentProvider {
 	public static final class Budget implements BaseColumns {
 		public static final String SUFFIX = "budget";
 		public static final String SUFFIX_CATEGORIES = "categories";
+		public static final String SUFFIX_SUM_PAID_AMOUNT="sum_paid_amount";
+		public static final String SUFFIX_SUM_TOTAL_AMOUNT="sum_total_amount";
 		// Content URI for budget table
 		public static final Uri CONTENT_URI = Uri.withAppendedPath(
 						DBContentProvider.CONTENT_URI, SUFFIX);
@@ -117,38 +119,66 @@ public final class DBContentProvider extends ContentProvider {
 				COL_BUDGET_VENDOR, COL_BUDGET_CATEGORY, COL_BUDGET_TOTAL_AMOUNT,
 				COL_BUDGET_PAID_AMOUNT, COL_BUDGET_NOTE };
 		// Default sort order
-		public static final String SORT_ORDER_DEFAULT = COL_BUDGET_CATEGORY
+		public static final String SORT_ORDER_DEFAULT = COL_BUDGET_EXPENSE
 				+ " ASC";
-		public static final String SORT_ORDER_CATEGORY = COL_VENDOR_CATEGORY
+		public static final String SORT_ORDER_CATEGORY = COL_BUDGET_CATEGORY
 				+ " ASC";
 	}
 
-	// Return codes
-	// Vendor
-	private static final int CODE_VENDORS = 10;
-	private static final int CODE_VENDOR_ITEM = 20;
-	private static final int CODE_VENDOR_CATEGORIES = 30;
-	// Budget
-	private static final int CODE_BUDGET = 100;
-	private static final int CODE_BUDGET_ITEM = 110;
-	private static final int CODE_BUDGET_CATEGORIES = 120;
+	/**
+	 * CODES enum return values
+	 * @author YCH
+	 *
+	 */
+	private enum CODES {
+		CODE_VENDORS(10), CODE_VENDOR_ITEM(20), CODE_VENDOR_CATEGORIES(30), 
+		CODE_BUDGET(40), CODE_BUDGET_ITEM(50), CODE_BUDGET_CATEGORIES(60),
+		CODE_BUDGET_SUM_PAID(70), CODE_BUDGET_SUM_TOTAL(80),
+		UNDEFINED(-1);
+		
+		private int code = -1;
+		
+		private CODES(final int code) {
+			this.code = code;
+		}
+		
+		/**
+		 * factory method
+		 * @param code
+		 * @return a CODES enum
+		 */
+		private static final CODES toEnum(final int value) {
+			
+			for (CODES code: CODES.values()) {
+				if (value == code.code) return code;
+			}
+			
+			return UNDEFINED;
+		}
+	}
+	
+	
 
 	// URI matcher
 	private static final UriMatcher URI_MATCHER = new UriMatcher(
 			UriMatcher.NO_MATCH);
 	static {
 		URI_MATCHER.addURI(AUTHORITY, BASE_PATH + "/" + Vendors.SUFFIX,
-				CODE_VENDORS);
+				CODES.CODE_VENDORS.code);
 		URI_MATCHER.addURI(AUTHORITY, BASE_PATH + "/" + Vendors.SUFFIX + "/#",
-				CODE_VENDOR_ITEM);
+				CODES.CODE_VENDOR_ITEM.code);
 		URI_MATCHER.addURI(AUTHORITY, BASE_PATH + "/" + Vendors.SUFFIX + "/"
-				+ Vendors.SUFFIX_CATEGORIES, CODE_VENDOR_CATEGORIES);
+				+ Vendors.SUFFIX_CATEGORIES, CODES.CODE_VENDOR_CATEGORIES.code);
 		URI_MATCHER.addURI(AUTHORITY, BASE_PATH + "/" + Budget.SUFFIX,
-				CODE_BUDGET);
+				CODES.CODE_BUDGET.code);
 		URI_MATCHER.addURI(AUTHORITY, BASE_PATH + "/" + Budget.SUFFIX + "/#",
-				CODE_BUDGET_ITEM);
+				CODES.CODE_BUDGET_ITEM.code);
 		URI_MATCHER.addURI(AUTHORITY, BASE_PATH + "/" + Budget.SUFFIX + "/"
-				+ Budget.SUFFIX_CATEGORIES, CODE_BUDGET_CATEGORIES);
+				+ Budget.SUFFIX_CATEGORIES, CODES.CODE_BUDGET_CATEGORIES.code);
+		URI_MATCHER.addURI(AUTHORITY, BASE_PATH + "/" + Budget.SUFFIX + "/"
+				+ Budget.SUFFIX_SUM_TOTAL_AMOUNT, CODES.CODE_BUDGET_SUM_TOTAL.code);
+		URI_MATCHER.addURI(AUTHORITY, BASE_PATH + "/" + Budget.SUFFIX + "/"
+				+ Budget.SUFFIX_SUM_PAID_AMOUNT, CODES.CODE_BUDGET_SUM_PAID.code);
 	}
 
 	/**
@@ -183,11 +213,13 @@ public final class DBContentProvider extends ContentProvider {
 	public Cursor query(Uri uri, String[] projection, String selection,
 			String[] selectionArgs, String sortOrder) {
 		SQLiteQueryBuilder queryBuilder = new SQLiteQueryBuilder();
-		SQLiteDatabase database = locator.getDatabase();
+		SQLiteDatabase database = locator.getReadDatabase();
 		Cursor cursor = null;
+		String query = null;
+		StringBuilder buildQuery = null;
 		int uriType = URI_MATCHER.match(uri);
 		checkColumns(projection, uriType);
-		switch (uriType) {
+		switch (CODES.toEnum(uriType)) {
 		case CODE_VENDORS:
 			queryBuilder.setTables(TABLE_VENDORS);
 			if (WeddingPlannerHelper.isEmpty(sortOrder)) {
@@ -235,6 +267,40 @@ public final class DBContentProvider extends ContentProvider {
 			cursor = queryBuilder.query(database, projection, selection,
 					selectionArgs, COL_BUDGET_CATEGORY, null, sortOrder);
 			break;
+		case CODE_BUDGET_SUM_TOTAL:
+			projection = new String[] {COL_ID, COL_BUDGET_TOTAL_AMOUNT};
+			queryBuilder.setTables(TABLE_BUDGET);
+			buildQuery = new StringBuilder().append("select sum(")
+					.append(COL_BUDGET_TOTAL_AMOUNT)
+					.append(") from ")
+					.append(TABLE_BUDGET);
+			if (null != selectionArgs && selectionArgs.length >= 1) {
+				buildQuery.append(" group by ")
+					.append(COL_BUDGET_CATEGORY)
+					.append(" having ")
+					.append(COL_BUDGET_CATEGORY)
+					.append(" = ?");
+			}
+			query = buildQuery.toString();
+			cursor = database.rawQuery(query, selectionArgs);
+			break;
+		case CODE_BUDGET_SUM_PAID:
+			projection = new String[] {COL_ID, COL_BUDGET_PAID_AMOUNT};
+			queryBuilder.setTables(TABLE_BUDGET);
+			buildQuery = new StringBuilder().append("select sum(")
+					.append(COL_BUDGET_PAID_AMOUNT)
+					.append(") from ")
+					.append(TABLE_BUDGET);
+			if (null != selectionArgs && selectionArgs.length >= 1) {		
+				buildQuery.append(" group by ")
+					.append(COL_BUDGET_CATEGORY)
+					.append(" having ")
+					.append(COL_BUDGET_CATEGORY)
+					.append(" = ?");
+			}
+			query = buildQuery.toString();
+			cursor = database.rawQuery(query, selectionArgs);
+			break;
 		default:
 			throw new IllegalArgumentException("Unknown URI: " + uri);
 		}
@@ -253,8 +319,10 @@ public final class DBContentProvider extends ContentProvider {
 	private void checkColumns(String[] projection, int uriType) {
 
 		// Choose the right set for columns
-		List<Integer> vendorCodeList = Arrays.asList( CODE_VENDORS, CODE_VENDOR_ITEM, CODE_VENDOR_CATEGORIES);
-		List<Integer> budgetCodeList =Arrays.asList( CODE_BUDGET, CODE_BUDGET_ITEM, CODE_BUDGET_CATEGORIES );
+		List<Integer> vendorCodeList = Arrays.asList( CODES.CODE_VENDORS.code, CODES.CODE_VENDOR_ITEM.code, CODES.CODE_VENDOR_CATEGORIES.code);
+		List<Integer> budgetCodeList =Arrays.asList( CODES.CODE_BUDGET.code, CODES.CODE_BUDGET_ITEM.code, CODES.CODE_BUDGET_CATEGORIES.code,
+				CODES.CODE_BUDGET_SUM_TOTAL.code,
+				CODES.CODE_BUDGET_SUM_PAID.code);
 		
 		String[] available = null;
 
@@ -289,7 +357,7 @@ public final class DBContentProvider extends ContentProvider {
 	@Override
 	public String getType(Uri uri) {
 		String type = null;
-		switch (URI_MATCHER.match(uri)) {
+		switch (CODES.toEnum(URI_MATCHER.match(uri))) {
 		case CODE_VENDORS:
 			type = Vendors.CONTENT_TYPE;
 			break;
@@ -307,6 +375,7 @@ public final class DBContentProvider extends ContentProvider {
 			break;
 		case CODE_BUDGET_CATEGORIES:
 			type = Budget.CONTENT_TYPE;
+			break;
 		default:
 			throw new IllegalArgumentException(Constantes.ILLEGAL_URI + uri);
 		}
@@ -322,10 +391,10 @@ public final class DBContentProvider extends ContentProvider {
 	@Override
 	public Uri insert(Uri uri, ContentValues values) {
 		Log.d(TAG, String.format("Insert values [%s] in content uri %s", values, uri));
-		SQLiteDatabase db = locator.getDatabase();
+		SQLiteDatabase db = locator.getWritableDatabase();
 		long id = -1;
 		
-		switch (URI_MATCHER.match(uri)) {
+		switch (CODES.toEnum(URI_MATCHER.match(uri))) {
 		case CODE_VENDORS:
 		case CODE_VENDOR_CATEGORIES:
 		case CODE_BUDGET_CATEGORIES:
@@ -366,12 +435,13 @@ public final class DBContentProvider extends ContentProvider {
 	@Override
 	public int delete(Uri uri, String selection, String[] selectionArgs) {
 		int count = 0;
-		SQLiteDatabase db = locator.getDatabase();
-		switch (URI_MATCHER.match(uri)) {
+		SQLiteDatabase db = locator.getWritableDatabase();
+		String idStr = uri.getLastPathSegment();
+		String where = null;
+		switch (CODES.toEnum(URI_MATCHER.match(uri))) {
 		case CODE_VENDOR_ITEM:
-			String idStr = uri.getLastPathSegment();
 			Log.v(TAG, "Delete vendor with id " + idStr);
-			String where = ConstantesDAO.COL_ID + " = " + idStr;
+			where = ConstantesDAO.COL_ID + " = " + idStr;
 			if (!WeddingPlannerHelper.isEmpty(selection)) {
 				where += " AND " + selection;
 			}
@@ -381,6 +451,15 @@ public final class DBContentProvider extends ContentProvider {
 		case CODE_VENDORS:
 			throw new UnsupportedOperationException(
 					"Delete All vendors not implemented");
+		case CODE_BUDGET_ITEM:
+			Log.v(TAG, "Delete budget line with id " + idStr);
+			where = ConstantesDAO.COL_ID + " = " + idStr;
+			if (!WeddingPlannerHelper.isEmpty(selection)) {
+				where += " AND " + selection;
+			}
+			count = db
+					.delete(ConstantesDAO.TABLE_BUDGET, where, selectionArgs);
+			break;
 		default:
 			throw new IllegalArgumentException(Constantes.ILLEGAL_URI);
 		}
@@ -402,6 +481,27 @@ public final class DBContentProvider extends ContentProvider {
 	public int update(Uri uri, ContentValues values, String selection,
 			String[] selectionArgs) {
 		int count = 0;
+		SQLiteDatabase db = locator.getWritableDatabase();
+		String idStr = uri.getLastPathSegment();
+		String where = null;
+		switch (CODES.toEnum(URI_MATCHER.match(uri))) {
+		case CODE_BUDGET_ITEM:
+			Log.v(TAG, "Update budget line with id " + idStr);
+			where = ConstantesDAO.COL_ID + " = " + idStr;
+			if (!WeddingPlannerHelper.isEmpty(selection)) {
+				where += " AND " + selection;
+			}
+			count = db.update(TABLE_BUDGET, values, where, selectionArgs);
+			break;
+		default:
+			throw new IllegalArgumentException(Constantes.ILLEGAL_URI);
+		}
+		
+		if (count > 0) {
+			getContext().getContentResolver().notifyChange(uri, null);
+		}
+		
+		
 		return count;
 	}
 

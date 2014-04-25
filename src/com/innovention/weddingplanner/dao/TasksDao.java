@@ -24,6 +24,7 @@ import java.util.List;
 import org.joda.time.DateTime;
 
 import android.content.ContentValues;
+import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
@@ -34,10 +35,10 @@ public class TasksDao implements IDao<Task> {
 	
 	private static final String TAG=TasksDao.class.getSimpleName();
 	
-	private SQLiteDatabase db;
+	private Context context;
 
-	public TasksDao(final SQLiteDatabase db) {
-		this.db = db;
+	public TasksDao(final Context ctxt) {
+		this.context = ctxt;
 	}
 
 	/**
@@ -55,7 +56,8 @@ public class TasksDao implements IDao<Task> {
 		values.put(COL_TASK_DUEDATE, (null != bean.getDueDate()) ? bean.getDueDate().toString() : "");
 		values.put(COL_TASK_REMINDDATE, (null != bean.getRemindDate()) ? bean.getRemindDate().toString() : "");
 		values.put(COL_TASK_REMINDOPTION, (null != bean.getRemindChoice()) ? bean.getRemindChoice() : "");
-		return db.insert(TABLE_TASKS, null, values);
+		return DaoLocator.getInstance(context).getWritableDatabase()
+				.insert(TABLE_TASKS, null, values);
 	}
 
 	/**
@@ -75,7 +77,8 @@ public class TasksDao implements IDao<Task> {
 		values.put(COL_TASK_DUEDATE, (null != bean.getDueDate()) ? bean.getDueDate().toString() : "");
 		values.put(COL_TASK_REMINDDATE, (null != bean.getRemindDate()) ? bean.getRemindDate().toString() : "");
 		values.put(COL_TASK_REMINDOPTION, (null != bean.getRemindChoice()) ? bean.getRemindChoice() : "");
-		int result = db.update(TABLE_TASKS, values, COL_ID + "=?", new String[] {String.valueOf(id)});
+		int result = DaoLocator.getInstance(context).getWritableDatabase()
+				.update(TABLE_TASKS, values, COL_ID + "=?", new String[] {String.valueOf(id)});
 		Log.d(TAG, "" + result + "rows affected");
 		return result;
 	}
@@ -87,7 +90,8 @@ public class TasksDao implements IDao<Task> {
 	 */
 	@Override
 	public int removeWithId(int id) {
-		return db.delete(TABLE_TASKS, COL_ID + " = " + id, null);
+		return DaoLocator.getInstance(context).getWritableDatabase()
+				.delete(TABLE_TASKS, COL_ID + " = " + id, null);
 	}
 
 	@Override
@@ -99,7 +103,8 @@ public class TasksDao implements IDao<Task> {
 	public Task get(long id) {
 		
 		Task entity = null;
-		Cursor c = db.query(TABLE_TASKS, new String[] {COL_ID, COL_TASK_STATUS, COL_TASK_DESC,
+		Cursor c = DaoLocator.getInstance(context).getReadDatabase()
+				.query(TABLE_TASKS, new String[] {COL_ID, COL_TASK_STATUS, COL_TASK_DESC,
 				COL_TASK_DUEDATE, COL_TASK_REMINDDATE, COL_TASK_REMINDOPTION}
 		, COL_ID + "=?", new String[] {String.valueOf(id)}, null, null, null);
 		
@@ -133,14 +138,16 @@ public class TasksDao implements IDao<Task> {
 	 */
 	@Override
 	public Cursor getCursor() {
-		return db.query(TABLE_TASKS, new String[] { COL_ID, COL_TASK_STATUS, COL_TASK_DESC,
+		return DaoLocator.getInstance(context).getReadDatabase()
+				.query(TABLE_TASKS, new String[] { COL_ID, COL_TASK_STATUS, COL_TASK_DESC,
 				COL_TASK_DUEDATE, COL_TASK_REMINDDATE, COL_TASK_REMINDOPTION }, null, null, null,
 				null, null);
 	}
 	
 	@Override
 	public Cursor getCursor(String selectionClause, String[] selectionArgs) {
-		return db.query(TABLE_TASKS, new String[] { COL_ID, COL_TASK_STATUS, COL_TASK_DESC,
+		return DaoLocator.getInstance(context).getReadDatabase()
+				.query(TABLE_TASKS, new String[] { COL_ID, COL_TASK_STATUS, COL_TASK_DESC,
 				COL_TASK_DUEDATE, COL_TASK_REMINDDATE, COL_TASK_REMINDOPTION }, selectionClause, selectionArgs, null,
 				null, null);
 	}

@@ -12,6 +12,7 @@ import java.util.List;
 import org.joda.time.DateTime;
 
 import android.content.ContentValues;
+import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
@@ -26,13 +27,13 @@ import com.innovention.weddingplanner.bean.WeddingInfo;
 public class WeddingInfoDao implements IDao<WeddingInfo> {
 	
 	// Handle on the currently open database
-	private SQLiteDatabase db;
+	private Context context;
 	
 	private static final String TAG=WeddingInfoDao.class.getSimpleName();
 	
-	public WeddingInfoDao(final SQLiteDatabase db) {
+	public WeddingInfoDao(final Context ctxt) {
 		Log.v(TAG, "Constructor - " + "create WeddingInfoDAO service");
-		this.db = db;
+		this.context = ctxt;
 	}
 
 	/* (non-Javadoc)
@@ -43,7 +44,8 @@ public class WeddingInfoDao implements IDao<WeddingInfo> {
 		Log.d(TAG, "insertInfo - " + bean.toString());
 		ContentValues values = new ContentValues();
 		values.put(COL_WEDDATE, bean.getWeddingDate().toString());
-		return db.insert(TABLE_WEDDINGINFO, null, values);
+		return DaoLocator.getInstance(context).getWritableDatabase()
+				.insert(TABLE_WEDDINGINFO, null, values);
 	}
 	
 	/* (non-Javadoc)
@@ -55,7 +57,8 @@ public class WeddingInfoDao implements IDao<WeddingInfo> {
 		ContentValues values = new ContentValues();
 		values.put(COL_WEDDATE, bean.getWeddingDate().toString());
 		//int result = db.update(TABLE_WEDDINGINFO, values, null, null);
-		int result = db.update(TABLE_WEDDINGINFO, values, COL_ID + "=?", new String[] {String.valueOf(id)});
+		int result = DaoLocator.getInstance(context).getWritableDatabase()
+				.update(TABLE_WEDDINGINFO, values, COL_ID + "=?", new String[] {String.valueOf(id)});
 		Log.d(TAG, "" + result + "rows affected");
 		return result;
 	}
@@ -65,7 +68,8 @@ public class WeddingInfoDao implements IDao<WeddingInfo> {
 	 */
 	@Override
 	public int removeWithId(int id) {
-		return db.delete(TABLE_WEDDINGINFO, COL_ID + " = " + id, null);
+		return DaoLocator.getInstance(context).getWritableDatabase()
+				.delete(TABLE_WEDDINGINFO, COL_ID + " = " + id, null);
 	}
 	
 	/* (non-Javadoc)
@@ -92,7 +96,8 @@ public class WeddingInfoDao implements IDao<WeddingInfo> {
 	 * @return
 	 */
 	public Cursor getCursor() {
-		return db.query(TABLE_WEDDINGINFO, new String[] {COL_ID, COL_WEDDATE}, null, null, null, null, null);
+		return DaoLocator.getInstance(context).getReadDatabase()
+				.query(TABLE_WEDDINGINFO, new String[] {COL_ID, COL_WEDDATE}, null, null, null, null, null);
 	}
 	
 	/**

@@ -3,42 +3,36 @@
  */
 package com.innovention.weddingplanner;
 
-import static com.innovention.weddingplanner.utils.WeddingPlannerHelper.getStringResource;
 import static com.innovention.weddingplanner.utils.WeddingPlannerHelper.showAlert;
 import static com.innovention.weddingplanner.utils.WeddingPlannerHelper.validateMandatory;
-import org.apache.commons.lang3.math.NumberUtils;
 
-import com.innovention.weddingplanner.Constantes.FragmentTags;
-import com.innovention.weddingplanner.VendorFragment.OnValidateVendor;
-import com.innovention.weddingplanner.contentprovider.DBContentProvider.Budget;
-import com.innovention.weddingplanner.contentprovider.DBContentProvider.Vendors;
-import com.innovention.weddingplanner.dao.ConstantesDAO;
-import com.innovention.weddingplanner.exception.InconsistentFieldException;
-import com.innovention.weddingplanner.exception.MissingMandatoryFieldException;
-import com.innovention.weddingplanner.utils.WeddingPlannerHelper;
+import org.apache.commons.lang3.math.NumberUtils;
 
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.ContentValues;
 import android.database.Cursor;
-import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.WebView.FindListener;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
-import android.widget.CursorAdapter;
 import android.widget.EditText;
 import android.widget.FilterQueryProvider;
-import android.widget.MultiAutoCompleteTextView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.SimpleCursorAdapter.CursorToStringConverter;
 import android.widget.Spinner;
-import android.widget.TextView;
+
+import com.innovention.weddingplanner.Constantes.FragmentTags;
+import com.innovention.weddingplanner.bean.Budget;
+import com.innovention.weddingplanner.bean.IDtoBean;
+import com.innovention.weddingplanner.contentprovider.DBContentProvider.Vendors;
+import com.innovention.weddingplanner.dao.ConstantesDAO;
+import com.innovention.weddingplanner.exception.InconsistentFieldException;
+import com.innovention.weddingplanner.exception.MissingMandatoryFieldException;
 
 /**
  * A fragment that displays a form to create or update a new budget item
@@ -53,6 +47,8 @@ public final class BudgetFragment extends Fragment {
 
 	// Edit mode
 	private FragmentTags mode = FragmentTags.TAG_FGT_CREATE_BUDGET;
+	
+	private Budget bean;
 
 	// AutoCompleteTextView adapter
 	private SimpleCursorAdapter adapter;
@@ -84,6 +80,13 @@ public final class BudgetFragment extends Fragment {
 	 */
 	public static BudgetFragment newInstance() {
 		return new BudgetFragment();
+	}
+	
+	public static BudgetFragment newInstance(FragmentTags mode, final Budget bean) {
+		BudgetFragment instance = BudgetFragment.newInstance();
+		instance.bean = bean;
+		instance.mode = mode;
+		return instance;
 	}
 
 	@Override
@@ -170,6 +173,12 @@ public final class BudgetFragment extends Fragment {
 					}
 
 					ContentValues values = new ContentValues();
+					
+					// Pass the id to activity to identify the record to update
+					if (FragmentTags.TAG_FGT_UPDATE_BUDGET.equals(mode)) {
+						values.put(ConstantesDAO.COL_ID, bean.getId());
+					}
+					
 					values.put(ConstantesDAO.COL_BUDGET_EXPENSE, caption);
 					values.put(ConstantesDAO.COL_BUDGET_VENDOR, vendor);
 					values.put(ConstantesDAO.COL_BUDGET_CATEGORY,
@@ -193,8 +202,22 @@ public final class BudgetFragment extends Fragment {
 				}
 			}
 		});
+		
+		if (FragmentTags.TAG_FGT_UPDATE_BUDGET.equals(mode)) {
+			updateFields(this.bean);
+		}
 
 		return view;
+	}
+	
+	@SuppressWarnings("unchecked")
+	private void updateFields(final Budget budget) {
+		captionTxt.setText(budget.getDescription());
+		vendorTxt.setText(budget.getVendor());
+		categorySpinner.setSelection(((ArrayAdapter<String>) categorySpinner.getAdapter()).getPosition(budget.getCategory()));
+		totalTxt.setText(String.valueOf(budget.getAmount()));
+		paidTxt.setText(String.valueOf(budget.getPaid()));
+		noteTxt.setText(budget.getNote());
 	}
 	
 	/*
