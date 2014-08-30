@@ -29,6 +29,7 @@ import com.innovention.weddingplanner.bean.WeddingInfo;
 import com.innovention.weddingplanner.dao.DaoLocator;
 import com.innovention.weddingplanner.dao.DaoLocator.SERVICES;
 import com.innovention.weddingplanner.dao.WeddingInfoDao;
+import com.innovention.weddingplanner.exception.TechnicalException;
 
 public class MainActivity extends Activity {
 	
@@ -98,8 +99,12 @@ public class MainActivity extends Activity {
 		switch (item.getItemId()) {
 		case R.id.action_recreateDb: 
 			// TODO call db connector recreate db
-			locator.getDbHelper().recreateDb(locator.getDbHelper().getWritableDatabase());
-			Toast.makeText(this, R.string.item_recreateDb_toast, Toast.LENGTH_LONG).show();
+			try {
+				locator.getDbHelper().recreateDb(locator.getDbHelper().getWritableDatabase());
+				Toast.makeText(this, R.string.item_recreateDb_toast, Toast.LENGTH_LONG).show();
+			} catch (TechnicalException e) {
+				Toast.makeText(this, R.string.item_recreateDb_failed_toast, Toast.LENGTH_LONG).show();
+			}
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);

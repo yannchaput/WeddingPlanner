@@ -151,7 +151,7 @@ public final class BudgetListFragment extends Fragment implements LoaderCallback
 		private LayoutInflater mInflator;
 
 		public ExpAdapter(Cursor cursor, Context context) {
-			super(cursor, context);
+			super(cursor, context,true);
 			mInflator = LayoutInflater.from(context);
 		}
 

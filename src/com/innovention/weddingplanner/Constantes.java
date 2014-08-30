@@ -65,5 +65,7 @@ public interface Constantes {
 	String INCORRECT_NUMBER_ARGS_EX="Incorrect number of arguments";
 	String INCONSISTENT_FIELD_EX = "Inconsistent combination of fields";
 	String ILLEGAL_URI = "Unsupported URI";
+	String BACKUP_ERROR = "Unable to backup database. An error occurred during backup process. All data probably lost.";
+	String BACKUP_ERROR_FILENOTFOUND = "Unable to backup database because one of the two files were not available.";
 	
 }

@@ -86,6 +86,9 @@ public interface ConstantesDAO {
 	// General
 	int VERSION_BDD = 9;
 	String NOM_BDD = "wedplanner.db";
+	String BDD_BACKUP_NOM = "wedplanner_backup.db";
+	//String BDD_PATH = "//data//data//com.innovention.weddingplanner//databases";
+	String BDD_PATH = "databases";
 	
 	String CREATE_WEDDINGINFO_TABLE= new StringBuilder()
 	.append("CREATE TABLE IF NOT EXISTS ")

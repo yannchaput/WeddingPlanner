@@ -19,8 +19,9 @@
 
     <!-- settings -->
     <string name="action_settings">Settings</string>
-    <string name="item_recreateDb_action">Reset DB</string>
+    <string name="item_recreateDb_action">Reset des données</string>
     <string name="item_recreateDb_toast">Merci de redémarrer l\'application</string>
+    <string name="item_recreateDb_failed_toast">Une erreur est intervenue. Les données n\'ont pu être sauvegardées</string>
 
     <!-- Contact list -->
     <string name="action_add_contact">Ajouter invité</string>
