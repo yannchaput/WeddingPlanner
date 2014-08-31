@@ -19,10 +19,15 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdSize;
+import com.google.android.gms.ads.AdView;
 import com.innovention.weddingplanner.Constantes.FragmentTags;
 import com.innovention.weddingplanner.bean.IDtoBean;
 import com.innovention.weddingplanner.bean.WeddingInfo;
@@ -30,10 +35,13 @@ import com.innovention.weddingplanner.dao.DaoLocator;
 import com.innovention.weddingplanner.dao.DaoLocator.SERVICES;
 import com.innovention.weddingplanner.dao.WeddingInfoDao;
 import com.innovention.weddingplanner.exception.TechnicalException;
+import com.innovention.weddingplanner.utils.WeddingPlannerHelper;
 
 public class MainActivity extends Activity {
 	
 	private final static String TAG = MainActivity.class.getSimpleName();
+	
+	private AdView adView;
 	
 	private ImageButton taskBtn;
 	private ImageButton inviteeBtn;
@@ -67,6 +75,19 @@ public class MainActivity extends Activity {
 		TextView titleView = (TextView) findViewById(titleId);
 		titleView.setTypeface(font);
 		
+		// Add ads
+		adView = new AdView(this);
+		adView.setAdUnitId(Constantes.AD_ID);
+	    adView.setAdSize(AdSize.BANNER);
+	    FrameLayout layoutAdd = (FrameLayout)findViewById(R.id.LayoutHomeAdd);
+	    layoutAdd.addView(adView);
+	    
+	    AdRequest adRequest = WeddingPlannerHelper.buildAdvert(Constantes.DEBUG);
+
+
+	    // Chargez l'objet adView avec la demande d'annonce.
+	    adView.loadAd(adRequest);
+	    
 		// Init services and DAO
 		initServices();
 		
@@ -75,6 +96,13 @@ public class MainActivity extends Activity {
 		
 	}
 	
+	@Override
+	protected void onResume() {
+		// TODO Auto-generated method stub
+		super.onResume();
+		adView.resume();
+	}
+
 	/*
 	 * Creates all services
 	 */
@@ -91,6 +119,7 @@ public class MainActivity extends Activity {
 		// Close all open dbs
 		Log.d(TAG, "onDestroy - " + "Destroy db");
 		locator.getDbHelper().close();
+		adView.destroy();
 		super.onDestroy();
 	}
 
@@ -142,6 +171,12 @@ public class MainActivity extends Activity {
 	}
 		
 	
+	@Override
+	protected void onPause() {
+		super.onPause();
+		adView.pause();
+	}
+
 	/**
 	 * Display guest activity on button click
 	 * @param v the triggering view

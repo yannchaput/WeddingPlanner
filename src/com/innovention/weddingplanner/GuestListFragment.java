@@ -22,11 +22,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdSize;
+import com.google.android.gms.ads.AdView;
 import com.innovention.weddingplanner.Constantes.FragmentTags;
 import com.innovention.weddingplanner.bean.Contact.ResponseType;
 import com.innovention.weddingplanner.dao.DaoLocator;
@@ -45,7 +49,7 @@ import com.innovention.weddingplanner.utils.WeddingPlannerHelper;
  */
 public class GuestListFragment extends Fragment implements
 		AbsListView.OnItemLongClickListener {
-	
+
 	private final static String TAG = GuestListFragment.class.getSimpleName();
 
 	// TODO: Rename parameter arguments, choose names that match
@@ -58,6 +62,11 @@ public class GuestListFragment extends Fragment implements
 	private String mParam2;
 
 	private OnGuestSelectedListener mListener;
+	
+	/**
+	 * Ad widget
+	 */
+	private AdView adView;
 
 	/**
 	 * The fragment's ListView/GridView.
@@ -69,7 +78,7 @@ public class GuestListFragment extends Fragment implements
 	 * Views.
 	 */
 	private ListAdapter mAdapter;
-	
+
 	/**
 	 * This interface must be implemented by activities that contain this
 	 * fragment to allow an interaction in this fragment to be communicated to
@@ -83,47 +92,49 @@ public class GuestListFragment extends Fragment implements
 		// TODO: Update argument type and name
 		public void onSelectGuest(long id, final FragmentTags action);
 	}
-	
+
 	// Contextual action mode in activity
 	private ActionMode mActionMode = null;
-	
+
 	// Action mode callback handler
 	private ActionMode.Callback mActionModeCallback = new ActionMode.Callback() {
-		
+
 		@Override
 		public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
 			// TODO Auto-generated method stub
 			return false;
 		}
-		
+
 		@Override
 		public void onDestroyActionMode(ActionMode mode) {
-			mActionMode = null;	
+			mActionMode = null;
 		}
-		
+
 		@Override
 		public boolean onCreateActionMode(ActionMode mode, Menu menu) {
 			MenuInflater inflater = mode.getMenuInflater();
 			inflater.inflate(R.menu.guest_context_menu, menu);
 			return true;
 		}
-		
+
 		@Override
 		public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
 			int pos = ((GuestCursorAdapter) mAdapter).currentSelectionPos;
 			long id = ((GuestCursorAdapter) mAdapter).currentSelectionId;
-			
-			
-			
+
 			switch (item.getItemId()) {
 			case R.id.action_update_contact:
-				Log.d(TAG, "ActionMode.Callback - onActionItemClicked - edit item with db id " + id);
+				Log.d(TAG,
+						"ActionMode.Callback - onActionItemClicked - edit item with db id "
+								+ id);
 				mListener.onSelectGuest(id, FragmentTags.TAG_FGT_UPDATECONTACT);
 				// Close the CAB
 				mode.finish();
 				return true;
 			case R.id.action_delete_contact:
-				Log.d(TAG, "ActionMode.Callback - onActionItemClicked - delete item with db id " + id);
+				Log.d(TAG,
+						"ActionMode.Callback - onActionItemClicked - delete item with db id "
+								+ id);
 				// Notify activity to perform physical delete in db
 				mListener.onSelectGuest(id, FragmentTags.TAG_FGT_DELETECONTACT);
 				// Refresh list view
@@ -141,19 +152,20 @@ public class GuestListFragment extends Fragment implements
 			}
 		}
 	};
-	
+
 	/**
-	 * Override SimpleCursorAdapter in order to have a fancier layout by adding icons
-	 * to row
+	 * Override SimpleCursorAdapter in order to have a fancier layout by adding
+	 * icons to row
+	 * 
 	 * @author YCH
-	 *
+	 * 
 	 */
 	private class GuestCursorAdapter extends SimpleCursorAdapter {
-		
+
 		private Context context;
 		private int currentSelectionPos = -1;
 		private long currentSelectionId = -1;
-		
+
 		private class ViewHolder {
 			private ImageView icon;
 			private TextView surname;
@@ -170,34 +182,40 @@ public class GuestListFragment extends Fragment implements
 		public View getView(int position, View convertView, ViewGroup parent) {
 			View row = convertView;
 			ViewHolder holder;
-			
+
 			// If view does not already exists we create it
 			if (row == null) {
-				row = View.inflate(context, R.layout.fragment_contact_adapter, null);
+				row = View.inflate(context, R.layout.fragment_contact_adapter,
+						null);
 				holder = new ViewHolder();
 				holder.icon = (ImageView) row.findViewById(R.id.itemGuestIcon);
-				holder.surname = (TextView) row.findViewById(R.id.itemGuestSurname);
+				holder.surname = (TextView) row
+						.findViewById(R.id.itemGuestSurname);
 				holder.name = (TextView) row.findViewById(R.id.itemGuestName);
 				row.setTag(holder);
 			}
-			
+
 			holder = (ViewHolder) row.getTag();
 			Cursor c = getCursor();
 			c.moveToPosition(position);
-			
+
 			ImageView icon = holder.icon;
 			TextView surname = holder.surname;
-			//surname.setTypeface(WeddingPlannerHelper.getFont(GuestListFragment.this.getActivity(), FONT_CURVED));
+			// surname.setTypeface(WeddingPlannerHelper.getFont(GuestListFragment.this.getActivity(),
+			// FONT_CURVED));
 			TextView name = (TextView) holder.name;
-			//name.setTypeface(WeddingPlannerHelper.getFont(GuestListFragment.this.getActivity(), FONT_CURVED));
+			// name.setTypeface(WeddingPlannerHelper.getFont(GuestListFragment.this.getActivity(),
+			// FONT_CURVED));
 			surname.setText(c.getString(NUM_COL_SURNAME));
 			name.setText(c.getString(NUM_COL_NAME));
-			
-			Boolean invite = DatabaseHelper.convertIntToBool(c.getInt(NUM_COL_INVITATION));
+
+			Boolean invite = DatabaseHelper.convertIntToBool(c
+					.getInt(NUM_COL_INVITATION));
 			ResponseType rsvp = ResponseType.toEnum(c.getString(NUM_COL_RSVP));
-			
+
 			int resId;
-			if (!invite.booleanValue()) resId = R.drawable.ic_action_unread;
+			if (!invite.booleanValue())
+				resId = R.drawable.ic_action_unread;
 			else {
 				switch (rsvp) {
 				case PENDING:
@@ -213,12 +231,12 @@ public class GuestListFragment extends Fragment implements
 					resId = R.drawable.ic_action_help;
 				}
 			}
-			
+
 			icon.setImageResource(resId);
-			
+
 			return row;
 		}
-		
+
 	}
 
 	// TODO: Rename and change types of parameters
@@ -230,7 +248,7 @@ public class GuestListFragment extends Fragment implements
 		fragment.setArguments(args);
 		return fragment;
 	}
-	
+
 	public static GuestListFragment newInstance() {
 		GuestListFragment fragment = new GuestListFragment();
 		return fragment;
@@ -244,6 +262,27 @@ public class GuestListFragment extends Fragment implements
 	}
 
 	@Override
+	public void onResume() {
+		// TODO Auto-generated method stub
+		super.onResume();
+		adView.resume();
+	}
+
+	@Override
+	public void onPause() {
+		// TODO Auto-generated method stub
+		super.onPause();
+		adView.pause();
+	}
+
+	@Override
+	public void onDestroy() {
+		// TODO Auto-generated method stub
+		adView.destroy();
+		super.onDestroy();
+	}
+
+	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
@@ -251,31 +290,31 @@ public class GuestListFragment extends Fragment implements
 			mParam1 = getArguments().getString(ARG_PARAM1);
 			mParam2 = getArguments().getString(ARG_PARAM2);
 		}
-		
+
 		Cursor c = DaoLocator
 				.getInstance(getActivity().getApplicationContext())
 				.get(SERVICES.GUEST).getCursor();
 
 		// TODO update to CursorLoader
 		getActivity().startManagingCursor(c);
-		
+
 		// TODO Use a CursorLoader
 		mAdapter = new GuestCursorAdapter(getActivity(),
-				R.layout.fragment_contact_adapter, c,
-				new String[] { COL_SURNAME, COL_NAME },
-				new int[] {R.id.itemGuestSurname, R.id.itemGuestName },1);
-		
-//		mAdapter = new SimpleCursorAdapter(getActivity(),
-//				R.layout.fragment_contact_list, c,
-//				new String[] { COL_SURNAME, COL_NAME },
-//				new int[] {R.id.itemGuestSurname, R.id.itemGuestName },1);
+				R.layout.fragment_contact_adapter, c, new String[] {
+						COL_SURNAME, COL_NAME }, new int[] {
+						R.id.itemGuestSurname, R.id.itemGuestName }, 1);
+
+		// mAdapter = new SimpleCursorAdapter(getActivity(),
+		// R.layout.fragment_contact_list, c,
+		// new String[] { COL_SURNAME, COL_NAME },
+		// new int[] {R.id.itemGuestSurname, R.id.itemGuestName },1);
 	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.fragment_guest, container, false);
-		
+
 		// Necessary to set the menu visible for fragment
 		setHasOptionsMenu(true);
 
@@ -285,17 +324,32 @@ public class GuestListFragment extends Fragment implements
 
 		// Set OnItemClickListener so we can be notified on item clicks
 		mListView.setOnItemLongClickListener(this);
-		
+
 		// Set empty view
 		mListView.setEmptyView(view.findViewById(R.id.empty));
-		
+
+		// Load Ad
+		adView = new AdView(this.getActivity());
+		adView.setAdUnitId(Constantes.AD_ID);
+		adView.setAdSize(AdSize.BANNER);
+		FrameLayout layoutAd = (FrameLayout) view
+				.findViewById(R.id.LayoutGuestAd);
+		layoutAd.addView(adView);
+
+		// Initiez une demande générique.
+		AdRequest adRequest = WeddingPlannerHelper
+				.buildAdvert(Constantes.DEBUG);
+
+		// Chargez l'objet adView avec la demande d'annonce.
+		adView.loadAd(adRequest);
+
 		return view;
 	}
 
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		// TODO Auto-generated method stub
-		//super.onCreateOptionsMenu(menu, inflater);
+		// super.onCreateOptionsMenu(menu, inflater);
 		inflater.inflate(R.menu.guest, menu);
 	}
 
@@ -315,9 +369,10 @@ public class GuestListFragment extends Fragment implements
 		super.onDetach();
 		mListener = null;
 	}
-	
+
 	/**
 	 * Triggered when a long click is fired on an list item
+	 * 
 	 * @param parent
 	 * @param view
 	 * @param position
@@ -325,16 +380,16 @@ public class GuestListFragment extends Fragment implements
 	 * @return
 	 */
 	@Override
-	public boolean onItemLongClick(AdapterView<?> parent, View view, int position,
-			long id) {
-		
+	public boolean onItemLongClick(AdapterView<?> parent, View view,
+			int position, long id) {
+
 		Log.v(TAG, "onItemLongClick - Long click on item id " + id);
 		Log.v(TAG, "onItemLongClick - Long click on item position " + position);
-		
+
 		if ((null == mListener) || (mActionMode != null)) {
 			return false;
 		}
-		
+
 		// Starts the CAB using the ActionMode.Callbakc defined above
 		mActionMode = getActivity().startActionMode(mActionModeCallback);
 		((GuestCursorAdapter) mAdapter).currentSelectionPos = position;

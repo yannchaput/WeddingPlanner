@@ -10,6 +10,8 @@
 
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.INTERNET"/>
+  	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
 
     <application
         android:allowBackup="true"
@@ -53,12 +55,11 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.innovention.weddingplanner.MainActivity" />
         </activity>
-        
         <activity
             android:name="com.innovention.weddingplanner.BudgetActivity"
             android:label="@string/title_activity_budget"
-            android:parentActivityName="com.innovention.weddingplanner.MainActivity" 
-            android:windowSoftInputMode="adjustResize">
+            android:parentActivityName="com.innovention.weddingplanner.MainActivity"
+            android:windowSoftInputMode="adjustResize" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.innovention.weddingplanner.MainActivity" />
@@ -82,7 +83,13 @@
             android:authorities="com.innovention.weddingplanner.contentprovider.DBContentProvider"
             android:exported="false" >
         </provider>
-
+        
+         <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+        
+        <activity android:name="com.google.android.gms.ads.AdActivity"
+             android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"/>
     </application>
 
 </manifest>

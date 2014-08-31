@@ -26,6 +26,7 @@ import android.util.Patterns;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
+import com.google.android.gms.ads.AdRequest;
 import com.innovention.weddingplanner.AlertDialogFragment;
 import com.innovention.weddingplanner.BudgetFragment;
 import com.innovention.weddingplanner.BudgetListFragment;
@@ -282,5 +283,20 @@ public final class WeddingPlannerHelper {
 	public static String formatCurrency(final double amount, final Locale region) {
 		NumberFormat fmt = NumberFormat.getCurrencyInstance(region);
 		return fmt.format(amount);
+	}
+	
+	/**
+	 * Buil the Admob widget according to a debug parameter
+	 * @param debug
+	 * @return
+	 */
+	public static AdRequest buildAdvert(boolean debug) {
+		
+		AdRequest.Builder builder = new AdRequest.Builder();
+		if (debug) {
+			builder.addTestDevice(AdRequest.DEVICE_ID_EMULATOR).addTestDevice("4947D53B14805BCA0640BC7C7457AA07");
+		}
+	    
+	    return builder.build();
 	}
 }

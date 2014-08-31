@@ -38,8 +38,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@android:color/transparent"
-                    android:src="@drawable/ic_dashboard_task" 
-                    android:onClick="showTaskActivity"/>
+                    android:onClick="showTaskActivity"
+                    android:src="@drawable/ic_dashboard_task" />
 
                 <TextView
                     android:id="@+id/textViewCell1"
@@ -60,8 +60,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@android:color/transparent"
-                    android:src="@drawable/ic_dashboard_guest_pink" 
-                    android:onClick="showGuestActivity"/>
+                    android:onClick="showGuestActivity"
+                    android:src="@drawable/ic_dashboard_guest_pink" />
+
                 <TextView
                     android:id="@+id/textViewCell2"
                     android:layout_width="wrap_content"
@@ -89,8 +90,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@android:color/transparent"
-                    android:src="@drawable/ic_dashboard_budget" 
-                    android:onClick="showBudgetActivity" />
+                    android:onClick="showBudgetActivity"
+                    android:src="@drawable/ic_dashboard_budget" />
+
                 <TextView
                     android:id="@+id/textViewCell3"
                     android:layout_width="wrap_content"
@@ -110,8 +112,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@android:color/transparent"
-                    android:src="@drawable/ic_dashboard_vendor" 
-                    android:onClick="showVendorActivity"/>
+                    android:onClick="showVendorActivity"
+                    android:src="@drawable/ic_dashboard_vendor" />
+
                 <TextView
                     android:id="@+id/textViewCell4"
                     android:layout_width="wrap_content"
@@ -129,8 +132,9 @@
         android:background="@color/LightCyan"
         android:clickable="true"
         android:gravity="center_horizontal"
-        android:longClickable="true" 
-        android:onClick="showDatePickerDialog">
+        android:longClickable="true"
+        android:onClick="showDatePickerDialog"
+        android:orientation="vertical" >
 
         <TextView
             android:id="@+id/days2WeddingText"
@@ -139,7 +143,12 @@
             android:text="@string/initial_date_to_update"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:textSize="@dimen/days_2_wedding_font_size" />
-
     </LinearLayout>
+
+    <FrameLayout
+        android:id="@+id/LayoutHomeAdd"
+        android:layout_height="@dimen/ad_banner_minwidth"
+        android:layout_width="match_parent"
+        android:background="@color/LightCyan" />
 
 </LinearLayout>

@@ -2,6 +2,8 @@ package com.innovention.weddingplanner;
 
 public interface Constantes {
 	
+	Boolean DEBUG = Boolean.TRUE;
+	
 	/**
 	 * List of tags to identify fragments. Also serves to identify the mode
 	 * of the mask, i.e. create/edit
@@ -39,6 +41,9 @@ public interface Constantes {
 			return tag;
 		}
 	}
+	
+	// AdMob Ids
+	String AD_ID = "ca-app-pub-8815791754201326/7427489893";
 	
 	// Ids
 	int DEFAULT_MONTHS_INTERVAL = 9;

@@ -33,11 +33,15 @@ import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdSize;
+import com.google.android.gms.ads.AdView;
 import com.innovention.weddingplanner.Constantes.FragmentTags;
 import com.innovention.weddingplanner.bean.Task;
 import com.innovention.weddingplanner.dao.DaoLocator;
@@ -55,6 +59,10 @@ public class TaskListFragment extends Fragment implements
 	 */
 	static final String ARG_SECTION_NUMBER = "section_number";
 
+	/**
+	 * The ad
+	 */
+	private AdView adView;
 	/**
 	 * The list adapter
 	 */
@@ -456,6 +464,19 @@ public class TaskListFragment extends Fragment implements
 		// Set the empty view
 		mListView.setEmptyView(rootView.findViewById(R.id.empty));
 
+		// Load Ad
+		adView = new AdView(this.getActivity());
+		adView.setAdUnitId(Constantes.AD_ID);
+		adView.setAdSize(AdSize.BANNER);
+		FrameLayout layoutAd = (FrameLayout) rootView.findViewById(R.id.LayoutTaskAd);
+		layoutAd.addView(adView);
+
+		// Initiez une demande générique.
+		AdRequest adRequest = WeddingPlannerHelper.buildAdvert(Constantes.DEBUG);
+
+		// Chargez l'objet adView avec la demande d'annonce.
+		adView.loadAd(adRequest);
+
 		return rootView;
 	}
 
@@ -526,6 +547,7 @@ public class TaskListFragment extends Fragment implements
 	@Override
 	public void onPause() {
 		super.onPause();
+		adView.pause();
 		Log.d(TAG, "onPause - save all modified items of the list");
 		TasksDao service = DaoLocator.getInstance(
 				getActivity().getApplicationContext()).get(SERVICES.TASK);
@@ -538,5 +560,19 @@ public class TaskListFragment extends Fragment implements
 			service.update(elt.id, task);
 		}
 
+	}
+
+	@Override
+	public void onResume() {
+		// TODO Auto-generated method stub
+		super.onResume();
+		adView.resume();
+	}
+
+	@Override
+	public void onDestroy() {
+		// TODO Auto-generated method stub
+		adView.destroy();
+		super.onDestroy();
 	}
 }
