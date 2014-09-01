@@ -25,9 +25,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CursorTreeAdapter;
 import android.widget.ExpandableListView;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdSize;
+import com.google.android.gms.ads.AdView;
 import com.innovention.weddingplanner.Constantes.FragmentTags;
 import com.innovention.weddingplanner.bean.Vendor;
 import com.innovention.weddingplanner.contentprovider.DBContentProvider;
@@ -46,12 +50,15 @@ public final class VendorListFragment extends Fragment implements
 
 	// log
 	private static final String TAG = VendorListFragment.class.getSimpleName();
-	
+
 	// LoaderManager id
 	private static final byte LOADER_ID = 0;
 
 	// Edit mode
 	private FragmentTags mode = FragmentTags.TAG_FGT_VENDORLIST;
+
+	// Ad banner
+	private AdView adView;
 
 	// Adapter
 	private ExpAdapter expListAdapter;
@@ -104,19 +111,23 @@ public final class VendorListFragment extends Fragment implements
 			long id = expListAdapter.getChildId(packedGroupPos, packedChildPos);
 			Log.v(TAG, "Get child id " + id);
 			Uri uri = ContentUris.withAppendedId(Vendors.CONTENT_URI, id);
-			
+
 			// Handle action
 			switch (item.getItemId()) {
 			case R.id.action_delete_vendor:
 				getActivity().getContentResolver().delete(uri, null, null);
-				Toast.makeText(getActivity(), R.string.delete_vendor_OK_alert_message, Toast.LENGTH_SHORT).show();
+				Toast.makeText(getActivity(),
+						R.string.delete_vendor_OK_alert_message,
+						Toast.LENGTH_SHORT).show();
 				returnCode = true;
 				break;
 			case R.id.action_update_vendor:
-				Cursor c = getActivity().getContentResolver().query(uri, Vendors.PROJECTION_ALL, null, null, null);
+				Cursor c = getActivity().getContentResolver().query(uri,
+						Vendors.PROJECTION_ALL, null, null, null);
 				Vendor vendor = Vendor.Transformer.transform(c);
 				c.close();
-				WeddingPlannerHelper.replaceFragment(getActivity(), FragmentTags.TAG_FGT_UPDATE_VENDOR, vendor);
+				WeddingPlannerHelper.replaceFragment(getActivity(),
+						FragmentTags.TAG_FGT_UPDATE_VENDOR, vendor);
 				returnCode = true;
 				break;
 			default:
@@ -202,7 +213,7 @@ public final class VendorListFragment extends Fragment implements
 	public VendorListFragment() {
 		mode = FragmentTags.TAG_FGT_VENDORLIST;
 	}
-	
+
 	/**
 	 * Default factory method
 	 * 
@@ -272,7 +283,44 @@ public final class VendorListFragment extends Fragment implements
 
 		// Necessary to set the menu visible for fragment
 		setHasOptionsMenu(true);
+
+		// Load Ad
+		adView = new AdView(this.getActivity());
+		adView.setAdUnitId(Constantes.AD_ID);
+		adView.setAdSize(AdSize.BANNER);
+		FrameLayout layoutAd = (FrameLayout) view
+				.findViewById(R.id.LayoutVendorAd);
+		layoutAd.addView(adView);
+
+		// Initiez une demande générique.
+		AdRequest adRequest = WeddingPlannerHelper
+				.buildAdvert(Constantes.DEBUG);
+
+		// Chargez l'objet adView avec la demande d'annonce.
+		adView.loadAd(adRequest);
+
 		return view;
+	}
+
+	@Override
+	public void onResume() {
+		// TODO Auto-generated method stub
+		super.onResume();
+		adView.resume();
+	}
+
+	@Override
+	public void onPause() {
+		// TODO Auto-generated method stub
+		super.onPause();
+		adView.pause();
+	}
+
+	@Override
+	public void onDestroy() {
+		// TODO Auto-generated method stub
+		super.onDestroy();
+		adView.destroy();
 	}
 
 	/*

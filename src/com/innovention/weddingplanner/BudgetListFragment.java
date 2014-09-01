@@ -12,6 +12,9 @@ import static com.innovention.weddingplanner.dao.ConstantesDAO.COL_BUDGET_PAID_A
 import static com.innovention.weddingplanner.utils.WeddingPlannerHelper.formatCurrency;
 import static com.innovention.weddingplanner.utils.WeddingPlannerHelper.getDefaultLocale;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdSize;
+import com.google.android.gms.ads.AdView;
 import com.innovention.weddingplanner.Constantes.FragmentTags;
 import com.innovention.weddingplanner.bean.Budget;
 import com.innovention.weddingplanner.contentprovider.DBContentProvider;
@@ -37,32 +40,39 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CursorTreeAdapter;
 import android.widget.ExpandableListView;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 /**
- * A fragment that displays a list of the current expenses grouped by vendor categories
- * The footer display the balance, the outstanding balance and the paid amount
+ * A fragment that displays a list of the current expenses grouped by vendor
+ * categories The footer display the balance, the outstanding balance and the
+ * paid amount
+ * 
  * @author YCH
- *
+ * 
  */
-public final class BudgetListFragment extends Fragment implements LoaderCallbacks<Cursor>, Refreshable {
-	
+public final class BudgetListFragment extends Fragment implements
+		LoaderCallbacks<Cursor>, Refreshable {
+
 	// Log
-	private static final String TAG =  BudgetListFragment.class.getSimpleName();
-	
+	private static final String TAG = BudgetListFragment.class.getSimpleName();
+
 	// LoaderManager id
 	private static final byte LOADER_ID = 0;
-	
+
 	// Edit mode
 	private FragmentTags mode = FragmentTags.TAG_FGT_BUDGET_LIST;
-	
+
+	// Ad banner
+	private AdView adView;
+
 	// Adapter
 	private ExpAdapter expListAdapter;
-	
+
 	// Context menu
 	private ActionMode mActionMode = null;
-	
+
 	// Action mode callback
 	private ActionMode.Callback mActionModeCallback = new ActionMode.Callback() {
 
@@ -105,7 +115,8 @@ public final class BudgetListFragment extends Fragment implements LoaderCallback
 
 			long id = expListAdapter.getChildId(packedGroupPos, packedChildPos);
 			Log.v(TAG, "Get child id " + id);
-			Uri uri = ContentUris.withAppendedId(DBContentProvider.Budget.CONTENT_URI, id);
+			Uri uri = ContentUris.withAppendedId(
+					DBContentProvider.Budget.CONTENT_URI, id);
 
 			// Handle action
 			switch (item.getItemId()) {
@@ -119,7 +130,8 @@ public final class BudgetListFragment extends Fragment implements LoaderCallback
 				break;
 			case R.id.action_update_budget:
 				Cursor c = getActivity().getContentResolver().query(uri,
-						DBContentProvider.Budget.PROJECTION_ALL, null, null, null);
+						DBContentProvider.Budget.PROJECTION_ALL, null, null,
+						null);
 				Budget budget = Budget.Transformer.transform(c);
 				c.close();
 				WeddingPlannerHelper.replaceFragment(getActivity(),
@@ -132,7 +144,7 @@ public final class BudgetListFragment extends Fragment implements LoaderCallback
 			return returnCode;
 		}
 	};
-	
+
 	// Fields
 	private TextView totalAmount;
 	private TextView paidAmount;
@@ -140,7 +152,7 @@ public final class BudgetListFragment extends Fragment implements LoaderCallback
 
 	// List view
 	private ExpandableListView expListView;
-	
+
 	/**
 	 * Adapter for Expandable list
 	 * 
@@ -151,7 +163,7 @@ public final class BudgetListFragment extends Fragment implements LoaderCallback
 		private LayoutInflater mInflator;
 
 		public ExpAdapter(Cursor cursor, Context context) {
-			super(cursor, context,true);
+			super(cursor, context, true);
 			mInflator = LayoutInflater.from(context);
 		}
 
@@ -162,10 +174,16 @@ public final class BudgetListFragment extends Fragment implements LoaderCallback
 					.findViewById(R.id.lblBudgetListItem);
 			tvChild.setText(cursor.getString(cursor
 					.getColumnIndex(ConstantesDAO.COL_BUDGET_EXPENSE)));
-			TextView tvAmount = (TextView) view.findViewById(R.id.lblBudgetListAmount);
-			tvAmount.setText(formatCurrency(cursor.getDouble(cursor.getColumnIndex(ConstantesDAO.COL_BUDGET_TOTAL_AMOUNT)), getDefaultLocale()));
-			TextView tvPaid = (TextView) view.findViewById(R.id.lblBudgetListPaid);
-			tvPaid.setText(formatCurrency(cursor.getDouble(cursor.getColumnIndex(ConstantesDAO.COL_BUDGET_PAID_AMOUNT)), getDefaultLocale()));
+			TextView tvAmount = (TextView) view
+					.findViewById(R.id.lblBudgetListAmount);
+			tvAmount.setText(formatCurrency(cursor.getDouble(cursor
+					.getColumnIndex(ConstantesDAO.COL_BUDGET_TOTAL_AMOUNT)),
+					getDefaultLocale()));
+			TextView tvPaid = (TextView) view
+					.findViewById(R.id.lblBudgetListPaid);
+			tvPaid.setText(formatCurrency(cursor.getDouble(cursor
+					.getColumnIndex(ConstantesDAO.COL_BUDGET_PAID_AMOUNT)),
+					getDefaultLocale()));
 		}
 
 		@Override
@@ -176,17 +194,22 @@ public final class BudgetListFragment extends Fragment implements LoaderCallback
 			TextView tvGrp = (TextView) view
 					.findViewById(R.id.lblBudgetListHeader);
 			tvGrp.setText(category);
-			TextView tvTotal = (TextView) view.findViewById(R.id.lblBudgetListHeaderAmount);
-			TextView tvPaid = (TextView) view.findViewById(R.id.lblBudgetListHeaderPaid);
-			tvTotal.setText(formatCurrency(computeTotalAmount(category), getDefaultLocale()));
-			tvPaid.setText(formatCurrency(computePaidAmount(category), getDefaultLocale()));
+			TextView tvTotal = (TextView) view
+					.findViewById(R.id.lblBudgetListHeaderAmount);
+			TextView tvPaid = (TextView) view
+					.findViewById(R.id.lblBudgetListHeaderPaid);
+			tvTotal.setText(formatCurrency(computeTotalAmount(category),
+					getDefaultLocale()));
+			tvPaid.setText(formatCurrency(computePaidAmount(category),
+					getDefaultLocale()));
 		}
 
 		@Override
 		protected Cursor getChildrenCursor(Cursor groupCursor) {
 			String category = groupCursor.getString(groupCursor
 					.getColumnIndex(COL_BUDGET_CATEGORY));
-			String[] projection = { COL_ID, COL_BUDGET_EXPENSE, COL_BUDGET_VENDOR, COL_BUDGET_TOTAL_AMOUNT,
+			String[] projection = { COL_ID, COL_BUDGET_EXPENSE,
+					COL_BUDGET_VENDOR, COL_BUDGET_TOTAL_AMOUNT,
 					COL_BUDGET_PAID_AMOUNT };
 			Cursor c = getActivity().getContentResolver().query(
 					DBContentProvider.Budget.CONTENT_URI, projection,
@@ -204,10 +227,16 @@ public final class BudgetListFragment extends Fragment implements LoaderCallback
 					.findViewById(R.id.lblBudgetListItem);
 			tvChild.setText(cursor.getString(cursor
 					.getColumnIndex(ConstantesDAO.COL_BUDGET_EXPENSE)));
-			TextView tvAmount = (TextView) mView.findViewById(R.id.lblBudgetListAmount);
-			tvAmount.setText(formatCurrency(cursor.getDouble(cursor.getColumnIndex(COL_BUDGET_TOTAL_AMOUNT)), getDefaultLocale()));
-			TextView tvPaid = (TextView) mView.findViewById(R.id.lblBudgetListPaid);
-			tvPaid.setText(formatCurrency(cursor.getDouble(cursor.getColumnIndex(COL_BUDGET_PAID_AMOUNT)), getDefaultLocale()));
+			TextView tvAmount = (TextView) mView
+					.findViewById(R.id.lblBudgetListAmount);
+			tvAmount.setText(formatCurrency(cursor.getDouble(cursor
+					.getColumnIndex(COL_BUDGET_TOTAL_AMOUNT)),
+					getDefaultLocale()));
+			TextView tvPaid = (TextView) mView
+					.findViewById(R.id.lblBudgetListPaid);
+			tvPaid.setText(formatCurrency(cursor.getDouble(cursor
+					.getColumnIndex(COL_BUDGET_PAID_AMOUNT)),
+					getDefaultLocale()));
 			return mView;
 		}
 
@@ -221,10 +250,14 @@ public final class BudgetListFragment extends Fragment implements LoaderCallback
 			TextView tvGrp = (TextView) mView
 					.findViewById(R.id.lblBudgetListHeader);
 			tvGrp.setText(category);
-			TextView tvTotal = (TextView) mView.findViewById(R.id.lblBudgetListHeaderAmount);
-			TextView tvPaid = (TextView) mView.findViewById(R.id.lblBudgetListHeaderPaid);
-			tvTotal.setText(formatCurrency(computeTotalAmount(category), getDefaultLocale()));
-			tvPaid.setText(formatCurrency(computePaidAmount(category), getDefaultLocale()));
+			TextView tvTotal = (TextView) mView
+					.findViewById(R.id.lblBudgetListHeaderAmount);
+			TextView tvPaid = (TextView) mView
+					.findViewById(R.id.lblBudgetListHeaderPaid);
+			tvTotal.setText(formatCurrency(computeTotalAmount(category),
+					getDefaultLocale()));
+			tvPaid.setText(formatCurrency(computePaidAmount(category),
+					getDefaultLocale()));
 			return mView;
 		}
 
@@ -236,7 +269,7 @@ public final class BudgetListFragment extends Fragment implements LoaderCallback
 	public BudgetListFragment() {
 		mode = FragmentTags.TAG_FGT_BUDGET_LIST;
 	}
-	
+
 	/**
 	 * Default factory
 	 */
@@ -245,55 +278,96 @@ public final class BudgetListFragment extends Fragment implements LoaderCallback
 		instance.mode = FragmentTags.TAG_FGT_BUDGET_LIST;
 		return instance;
 	}
-	
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		Log.v(TAG, "onCreateView");
 		View rootView = inflater.inflate(R.layout.fragment_budget_list,
 				container, false);
-		
+
 		// get the listview
 		expListView = (ExpandableListView) rootView
 				.findViewById(R.id.expandableListBudget);
 		expListView.setEmptyView(rootView.findViewById(R.id.empty));
-		expListView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
-			
-			@Override
-			public boolean onChildClick(ExpandableListView parent, View v,
-					int groupPosition, int childPosition, long id) {
-				Log.v(TAG,
-						String.format(
-								"onChildClick - perform a click on child of expandable list [id=%d, groupPos=%d, childPos=%d",
-								id, groupPosition, childPosition));
-				if (null == mActionMode) {
-					mActionMode = getActivity().startActionMode(
-							mActionModeCallback);
-					expListView
-							.setChoiceMode(ExpandableListView.CHOICE_MODE_SINGLE);
-					int index = parent
-							.getFlatListPosition(ExpandableListView
-									.getPackedPositionForChild(
-											groupPosition,
-											childPosition));
-					expListView.setItemChecked(index, true);
-				}
-				return true;
-			}
-		});
-		
+		expListView
+				.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
+
+					@Override
+					public boolean onChildClick(ExpandableListView parent,
+							View v, int groupPosition, int childPosition,
+							long id) {
+						Log.v(TAG,
+								String.format(
+										"onChildClick - perform a click on child of expandable list [id=%d, groupPos=%d, childPos=%d",
+										id, groupPosition, childPosition));
+						if (null == mActionMode) {
+							mActionMode = getActivity().startActionMode(
+									mActionModeCallback);
+							expListView
+									.setChoiceMode(ExpandableListView.CHOICE_MODE_SINGLE);
+							int index = parent
+									.getFlatListPosition(ExpandableListView
+											.getPackedPositionForChild(
+													groupPosition,
+													childPosition));
+							expListView.setItemChecked(index, true);
+						}
+						return true;
+					}
+				});
+
 		// Set the fields
 		View includeView = rootView.findViewById(R.id.includeBudgetTopPanel);
-		totalAmount = (TextView) includeView.findViewById(R.id.lblCalculatedTotal);
-		paidAmount = (TextView) includeView.findViewById(R.id.lblCalculatedPaid);
-		outstandingAmount = (TextView) includeView.findViewById(R.id.lblCalculatedOutstanding);
-		
+		totalAmount = (TextView) includeView
+				.findViewById(R.id.lblCalculatedTotal);
+		paidAmount = (TextView) includeView
+				.findViewById(R.id.lblCalculatedPaid);
+		outstandingAmount = (TextView) includeView
+				.findViewById(R.id.lblCalculatedOutstanding);
+
 		fillContent();
-		
+
 		setHasOptionsMenu(true);
+
+		// Load Ad
+		adView = new AdView(this.getActivity());
+		adView.setAdUnitId(Constantes.AD_ID);
+		adView.setAdSize(AdSize.BANNER);
+		FrameLayout layoutAd = (FrameLayout) rootView
+				.findViewById(R.id.LayoutBudgetAd);
+		layoutAd.addView(adView);
+
+		// Initiez une demande générique.
+		AdRequest adRequest = WeddingPlannerHelper
+				.buildAdvert(Constantes.DEBUG);
+
+		// Chargez l'objet adView avec la demande d'annonce.
+		adView.loadAd(adRequest);
+
 		return rootView;
 	}
-	
+
+	@Override
+	public void onResume() {
+		// TODO Auto-generated method stub
+		super.onResume();
+		adView.resume();
+	}
+
+	@Override
+	public void onPause() {
+		// TODO Auto-generated method stub
+		super.onPause();
+		adView.pause();
+	}
+
+	@Override
+	public void onDestroy() {
+		adView.destroy();
+		super.onDestroy();
+	}
+
 	/**
 	 * Fill content of the list view the first time
 	 */
@@ -302,12 +376,11 @@ public final class BudgetListFragment extends Fragment implements LoaderCallback
 		getLoaderManager().initLoader(LOADER_ID, null, this);
 		expListAdapter = new ExpAdapter(null, getActivity());
 		expListView.setAdapter(expListAdapter);
-		
+
 		updateTopContent();
-		
-		
+
 	}
-	
+
 	/**
 	 * Update content of top panel
 	 */
@@ -315,10 +388,11 @@ public final class BudgetListFragment extends Fragment implements LoaderCallback
 		double total = computeTotalAmount(null);
 		double paid = computePaidAmount(null);
 		double outstanding = total - paid;
-		
+
 		totalAmount.setText(formatCurrency(total, getDefaultLocale()));
 		paidAmount.setText(formatCurrency(paid, getDefaultLocale()));
-		outstandingAmount.setText(formatCurrency(outstanding, getDefaultLocale()));
+		outstandingAmount.setText(formatCurrency(outstanding,
+				getDefaultLocale()));
 	}
 
 	@Override
@@ -329,107 +403,107 @@ public final class BudgetListFragment extends Fragment implements LoaderCallback
 
 	@Override
 	public void refresh() {
-		//getLoaderManager().restartLoader(LOADER_ID, null, this);
+		// getLoaderManager().restartLoader(LOADER_ID, null, this);
 		// No need to refresh the loader as content provider ensures
 		// the listeners such as adpaters are notified and updated
-		
+
 		// refresh top panel
 		updateTopContent();
 	}
-	
+
 	/**
 	 * Compute total amount of a category
+	 * 
 	 * @param category
 	 * @return the total
 	 */
 	private double computeTotalAmount(String category) {
-		
+
 		double result = 0.0d;
-		
+
 		Cursor c = null;
-		
+
 		if (null != category) {
-			c = getActivity().getContentResolver().query(Uri.withAppendedPath(DBContentProvider.Budget.CONTENT_URI, DBContentProvider.Budget.SUFFIX_SUM_TOTAL_AMOUNT),
-					null,
-					null,
-					new String[] {category},
-					null);
+			c = getActivity().getContentResolver().query(
+					Uri.withAppendedPath(DBContentProvider.Budget.CONTENT_URI,
+							DBContentProvider.Budget.SUFFIX_SUM_TOTAL_AMOUNT),
+					null, null, new String[] { category }, null);
+		} else {
+			c = getActivity().getContentResolver().query(
+					Uri.withAppendedPath(DBContentProvider.Budget.CONTENT_URI,
+							DBContentProvider.Budget.SUFFIX_SUM_TOTAL_AMOUNT),
+					null, null, null, null);
 		}
-		else {
-			c = getActivity().getContentResolver().query(Uri.withAppendedPath(DBContentProvider.Budget.CONTENT_URI, DBContentProvider.Budget.SUFFIX_SUM_TOTAL_AMOUNT),
-					null,
-					null,
-					null,
-					null);
-		}
-		
+
 		result = compute(c);
-		
+
 		c.close();
-		
+
 		return result;
 	}
-	
+
 	/**
 	 * Compute paid amount of a category
+	 * 
 	 * @param category
 	 * @return the total
 	 */
 	private double computePaidAmount(String category) {
-		
+
 		double result = 0.0d;
-		
+
 		Cursor c = null;
-		
+
 		if (null != category) {
 			c = getActivity().getContentResolver().query(
 					Uri.withAppendedPath(DBContentProvider.Budget.CONTENT_URI,
-							DBContentProvider.Budget.SUFFIX_SUM_PAID_AMOUNT), null, null,
-					new String[] { category }, null);
-		}
-		else {
+							DBContentProvider.Budget.SUFFIX_SUM_PAID_AMOUNT),
+					null, null, new String[] { category }, null);
+		} else {
 			c = getActivity().getContentResolver().query(
 					Uri.withAppendedPath(DBContentProvider.Budget.CONTENT_URI,
-							DBContentProvider.Budget.SUFFIX_SUM_PAID_AMOUNT), null, null,
-					null, null);
+							DBContentProvider.Budget.SUFFIX_SUM_PAID_AMOUNT),
+					null, null, null, null);
 		}
-		
+
 		result = compute(c);
-		
+
 		c.close();
-		
+
 		return result;
 	}
-	
+
 	/**
 	 * Embeds logic to calculate sum of a column
+	 * 
 	 * @param c
 	 * @return result
 	 */
 	private double compute(final Cursor c) {
 		double result = 0.0d;
-		
+
 		if (c.getCount() > 0) {
 			c.moveToFirst();
 			do {
 				result += c.getDouble(0);
 			} while (!c.isLast());
 		}
-		
+
 		return result;
 	}
-	
+
 	// LoaderCallbacks interface implementation
 	// -----------------------------------------
 
 	// TODO: implement categories query on content provider
-	
+
 	@Override
 	public Loader<Cursor> onCreateLoader(int id, Bundle args) {
 		String[] projection = { COL_ID, COL_BUDGET_CATEGORY };
 		CursorLoader loader = new CursorLoader(getActivity(),
 				Uri.withAppendedPath(DBContentProvider.Budget.CONTENT_URI,
-						DBContentProvider.Budget.SUFFIX_CATEGORIES), projection, null, null,
+						DBContentProvider.Budget.SUFFIX_CATEGORIES),
+				projection, null, null,
 				DBContentProvider.Budget.SORT_ORDER_CATEGORY);
 		return loader;
 	}

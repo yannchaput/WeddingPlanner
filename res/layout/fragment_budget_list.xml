@@ -7,29 +7,46 @@
     tools:context=".BudgetListFragment" >
 
     <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/budget_list_top_bottom_margin"
-        android:layout_marginTop="@dimen/budget_list_top_top_margin" >
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:layout_height="0dp"
+        android:layout_weight="1" >
 
-        <include
-            android:id="@+id/includeBudgetTopPanel"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            layout="@layout/fragment_budget_list_top" />
+            android:layout_marginBottom="@dimen/budget_list_top_bottom_margin"
+            android:layout_marginTop="@dimen/budget_list_top_top_margin" 
+            android:layout_marginLeft="@dimen/budget_list_top_item_left_margin"
+            android:layout_marginRight="@dimen/budget_list_top_item_right_margin">
+
+            <include
+                android:id="@+id/includeBudgetTopPanel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                layout="@layout/fragment_budget_list_top" />
+        </LinearLayout>
+
+        <ExpandableListView
+            android:id="@+id/expandableListBudget"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" 
+            android:layout_marginLeft="@dimen/budget_list_middle_item_left_margin"
+            android:layout_marginRight="@dimen/budget_list_middle_item_right_margin" >
+        </ExpandableListView>
+
+        <TextView
+            android:id="@+id/empty"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="@string/empty_list" />
     </LinearLayout>
-	
-    <ExpandableListView
-        android:id="@+id/expandableListBudget"
+
+    <FrameLayout
+        android:id="@+id/LayoutBudgetAd"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
-    </ExpandableListView>
-    
-    <TextView
-        android:id="@+id/empty"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:text="@string/empty_list" />
+        android:layout_height="@dimen/ad_banner_minwidth"
+        android:background="@color/LightCyan" />
 
 </LinearLayout>
