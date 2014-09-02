@@ -306,21 +306,21 @@ public final class VendorListFragment extends Fragment implements
 	public void onResume() {
 		// TODO Auto-generated method stub
 		super.onResume();
-		adView.resume();
+		if (adView != null) adView.resume();
 	}
 
 	@Override
 	public void onPause() {
 		// TODO Auto-generated method stub
 		super.onPause();
-		adView.pause();
+		if (adView != null) adView.pause();
 	}
 
 	@Override
 	public void onDestroy() {
 		// TODO Auto-generated method stub
 		super.onDestroy();
-		adView.destroy();
+		if (adView != null) adView.destroy();
 	}
 
 	/*

@@ -265,20 +265,20 @@ public class GuestListFragment extends Fragment implements
 	public void onResume() {
 		// TODO Auto-generated method stub
 		super.onResume();
-		adView.resume();
+		if (adView != null) adView.resume();
 	}
 
 	@Override
 	public void onPause() {
 		// TODO Auto-generated method stub
 		super.onPause();
-		adView.pause();
+		if (adView != null) adView.pause();
 	}
 
 	@Override
 	public void onDestroy() {
 		// TODO Auto-generated method stub
-		adView.destroy();
+		if (adView != null) adView.destroy();
 		super.onDestroy();
 	}
 
@@ -313,7 +313,7 @@ public class GuestListFragment extends Fragment implements
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		View view = inflater.inflate(R.layout.fragment_guest, container, false);
+		View view = inflater.inflate(R.layout.fragment_guest_list, container, false);
 
 		// Necessary to set the menu visible for fragment
 		setHasOptionsMenu(true);
