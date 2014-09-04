@@ -547,7 +547,7 @@ public class TaskListFragment extends Fragment implements
 	@Override
 	public void onPause() {
 		super.onPause();
-		adView.pause();
+		if (adView != null) adView.pause();
 		Log.d(TAG, "onPause - save all modified items of the list");
 		TasksDao service = DaoLocator.getInstance(
 				getActivity().getApplicationContext()).get(SERVICES.TASK);
@@ -566,13 +566,13 @@ public class TaskListFragment extends Fragment implements
 	public void onResume() {
 		// TODO Auto-generated method stub
 		super.onResume();
-		adView.resume();
+		if (adView != null) adView.resume();
 	}
 
 	@Override
 	public void onDestroy() {
 		// TODO Auto-generated method stub
-		adView.destroy();
+		if (adView != null) adView.destroy();
 		super.onDestroy();
 	}
 }
