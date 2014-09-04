@@ -1,6 +1,5 @@
 package com.innovention.weddingplanner;
 
-import static com.innovention.weddingplanner.Constantes.FONT_CURVED;
 import static com.innovention.weddingplanner.dao.ConstantesDAO.COL_NAME;
 import static com.innovention.weddingplanner.dao.ConstantesDAO.COL_SURNAME;
 import static com.innovention.weddingplanner.dao.ConstantesDAO.NUM_COL_INVITATION;

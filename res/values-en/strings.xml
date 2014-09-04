@@ -149,7 +149,7 @@
     <string name="vendor_spinner_label_category">Category</string>
 
     <string-array name="vendor_spinner_categories_entries">
-        <item>Accomodation</item>
+        <item>Acomodation</item>
         <item>Attire</item>
         <item>Beverage</item>
         <item>Catering</item>
