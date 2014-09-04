@@ -3,6 +3,7 @@
 
     <!-- General -->
     <string name="app_name">WeddingPlanner</string>
+    <string name="ad_keyword">mariage</string>
 
     <!-- Tests -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
@@ -122,12 +123,15 @@
 
     <!-- Alerts -->
     <string name="delete_guest_alert_dialog_title">Erreur suppression</string>
+    <string name="delete_guest_OK_alert_dialog_title">Suppression OK</string>
     <string name="delete_guest_0_alert_message">Aucun enregistrement correspondant à l\'invité sélectionné n\'a été trouvé</string>
     <string name="delete_guest_multiple_alert_message">Plusieurs enregistrements correspondants à l\'invité sélectionné ont été trouvés</string>
     <string name="delete_guest_OK_alert_message">Contact supprimé de la liste!</string>
     <string name="update_task_alert_dialog_title">Erreur mise à jour</string>
+    <string name="update_task_OK_alert_dialog_title">Mise à jour OK</string>
     <string name="update_task_0_alert_message">Aucun enregistrement correspondant à la tâche sélectionnée n\'a été trouvé</string>
     <string name="delete_task_alert_dialog_title">Erreur suppression</string>
+    <string name="delete_task_OK_alert_dialog_title">Suppression OK</string>
     <string name="delete_task_0_alert_message">Aucun enregistrement correspondant à la tâche sélectionnée n\'a été trouvé</string>
     <string name="delete_task_multiple_alert_message">Plusieurs enregistrements correspondants à la tâche sélectionnée ont été trouvés</string>
     <string name="delete_task_OK_alert_message">Tâche supprimée de la liste!</string>
@@ -147,17 +151,18 @@
     <string-array name="vendor_spinner_categories_entries">
         <item>Alimentation</item>
         <item>Animation</item>
-        <item>Bijouterie</item>
+        <item>Alliance</item>
         <item>Boisson</item>
         <item>Cadeaux</item>
-        <item>Coiffeur</item>
+        <item>Costume</item>
+        <item>Transport</item>
         <item>Décoration</item>
         <item>Divers</item>
         <item>Location</item>
         <item>Logement</item>
         <item>Papeterie</item>
         <item>Photographe</item>
-        <item>Service</item>
+        <item>Services</item>
         <item>Traiteur</item>
         <item>Transport</item>
     </string-array>

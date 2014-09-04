@@ -164,7 +164,7 @@ public class TaskActivity extends Activity implements
 							getFragmentManager());
 				}
 				else {
-					showAlert(R.string.delete_task_alert_dialog_title,
+					showAlert(R.string.delete_task_OK_alert_dialog_title,
 							R.string.delete_guest_OK_alert_message,
 							getFragmentManager());
 				}

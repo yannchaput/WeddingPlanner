@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- General -->
+    <string name="app_name">WeddingPlanner</string>
+    <string name="ad_keyword">wedding</string>
+
+    <!-- Tests -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="hello_world">Hello world!</string>
+
+    <!-- dashboard -->
+    <string name="days_to_wedding">days before your Big Day!</string>
+    <string name="initial_date_to_update">When is your big day?</string>
+    <string name="tasks_option">To do</string>
+    <string name="invite_option">Guests</string>
+    <string name="budget_option">Budget</string>
+    <string name="prestations_option">Vendors</string>
+    <string name="title_activity_guest">RSVP</string>
+
+    <!-- settings -->
+    <string name="action_settings">Settings</string>
+    <string name="item_recreateDb_action">Data reset</string>
+    <string name="item_recreateDb_toast">Thank you to restart the application</string>
+    <string name="item_recreateDb_failed_toast">An error occurred. Data were not restored successfully</string>
+
+    <!-- Contact list -->
+    <string name="action_add_contact">Add guest</string>
+    <string name="action_delete_contact">Remove guest</string>
+    <string name="action_update_contact">Update guest</string>
+
+    <!-- Contact form -->
+    <string name="contact_field_surname">Name</string>
+    <string name="contact_field_name">First name</string>
+    <string name="contact_field_phone">Tel.</string>
+    <string name="contact_field_mail">E-Mail</string>
+    <string name="contact_field_address">Address</string>
+    <string name="contact_item_townhall">Townhall</string>
+    <string name="contact_item_church">Church</string>
+    <string name="contact_item_VinHonneur">Cocktail</string>
+    <string name="contact_item_reception">Venue</string>
+    <string name="contact_label_ceremony">Ceremony</string>
+    <string name="contact_label_invitation">Invitation</string>
+    <string name="contact_item_fairepart">Is invitation sent?</string>
+    <string name="contact_label_reponse">RSVP</string>
+    <string name="contact_item_noresponse">Pending</string>
+    <string name="contact_item_attend">Attended</string>
+    <string name="contact_item_absent">Unattended</string>
+    <string name="contact_button_validate">Submit</string>
+
+    <!-- Task activity -->
+    <string name="title_activity_task">Tasks</string>
+    <string name="title_section1">Task list</string>
+    <string name="title_section2">Ongoing</string>
+    <string name="title_section3">Completed</string>
+    <string name="title_section4">Overdue</string>
+
+    <!-- Task form -->
+    <string name="task_hint_field_description">Description</string>
+    <string name="task_label_dates">Due dates \u0026 reminders</string>
+    <string name="task_label_echeance">Due date</string>
+    <string name="task_hint_field_echeance">Input date</string>
+    <string name="task_button_validate">Submit</string>
+    <string name="task_label_remind_date">Reminder</string>
+    <string name="task_spinner_prompt">Reminder before due date</string>
+
+    <!-- spinner -->
+    <string name="task_spinner_item1">None</string>
+    <string name="task_spinner_item2">1 month before</string>
+    <string name="task_spinner_item3">2 weeks before</string>
+    <string name="task_spinner_item4">1 week beforet</string>
+    <string name="task_spinner_item5">3 days before</string>
+    <string name="task_spinner_item6">1 day before</string>
+    <string name="task_spinner_item7">6 hours before</string>
+    <string name="task_spinner_item8">2 hours before</string>
+    <string name="task_spinner_item9">1 hour before</string>
+
+    <string-array name="task_spinner_entries">
+        <item>@string/task_spinner_item1</item>
+        <item>@string/task_spinner_item2</item>
+        <item>@string/task_spinner_item3</item>
+        <item>@string/task_spinner_item4</item>
+        <item>@string/task_spinner_item5</item>
+        <item>@string/task_spinner_item6</item>
+        <item>@string/task_spinner_item7</item>
+        <item>@string/task_spinner_item8</item>
+        <item>@string/task_spinner_item9</item>
+    </string-array>
+
+    <!-- Tasks list -->
+    <string name="action_add_task">New task</string>
+    <string name="action_delete_task">Delete task</string>
+    <string name="action_update_task">Update task</string>
+
+    <!-- Vendor list -->
+    <string name="action_add_vendor">New vendor</string>
+    <string name="action_delete_vendor">Delete vendor</string>
+    <string name="action_update_vendor">Update vendor</string>
+    
+    <!--  budget list -->
+    <string name="action_add_budget_item">New budget item</string>
+    <string name="action_delete_budget_item">Delete expense</string>
+    <string name="action_update_budget_item">Update expense</string>
+
+    <!-- Validators -->
+    <string name="alert_dialog_validate">OK</string>
+    <string name="contact_alert_dialog_title">Information missing</string>
+    <string name="email_validator_message">Wrong email address</string>
+    <string name="phone_validator_message">Wrong phone number</string>
+    <string name="contact_mandatory_validator_message">Fields surname and name are mandatory. Can you provide them please?</string>
+    <string name="task_alert_dialog_title">Information missing</string>
+    <string name="task_mandatory_validator_message">Task description is mandatory. Can you provide one please?</string>
+    <string name="task_inconsistent_validator_message">A reminder can not be set without a due date</string>
+    <string name="vendor_alert_dialog_title">Information missing</string>
+    <string name="vendor_mandatory_validator_message">Company name is mandatory. Can you provide one please?</string>
+    <string name="budget_alert_dialog_title">Information missing</string>
+    <string name="budget_mandatory_validator_message">Caption, vendor name, amount are mandatory fields. Can you provide them please?</string>
+
+    <!-- Autres -->
+    <string name="placeholder">placeholder</string>
+    <string name="empty">Empty</string>
+    <string name="empty_list">Empty list</string>
+
+    <!-- Alerts -->
+    <string name="delete_guest_alert_dialog_title">An error occurred during remove process</string>
+    <string name="delete_guest_OK_alert_dialog_title">Delete successful</string>
+    <string name="delete_guest_0_alert_message">No data available for this guest in database.</string>
+    <string name="delete_guest_multiple_alert_message">More than one record were found for the selected guest.</string>
+    <string name="delete_guest_OK_alert_message">Contact was sucessfully removed from the list!</string>
+    <string name="update_task_alert_dialog_title">Update error</string>
+    <string name="update_task_OK_alert_dialog_title">Update succesful</string>
+    <string name="update_task_0_alert_message">No data available for the selected task.</string>
+    <string name="delete_task_alert_dialog_title">Delete error</string>
+    <string name="delete_task_OK_alert_dialog_title">Delete successful</string>
+    <string name="delete_task_0_alert_message">No data available for the selected task.</string>
+    <string name="delete_task_multiple_alert_message">More than one record were found for the selected task.</string>
+    <string name="delete_task_OK_alert_message">Task was sucessfully removed from the list!</string>
+    <string name="delete_vendor_OK_alert_message">Vendor was sucessfully removed from the list!</string>
+    <string name="inconsistent_paid_amount">Paid amount can not be greater than due amount.</string>
+    <string name="delete_budget_OK_alert_message">Budget item removed from the list!</string>
+
+    <!-- Notifications -->
+    <string name="task_notification_title">Reminder</string>
+
+    <!-- Vendors -->
+    <string name="title_activity_vendor">Vendors</string>
+    <string name="vendor_label_company">Company</string>
+    <string name="vendor_label_contact">Surname &amp; name of the contact</string>
+    <string name="vendor_spinner_label_category">Category</string>
+
+    <string-array name="vendor_spinner_categories_entries">
+        <item>Accomodation</item>
+        <item>Attire</item>
+        <item>Beverage</item>
+        <item>Catering</item>
+        <item>Decoration</item>
+        <item>Entertainment</item>
+        <item>Food</item>
+        <item>Gifts</item>
+        <item>Hairdressing</item>
+        <item>Jewelry</item>
+        <item>Miscellaneous</item>
+        <item>Photographer</item>
+        <item>Rental</item>
+        <item>Stationnery</item>
+        <item>Services</item>
+        <item>Transportation</item>
+    </string-array>
+
+    <string name="vendor_label_address">Address</string>
+    <string name="vendor_label_mail">Mail</string>
+    <string name="vendor_label_note">Memo</string>
+    <string name="vendor_button_validate">Submit</string>
+    <string name="vendor_label_phone">Tel.</string>
+    
+    <!--  Budget -->
+    <string name="title_activity_budget">Budget</string>
+    <string name="budget_hint_field_caption">Caption</string>
+    <string name="budget_label_vendor">Vendor</string>
+    <string name="budget_label_total_amount">Total</string>
+    <string name="budget_label_paid_amount">Paid</string>
+    <string name="budget_hint_field_total_amount">Total amount</string>
+    <string name="budget_hint_field_paid_amount">Paid amount</string>
+    <string name="budget_hint_field_note">Memo</string>
+	<string name="budget_button_validate">Submit</string>
+	<string name="budget_list_total_amount_label">Total expense</string>
+	<string name="budget_list_outstanding_amount_label">Outsanding amount</string>
+	<string name="budget_list_paid_amount_label">Paid</string>
+</resources>

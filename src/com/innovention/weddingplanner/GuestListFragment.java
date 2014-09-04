@@ -338,7 +338,7 @@ public class GuestListFragment extends Fragment implements
 
 		// Initiez une demande générique.
 		AdRequest adRequest = WeddingPlannerHelper
-				.buildAdvert(Constantes.DEBUG);
+				.buildAdvert(this.getActivity(),Constantes.DEBUG);
 
 		// Chargez l'objet adView avec la demande d'annonce.
 		adView.loadAd(adRequest);

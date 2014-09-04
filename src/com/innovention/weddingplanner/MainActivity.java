@@ -82,7 +82,7 @@ public class MainActivity extends Activity {
 	    FrameLayout layoutAdd = (FrameLayout)findViewById(R.id.LayoutHomeAdd);
 	    layoutAdd.addView(adView);
 	    
-	    AdRequest adRequest = WeddingPlannerHelper.buildAdvert(Constantes.DEBUG);
+	    AdRequest adRequest = WeddingPlannerHelper.buildAdvert(this,Constantes.DEBUG);
 
 
 	    // Chargez l'objet adView avec la demande d'annonce.

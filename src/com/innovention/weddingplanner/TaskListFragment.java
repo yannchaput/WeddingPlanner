@@ -472,7 +472,7 @@ public class TaskListFragment extends Fragment implements
 		layoutAd.addView(adView);
 
 		// Initiez une demande générique.
-		AdRequest adRequest = WeddingPlannerHelper.buildAdvert(Constantes.DEBUG);
+		AdRequest adRequest = WeddingPlannerHelper.buildAdvert(this.getActivity(),Constantes.DEBUG);
 
 		// Chargez l'objet adView avec la demande d'annonce.
 		adView.loadAd(adRequest);
