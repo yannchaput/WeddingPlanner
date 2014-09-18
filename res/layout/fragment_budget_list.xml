@@ -8,17 +8,17 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:orientation="vertical"
         android:layout_height="0dp"
-        android:layout_weight="1" >
+        android:layout_weight="1"
+        android:orientation="vertical" >
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/budget_list_top_bottom_margin"
-            android:layout_marginTop="@dimen/budget_list_top_top_margin" 
             android:layout_marginLeft="@dimen/budget_list_top_item_left_margin"
-            android:layout_marginRight="@dimen/budget_list_top_item_right_margin">
+            android:layout_marginRight="@dimen/budget_list_top_item_right_margin"
+            android:layout_marginTop="@dimen/budget_list_top_top_margin" >
 
             <include
                 android:id="@+id/includeBudgetTopPanel"
@@ -30,7 +30,7 @@
         <ExpandableListView
             android:id="@+id/expandableListBudget"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" 
+            android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/budget_list_middle_item_left_margin"
             android:layout_marginRight="@dimen/budget_list_middle_item_right_margin" >
         </ExpandableListView>
@@ -41,6 +41,24 @@
             android:layout_height="match_parent"
             android:gravity="center"
             android:text="@string/empty_list" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+
+        <ImageButton
+            android:id="@+id/imageButtonPieChart"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:layout_marginRight="@dimen/budget_list_pie_chart_right_margin"
+            android:background="@android:color/transparent"
+            android:gravity="right"
+            android:orientation="horizontal"
+            android:src="@drawable/pie_chart_icon" />
+
     </LinearLayout>
 
     <FrameLayout

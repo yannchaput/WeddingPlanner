@@ -60,7 +60,7 @@ public class MainActivity extends Activity {
 		
 		setContentView(R.layout.activity_main);
 		
-		taskBtn = (ImageButton) findViewById(R.id.imageButton1);
+		taskBtn = (ImageButton) findViewById(R.id.imageButtonPieChart);
 		inviteeBtn = (ImageButton) findViewById(R.id.imageButton2);
 		budgetBtn = (ImageButton) findViewById(R.id.imageButton3);
 		vendorBtn = (ImageButton) findViewById(R.id.imageButton4);

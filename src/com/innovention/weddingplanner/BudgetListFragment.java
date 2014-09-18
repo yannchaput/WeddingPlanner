@@ -41,6 +41,7 @@ import android.view.ViewGroup;
 import android.widget.CursorTreeAdapter;
 import android.widget.ExpandableListView;
 import android.widget.FrameLayout;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -149,6 +150,7 @@ public final class BudgetListFragment extends Fragment implements
 	private TextView totalAmount;
 	private TextView paidAmount;
 	private TextView outstandingAmount;
+	private ImageButton pieChartBtn;
 
 	// List view
 	private ExpandableListView expListView;
@@ -325,6 +327,17 @@ public final class BudgetListFragment extends Fragment implements
 				.findViewById(R.id.lblCalculatedPaid);
 		outstandingAmount = (TextView) includeView
 				.findViewById(R.id.lblCalculatedOutstanding);
+		pieChartBtn = (ImageButton) rootView
+				.findViewById(R.id.imageButtonPieChart);
+		pieChartBtn.setOnClickListener(new View.OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				Toast.makeText(getActivity(), "Display pie chart",
+						Toast.LENGTH_SHORT).show();
+
+			}
+		});
 
 		fillContent();
 
@@ -339,8 +352,8 @@ public final class BudgetListFragment extends Fragment implements
 		layoutAd.addView(adView);
 
 		// Initiez une demande générique.
-		AdRequest adRequest = WeddingPlannerHelper
-				.buildAdvert(this.getActivity(),Constantes.DEBUG);
+		AdRequest adRequest = WeddingPlannerHelper.buildAdvert(
+				this.getActivity(), Constantes.DEBUG);
 
 		// Chargez l'objet adView avec la demande d'annonce.
 		adView.loadAd(adRequest);
@@ -352,19 +365,22 @@ public final class BudgetListFragment extends Fragment implements
 	public void onResume() {
 		// TODO Auto-generated method stub
 		super.onResume();
-		if (adView != null) adView.resume();
+		if (adView != null)
+			adView.resume();
 	}
 
 	@Override
 	public void onPause() {
 		// TODO Auto-generated method stub
 		super.onPause();
-		if (adView != null) adView.pause();
+		if (adView != null)
+			adView.pause();
 	}
 
 	@Override
 	public void onDestroy() {
-		if (adView != null) adView.destroy();
+		if (adView != null)
+			adView.destroy();
 		super.onDestroy();
 	}
 
