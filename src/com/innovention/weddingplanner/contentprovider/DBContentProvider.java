@@ -406,7 +406,10 @@ public final class DBContentProvider extends ContentProvider {
 			throw new IllegalArgumentException("Unsupported URI for insertion " + uri);
 			
 		}
-		return getUriForId(id, uri);
+		
+		Uri result = getUriForId(id, uri);
+		getContext().getContentResolver().notifyChange(uri, null);
+		return result;
 	}
 	
 	/**

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+
+        <ImageButton
+            android:id="@+id/imageButtonReturnBudget"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:layout_marginEnd="@dimen/budget_list_pie_chart_right_margin"
+            android:layout_marginRight="@dimen/budget_list_pie_chart_right_margin"
+            android:background="@android:color/transparent"
+            android:gravity="end"
+            android:orientation="horizontal"
+            android:src="@drawable/ic_dashboard_budget" />
+    </LinearLayout>
+
+</LinearLayout>

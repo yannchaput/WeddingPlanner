@@ -28,6 +28,7 @@ public interface Constantes {
 		TAG_FGT_UPDATE_VENDOR("updateVendorFgt"),
 		TAG_FGT_VENDORLIST("vendorListFgt"),
 		TAG_FGT_BUDGET_LIST("budgetListFgt"),
+		TAG_FGT_BUDGET_PIE("budgetPieFgt"),
 		TAG_FGT_CREATE_BUDGET("createBudgetFgt"),
 		TAG_FGT_UPDATE_BUDGET("updateBudgetFgt");
 		

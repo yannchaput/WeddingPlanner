@@ -30,6 +30,7 @@ import com.google.android.gms.ads.AdRequest;
 import com.innovention.weddingplanner.AlertDialogFragment;
 import com.innovention.weddingplanner.BudgetFragment;
 import com.innovention.weddingplanner.BudgetListFragment;
+import com.innovention.weddingplanner.BudgetPieFragment;
 import com.innovention.weddingplanner.Constantes.FragmentTags;
 import com.innovention.weddingplanner.ContactFragment;
 import com.innovention.weddingplanner.GuestListFragment;
@@ -253,6 +254,13 @@ public final class WeddingPlannerHelper {
 			} else {
 				((BudgetListFragment) fgt).refresh();
 			}
+			resId = R.id.LayoutBudget;
+			break;
+		case TAG_FGT_BUDGET_PIE:
+			fgt = parent.getFragmentManager().findFragmentByTag(tag.getValue());
+			if (null == fgt) {
+				fgt = BudgetPieFragment.newInstance();
+			} 
 			resId = R.id.LayoutBudget;
 			break;
 		case TAG_FGT_CREATE_BUDGET:

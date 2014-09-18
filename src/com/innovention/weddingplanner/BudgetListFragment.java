@@ -333,8 +333,7 @@ public final class BudgetListFragment extends Fragment implements
 
 			@Override
 			public void onClick(View v) {
-				Toast.makeText(getActivity(), "Display pie chart",
-						Toast.LENGTH_SHORT).show();
+				WeddingPlannerHelper.replaceFragment(getActivity(), FragmentTags.TAG_FGT_BUDGET_PIE);
 
 			}
 		});
