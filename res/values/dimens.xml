@@ -45,6 +45,7 @@
 	<dimen name="budget_list_top_item_right_margin">10dp</dimen>
 	<dimen name="budget_list_middle_item_left_margin">10dp</dimen>
 	<dimen name="budget_list_middle_item_right_margin">10dp</dimen>
+	<dimen name="budget_list_pie_chart_right_margin">10dp</dimen>
 	
 	<!--  Ads -->
 	<dimen name="ad_banner_minwidth">60dp</dimen>
