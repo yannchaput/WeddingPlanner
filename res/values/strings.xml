@@ -186,4 +186,7 @@
 	<string name="budget_list_total_amount_label">Dépense totale</string>
 	<string name="budget_list_outstanding_amount_label">En cours</string>
 	<string name="budget_list_paid_amount_label">Payé</string>
+	
+	<!-- Budget pie -->
+	<string name="budget_pie_chart_title">Répartition des dépenses globales</string>
 </resources>
