@@ -1,13 +1,21 @@
 package com.innovention.weddingplanner;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
+import com.google.android.gms.internal.bg;
+import com.google.common.base.Joiner;
 import com.innovention.weddingplanner.Constantes.FragmentTags;
+import com.innovention.weddingplanner.contentprovider.DBContentProvider;
+import com.innovention.weddingplanner.dao.ConstantesDAO;
 import com.innovention.weddingplanner.utils.WeddingPlannerHelper;
 
 import android.annotation.SuppressLint;
 import android.app.Fragment;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -76,7 +84,12 @@ public class BudgetPieFragment extends Fragment {
 				R.dimen.budget_pie_chart_width);
 		float pie_height = viewPie.getResources().getDimension(
 				R.dimen.budget_pie_chart_height);
-		String title = viewPie.getResources().getString(R.string.budget_pie_chart_title);
+		String title = viewPie.getResources().getString(
+				R.string.budget_pie_chart_title);
+		int bgColor = viewPie.getResources().getColor(R.color.Bisque);
+		Log.v(TAG, "background color: " + Integer.toHexString(bgColor));
+		String[] labels = GetCategoryArray();
+		Log.v(TAG, Joiner.on("|").skipNulls().join(labels));
 
 		Uri.Builder builder = new Uri.Builder();
 		Uri chartUri = builder
@@ -86,16 +99,24 @@ public class BudgetPieFragment extends Fragment {
 				.appendQueryParameter("cht", "p3")
 				.appendQueryParameter(
 						"chs",
-						new StringBuilder().append(String.valueOf((int) pie_width))
-								.append("x").append(String.valueOf((int) pie_height))
+						new StringBuilder()
+								.append(String.valueOf((int) pie_width))
+								.append("x")
+								.append(String.valueOf((int) pie_height))
 								.toString())
-				.appendQueryParameter("chd", "t:20,20,45,15") // Data
-				.appendQueryParameter("chts", "000000,16") // Title color and size
+				.appendQueryParameter("chd", "t:20,65,15")
+				// Data
+				.appendQueryParameter("chts", "000000,16")
+				// Title color and size
 				.appendQueryParameter("chtt", title)
-				.appendQueryParameter("chl", "Hello|Hi|anas|Explorer")
-				.appendQueryParameter("chf", "bg,t,00000000")
-				//.appendQueryParameter("chco", "FF5533,237745,9011D3,335423")
-				.appendQueryParameter("chdl", "Apple|Mozilla|Google|Microsoft")
+				.appendQueryParameter("chl", Joiner.on("|").skipNulls().join(labels))
+				.appendQueryParameter(
+						"chf",
+						new StringBuilder().append("bg").append(",s")
+								.append(",").append(Integer.toHexString(bgColor))
+								.toString())
+				// .appendQueryParameter("chco", "FF5533,237745,9011D3,335423")
+				//.appendQueryParameter("chdl", "Apple|Mozilla|Google|Microsoft")
 				.build();
 		viewPie.loadUrl(chartUri.toString());
 
@@ -115,6 +136,38 @@ public class BudgetPieFragment extends Fragment {
 		adView.loadAd(adRequest);
 
 		return rootView;
+	}
+
+	/**
+	 * Retrieves list of categories in the shape of an array of strings
+	 * @return array of category string
+	 */
+	private String[] GetCategoryArray() {
+		ArrayList<String> categories = new ArrayList<String>();
+		Cursor c = getCategoryCursor();
+
+		for (c.moveToFirst(); !c.isAfterLast(); c.moveToNext()) {
+			categories.add(c.getString(c.getColumnIndex(ConstantesDAO.COL_BUDGET_CATEGORY)));
+		}
+		c.close();
+
+		return categories.toArray(new String[categories.size()]);
+	}
+
+	/**
+	 * Retrieve list of available categories from DB
+	 * 
+	 * @return the cursor
+	 */
+	private Cursor getCategoryCursor() {
+		return this
+				.getActivity()
+				.getContentResolver()
+				.query(Uri.withAppendedPath(
+						DBContentProvider.Budget.CONTENT_URI,
+						DBContentProvider.Budget.SUFFIX_CATEGORIES), null,
+						null, null,
+						DBContentProvider.Budget.SORT_ORDER_CATEGORY);
 	}
 
 	@Override

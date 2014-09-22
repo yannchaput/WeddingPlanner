@@ -48,8 +48,8 @@
 	<dimen name="budget_list_pie_chart_right_margin">10dp</dimen>
 	
 	<!-- Pie Chart -->
-	<dimen name="budget_pie_chart_width">400px</dimen>
-	<dimen name="budget_pie_chart_height">200px</dimen>
+	<dimen name="budget_pie_chart_width">350px</dimen>
+	<dimen name="budget_pie_chart_height">175px</dimen>
 	
 	<!--  Ads -->
 	<dimen name="ad_banner_minwidth">60dp</dimen>

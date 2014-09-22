@@ -188,5 +188,5 @@
 	<string name="budget_list_paid_amount_label">Paid</string>
 	
 	<!-- Budget pie -->
-	<string name="budget_pie_chart_title">Total expense breakdown</string>
+	<string name="budget_pie_chart_title">Total budget</string>
 </resources>
