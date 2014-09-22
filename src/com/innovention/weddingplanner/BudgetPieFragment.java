@@ -90,6 +90,13 @@ public class BudgetPieFragment extends Fragment {
 		Log.v(TAG, "background color: " + Integer.toHexString(bgColor));
 		String[] labels = GetCategoryArray();
 		Log.v(TAG, Joiner.on("|").skipNulls().join(labels));
+		ArrayList<Integer> data = new ArrayList<Integer>();
+		for (String label : labels) {
+			data.add( (int) ((BudgetActivity) getActivity()).computeAmount(Uri
+					.withAppendedPath(DBContentProvider.Budget.CONTENT_URI,
+							DBContentProvider.Budget.SUFFIX_SUM_TOTAL_AMOUNT),
+					label) );
+		}
 
 		Uri.Builder builder = new Uri.Builder();
 		Uri chartUri = builder
@@ -109,14 +116,17 @@ public class BudgetPieFragment extends Fragment {
 				.appendQueryParameter("chts", "000000,16")
 				// Title color and size
 				.appendQueryParameter("chtt", title)
-				.appendQueryParameter("chl", Joiner.on("|").skipNulls().join(labels))
+				.appendQueryParameter("chl",
+						Joiner.on("|").skipNulls().join(labels))
 				.appendQueryParameter(
 						"chf",
 						new StringBuilder().append("bg").append(",s")
-								.append(",").append(Integer.toHexString(bgColor))
+								.append(",")
+								.append(Integer.toHexString(bgColor))
 								.toString())
 				// .appendQueryParameter("chco", "FF5533,237745,9011D3,335423")
-				//.appendQueryParameter("chdl", "Apple|Mozilla|Google|Microsoft")
+				// .appendQueryParameter("chdl",
+				// "Apple|Mozilla|Google|Microsoft")
 				.build();
 		viewPie.loadUrl(chartUri.toString());
 
@@ -140,6 +150,7 @@ public class BudgetPieFragment extends Fragment {
 
 	/**
 	 * Retrieves list of categories in the shape of an array of strings
+	 * 
 	 * @return array of category string
 	 */
 	private String[] GetCategoryArray() {
@@ -147,7 +158,8 @@ public class BudgetPieFragment extends Fragment {
 		Cursor c = getCategoryCursor();
 
 		for (c.moveToFirst(); !c.isAfterLast(); c.moveToNext()) {
-			categories.add(c.getString(c.getColumnIndex(ConstantesDAO.COL_BUDGET_CATEGORY)));
+			categories.add(c.getString(c
+					.getColumnIndex(ConstantesDAO.COL_BUDGET_CATEGORY)));
 		}
 		c.close();
 

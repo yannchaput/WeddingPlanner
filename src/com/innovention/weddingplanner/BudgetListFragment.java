@@ -200,9 +200,13 @@ public final class BudgetListFragment extends Fragment implements
 					.findViewById(R.id.lblBudgetListHeaderAmount);
 			TextView tvPaid = (TextView) view
 					.findViewById(R.id.lblBudgetListHeaderPaid);
-			tvTotal.setText(formatCurrency(computeTotalAmount(category),
-					getDefaultLocale()));
-			tvPaid.setText(formatCurrency(computePaidAmount(category),
+			tvTotal.setText(formatCurrency(
+					((BudgetActivity) getActivity()).computeAmount(Uri.withAppendedPath(
+							DBContentProvider.Budget.CONTENT_URI,
+							DBContentProvider.Budget.SUFFIX_SUM_TOTAL_AMOUNT),
+							category), getDefaultLocale()));
+			tvPaid.setText(formatCurrency(((BudgetActivity) getActivity()).computeAmount(Uri.withAppendedPath(DBContentProvider.Budget.CONTENT_URI,
+					DBContentProvider.Budget.SUFFIX_SUM_PAID_AMOUNT), category),
 					getDefaultLocale()));
 		}
 
@@ -256,9 +260,13 @@ public final class BudgetListFragment extends Fragment implements
 					.findViewById(R.id.lblBudgetListHeaderAmount);
 			TextView tvPaid = (TextView) mView
 					.findViewById(R.id.lblBudgetListHeaderPaid);
-			tvTotal.setText(formatCurrency(computeTotalAmount(category),
-					getDefaultLocale()));
-			tvPaid.setText(formatCurrency(computePaidAmount(category),
+			tvTotal.setText(formatCurrency(
+					((BudgetActivity) getActivity()).computeAmount(Uri.withAppendedPath(
+							DBContentProvider.Budget.CONTENT_URI,
+							DBContentProvider.Budget.SUFFIX_SUM_TOTAL_AMOUNT),
+							category), getDefaultLocale()));
+			tvPaid.setText(formatCurrency(((BudgetActivity) getActivity()).computeAmount(Uri.withAppendedPath(DBContentProvider.Budget.CONTENT_URI,
+					DBContentProvider.Budget.SUFFIX_SUM_PAID_AMOUNT), category),
 					getDefaultLocale()));
 			return mView;
 		}
@@ -333,7 +341,8 @@ public final class BudgetListFragment extends Fragment implements
 
 			@Override
 			public void onClick(View v) {
-				WeddingPlannerHelper.replaceFragment(getActivity(), FragmentTags.TAG_FGT_BUDGET_PIE);
+				WeddingPlannerHelper.replaceFragment(getActivity(),
+						FragmentTags.TAG_FGT_BUDGET_PIE);
 
 			}
 		});
@@ -400,8 +409,11 @@ public final class BudgetListFragment extends Fragment implements
 	 * Update content of top panel
 	 */
 	private void updateTopContent() {
-		double total = computeTotalAmount(null);
-		double paid = computePaidAmount(null);
+		double total = ((BudgetActivity) getActivity()).computeAmount(Uri.withAppendedPath(
+				DBContentProvider.Budget.CONTENT_URI,
+				DBContentProvider.Budget.SUFFIX_SUM_TOTAL_AMOUNT), null);
+		double paid = ((BudgetActivity) getActivity()).computeAmount(Uri.withAppendedPath(DBContentProvider.Budget.CONTENT_URI,
+				DBContentProvider.Budget.SUFFIX_SUM_PAID_AMOUNT), null);
 		double outstanding = total - paid;
 
 		totalAmount.setText(formatCurrency(total, getDefaultLocale()));
@@ -426,86 +438,6 @@ public final class BudgetListFragment extends Fragment implements
 		updateTopContent();
 	}
 
-	/**
-	 * Compute total amount of a category
-	 * 
-	 * @param category
-	 * @return the total
-	 */
-	private double computeTotalAmount(String category) {
-
-		double result = 0.0d;
-
-		Cursor c = null;
-
-		if (null != category) {
-			c = getActivity().getContentResolver().query(
-					Uri.withAppendedPath(DBContentProvider.Budget.CONTENT_URI,
-							DBContentProvider.Budget.SUFFIX_SUM_TOTAL_AMOUNT),
-					null, null, new String[] { category }, null);
-		} else {
-			c = getActivity().getContentResolver().query(
-					Uri.withAppendedPath(DBContentProvider.Budget.CONTENT_URI,
-							DBContentProvider.Budget.SUFFIX_SUM_TOTAL_AMOUNT),
-					null, null, null, null);
-		}
-
-		result = compute(c);
-
-		c.close();
-
-		return result;
-	}
-
-	/**
-	 * Compute paid amount of a category
-	 * 
-	 * @param category
-	 * @return the total
-	 */
-	private double computePaidAmount(String category) {
-
-		double result = 0.0d;
-
-		Cursor c = null;
-
-		if (null != category) {
-			c = getActivity().getContentResolver().query(
-					Uri.withAppendedPath(DBContentProvider.Budget.CONTENT_URI,
-							DBContentProvider.Budget.SUFFIX_SUM_PAID_AMOUNT),
-					null, null, new String[] { category }, null);
-		} else {
-			c = getActivity().getContentResolver().query(
-					Uri.withAppendedPath(DBContentProvider.Budget.CONTENT_URI,
-							DBContentProvider.Budget.SUFFIX_SUM_PAID_AMOUNT),
-					null, null, null, null);
-		}
-
-		result = compute(c);
-
-		c.close();
-
-		return result;
-	}
-
-	/**
-	 * Embeds logic to calculate sum of a column
-	 * 
-	 * @param c
-	 * @return result
-	 */
-	private double compute(final Cursor c) {
-		double result = 0.0d;
-
-		if (c.getCount() > 0) {
-			c.moveToFirst();
-			do {
-				result += c.getDouble(0);
-			} while (!c.isLast());
-		}
-
-		return result;
-	}
 
 	// LoaderCallbacks interface implementation
 	// -----------------------------------------
