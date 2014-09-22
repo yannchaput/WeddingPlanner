@@ -16,6 +16,7 @@ import com.innovention.weddingplanner.utils.WeddingPlannerHelper;
 import android.annotation.SuppressLint;
 import android.app.Fragment;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -42,6 +43,7 @@ public class BudgetPieFragment extends Fragment {
 
 	// Fields
 	private WebView viewPie;
+	private WebView viewPie2;
 	private ImageButton backListBtn;
 
 	public BudgetPieFragment() {
@@ -76,59 +78,21 @@ public class BudgetPieFragment extends Fragment {
 			}
 		});
 
+		// Overall budget pie
 		viewPie = (WebView) rootView.findViewById(R.id.webViewPie);
 		viewPie.getSettings().setJavaScriptEnabled(true);
-
-		// Build URL
-		float pie_width = viewPie.getResources().getDimension(
-				R.dimen.budget_pie_chart_width);
-		float pie_height = viewPie.getResources().getDimension(
-				R.dimen.budget_pie_chart_height);
-		String title = viewPie.getResources().getString(
-				R.string.budget_pie_chart_title);
-		int bgColor = viewPie.getResources().getColor(R.color.Bisque);
-		Log.v(TAG, "background color: " + Integer.toHexString(bgColor));
-		String[] labels = GetCategoryArray();
-		Log.v(TAG, Joiner.on("|").skipNulls().join(labels));
-		ArrayList<Integer> data = new ArrayList<Integer>();
-		for (String label : labels) {
-			data.add( (int) ((BudgetActivity) getActivity()).computeAmount(Uri
-					.withAppendedPath(DBContentProvider.Budget.CONTENT_URI,
-							DBContentProvider.Budget.SUFFIX_SUM_TOTAL_AMOUNT),
-					label) );
-		}
-
-		Uri.Builder builder = new Uri.Builder();
-		Uri chartUri = builder
-				.scheme("http")
-				.authority("chart.apis.google.com")
-				.appendPath("chart")
-				.appendQueryParameter("cht", "p3")
-				.appendQueryParameter(
-						"chs",
-						new StringBuilder()
-								.append(String.valueOf((int) pie_width))
-								.append("x")
-								.append(String.valueOf((int) pie_height))
-								.toString())
-				.appendQueryParameter("chd", "t:20,65,15")
-				// Data
-				.appendQueryParameter("chts", "000000,16")
-				// Title color and size
-				.appendQueryParameter("chtt", title)
-				.appendQueryParameter("chl",
-						Joiner.on("|").skipNulls().join(labels))
-				.appendQueryParameter(
-						"chf",
-						new StringBuilder().append("bg").append(",s")
-								.append(",")
-								.append(Integer.toHexString(bgColor))
-								.toString())
-				// .appendQueryParameter("chco", "FF5533,237745,9011D3,335423")
-				// .appendQueryParameter("chdl",
-				// "Apple|Mozilla|Google|Microsoft")
-				.build();
-		viewPie.loadUrl(chartUri.toString());
+		viewPie.loadUrl(buildGoogleChartUri(viewPie,
+				R.string.budget_pie_chart_title,
+				DBContentProvider.Budget.SUFFIX_SUM_TOTAL_AMOUNT).toString());
+		viewPie.setBackgroundColor(Color.TRANSPARENT);  
+		
+		// Already paid budget pie
+		viewPie2 = (WebView) rootView.findViewById(R.id.webViewPie2);
+		viewPie2.getSettings().setJavaScriptEnabled(true);
+		viewPie2.loadUrl(buildGoogleChartUri(viewPie2,
+				R.string.budget_pie_chart_title2,
+				DBContentProvider.Budget.SUFFIX_SUM_PAID_AMOUNT).toString());
+		viewPie2.setBackgroundColor(Color.TRANSPARENT);  
 
 		// Load Ad
 		adView = new AdView(this.getActivity());
@@ -146,6 +110,60 @@ public class BudgetPieFragment extends Fragment {
 		adView.loadAd(adRequest);
 
 		return rootView;
+	}
+
+	/**
+	 * Build the query uri to google chart API
+	 * 
+	 * @return uri
+	 */
+	private Uri buildGoogleChartUri(View view, int idTitle, String queryUri) {
+		// Build URL
+		float pie_width = view.getResources().getDimension(
+				R.dimen.budget_pie_chart_width);
+		float pie_height = view.getResources().getDimension(
+				R.dimen.budget_pie_chart_height);
+		String title = view.getResources().getString(idTitle);
+		int bgColor = view.getResources().getColor(R.color.Bisque);
+		Log.v(TAG, "background color: " + Integer.toHexString(bgColor));
+		String[] labels = GetCategoryArray();
+		ArrayList<Integer> data = new ArrayList<Integer>();
+		for (String label : labels) {
+			data.add((int) ((BudgetActivity) getActivity()).computeAmount(Uri
+					.withAppendedPath(DBContentProvider.Budget.CONTENT_URI,
+							queryUri), label));
+		}
+		String sData = "t:" + Joiner.on(',').skipNulls().join(data);
+		Log.v(TAG, "Data to display: " + sData);
+
+		Uri.Builder builder = new Uri.Builder();
+		Uri chartUri = builder
+				.scheme("http")
+				.authority("chart.apis.google.com")
+				.appendPath("chart")
+				.appendQueryParameter("cht", "p3")
+				.appendQueryParameter(
+						"chs",
+						new StringBuilder()
+								.append(String.valueOf((int) pie_width))
+								.append("x")
+								.append(String.valueOf((int) pie_height))
+								.toString())
+				.appendQueryParameter("chd", sData)
+				// Data
+				.appendQueryParameter("chts", "000000,16")
+				// Title color and size
+				.appendQueryParameter("chtt", title)
+				.appendQueryParameter("chl",
+						Joiner.on("|").skipNulls().join(labels))
+				.appendQueryParameter(
+						"chf",
+						new StringBuilder().append("bg").append(",s")
+								.append(",")
+								.append("FFFFFF00")
+								.toString()).build();
+
+		return chartUri;
 	}
 
 	/**

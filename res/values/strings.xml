@@ -189,4 +189,5 @@
 	
 	<!-- Budget pie -->
 	<string name="budget_pie_chart_title">Budget total</string>
+	<string name="budget_pie_chart_title2">Dépenses actuelles</string>
 </resources>
