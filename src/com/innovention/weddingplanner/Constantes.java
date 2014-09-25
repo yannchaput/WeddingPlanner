@@ -2,7 +2,7 @@ package com.innovention.weddingplanner;
 
 public interface Constantes {
 	
-	Boolean DEBUG = Boolean.FALSE;
+	Boolean DEBUG = Boolean.TRUE;
 	
 	/**
 	 * List of tags to identify fragments. Also serves to identify the mode
@@ -16,6 +16,7 @@ public interface Constantes {
 		TAG_FGT_DELETECONTACT("deleteContactFgt"),
 		TAG_FGT_GUESTLIST("guestListFgt"),
 		TAG_FGT_GUESTALERT("guestAlertFgt"),
+		TAG_FGT_GUEST_ADD_ACTION("guestAddActionFgt"),
 		TAG_FGT_MAINDATEPICKER("mainDatePickerDlgFgt"),
 		TAG_FGT_TASKDATEPICKER("taskDatePickerDlgFgt"),
 		TAG_FGT_TASKDATEPICKER_UPDATE("taskDatePickerUpdateDlgFgt"),

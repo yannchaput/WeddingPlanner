@@ -47,6 +47,13 @@
     <string name="contact_item_attend">Présent</string>
     <string name="contact_item_absent">Absent</string>
     <string name="contact_button_validate">Valider</string>
+    
+    <!-- Contact dialog -->
+    <string name="contact_title_choice_dialog">Contact</string>
+    <string-array name="contact_choice_dialog_entries">
+        <item>Créer</item>
+        <item>Importer</item>
+    </string-array>
 
     <!-- Task activity -->
     <string name="title_activity_task">Tâches</string>

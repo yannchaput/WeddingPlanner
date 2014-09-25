@@ -3,6 +3,7 @@ package com.innovention.weddingplanner;
 import static com.innovention.weddingplanner.utils.WeddingPlannerHelper.hideKeyboard;
 import static com.innovention.weddingplanner.utils.WeddingPlannerHelper.replaceFragment;
 import static com.innovention.weddingplanner.utils.WeddingPlannerHelper.showAlert;
+import static com.innovention.weddingplanner.utils.WeddingPlannerHelper.showFragmentDialog;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
@@ -20,8 +21,9 @@ import com.innovention.weddingplanner.dao.DaoLocator;
 import com.innovention.weddingplanner.dao.DaoLocator.SERVICES;
 import com.innovention.weddingplanner.dao.GuestsDao;
 
-public class GuestActivity extends Activity implements OnGuestSelectedListener, OnValidateContactListener {
-	
+public class GuestActivity extends Activity implements OnGuestSelectedListener,
+		OnValidateContactListener {
+
 	private final static String TAG = ContactFragment.class.getSimpleName();
 
 	@Override
@@ -31,7 +33,10 @@ public class GuestActivity extends Activity implements OnGuestSelectedListener, 
 		// Show the Up button in the action bar.
 		setupActionBar();
 		// Add list guest fragment
-		getFragmentManager().beginTransaction().add(R.id.LayoutGuest, GuestListFragment.newInstance(), FragmentTags.TAG_FGT_GUESTLIST.getValue()).commit();
+		getFragmentManager()
+				.beginTransaction()
+				.add(R.id.LayoutGuest, GuestListFragment.newInstance(),
+						FragmentTags.TAG_FGT_GUESTLIST.getValue()).commit();
 	}
 
 	/**
@@ -43,12 +48,12 @@ public class GuestActivity extends Activity implements OnGuestSelectedListener, 
 
 	}
 
-//	@Override
-//	public boolean onCreateOptionsMenu(Menu menu) {
-//		// Inflate the menu; this adds items to the action bar if it is present.
-//		getMenuInflater().inflate(R.menu.guest, menu);
-//		return true;
-//	}
+	// @Override
+	// public boolean onCreateOptionsMenu(Menu menu) {
+	// // Inflate the menu; this adds items to the action bar if it is present.
+	// getMenuInflater().inflate(R.menu.guest, menu);
+	// return true;
+	// }
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
@@ -65,11 +70,11 @@ public class GuestActivity extends Activity implements OnGuestSelectedListener, 
 			NavUtils.navigateUpFromSameTask(this);
 			return true;
 		case R.id.action_add_contact:
-			
-			if (Log.isLoggable(TAG, Log.VERBOSE))
-			Log.d(TAG, "User action : create new contact -> open the mask");
-			// Create contact action
-			replaceFragment(this,FragmentTags.TAG_FGT_CREATECONTACT);
+
+			Log.d(TAG, "User action : create new contact -> open the option list");
+			showFragmentDialog(this, ContactDialogFragment.newInstance(),
+					FragmentTags.TAG_FGT_GUEST_ADD_ACTION);
+
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
@@ -78,34 +83,36 @@ public class GuestActivity extends Activity implements OnGuestSelectedListener, 
 
 	/**
 	 * Called when an item is clicked on the fragment list
-	 * @param id db id of the selected item
-	 * @param action action (update/delete)
+	 * 
+	 * @param id
+	 *            db id of the selected item
+	 * @param action
+	 *            action (update/delete)
 	 */
 	@Override
 	public void onSelectGuest(long id, final FragmentTags action) {
 		// TODO Auto-generated method stub
 		Log.d(TAG, "onSelectGuest - Selected item with id:" + id);
-		GuestsDao dao = DaoLocator.getInstance(getApplication())
-				.get(SERVICES.GUEST);
-		
+		GuestsDao dao = DaoLocator.getInstance(getApplication()).get(
+				SERVICES.GUEST);
+
 		if (FragmentTags.TAG_FGT_UPDATECONTACT.equals(action)) {
 			Contact selectedGuest = dao.get(id);
 			Log.v(TAG, "onSelectGuest - Guest to update is " + selectedGuest);
-			replaceFragment(this,FragmentTags.TAG_FGT_UPDATECONTACT, selectedGuest);
-		}
-		else if (FragmentTags.TAG_FGT_DELETECONTACT.equals(action)) {
+			replaceFragment(this, FragmentTags.TAG_FGT_UPDATECONTACT,
+					selectedGuest);
+		} else if (FragmentTags.TAG_FGT_DELETECONTACT.equals(action)) {
 			Log.v(TAG, "onSelectGuest - Suppress guest with id " + id);
 			int count = dao.removeWithId((int) id);
 			if (count > 1)
 				showAlert(R.string.delete_guest_alert_dialog_title,
 						R.string.delete_guest_multiple_alert_message,
 						getFragmentManager());
-			else if (count == 0){
+			else if (count == 0) {
 				showAlert(R.string.delete_guest_alert_dialog_title,
 						R.string.delete_guest_0_alert_message,
 						getFragmentManager());
-			}
-			else {
+			} else {
 				showAlert(R.string.delete_guest_OK_alert_dialog_title,
 						R.string.delete_guest_OK_alert_message,
 						getFragmentManager());
@@ -114,32 +121,34 @@ public class GuestActivity extends Activity implements OnGuestSelectedListener, 
 	}
 
 	/**
-	 * Triggered when a contact was validated from ContactFragment
-	 * and needs saving
+	 * Triggered when a contact was validated from ContactFragment and needs
+	 * saving
 	 */
 	@Override
 	public void onValidateContact(IDtoBean bean, String tag) {
 		// TODO Auto-generated method stub
-		
-		Preconditions.checkNotNull(bean, "Contact bean can't be null on validation");
-		Preconditions.checkArgument(!Strings.isNullOrEmpty(tag), "Fragment tag passed is empty which is incorrect");
-		
+
+		Preconditions.checkNotNull(bean,
+				"Contact bean can't be null on validation");
+		Preconditions.checkArgument(!Strings.isNullOrEmpty(tag),
+				"Fragment tag passed is empty which is incorrect");
+
 		hideKeyboard(this);
-		
-		GuestsDao dao = DaoLocator
-				.getInstance(getApplication()).get(SERVICES.GUEST);
-		
+
+		GuestsDao dao = DaoLocator.getInstance(getApplication()).get(
+				SERVICES.GUEST);
+
 		if (FragmentTags.TAG_FGT_CREATECONTACT.getValue().equals(tag)) {
 			Log.d(TAG, "Save contact in creation mode: " + bean);
-			dao.insert((Contact) bean);		
-		}
-		else if (FragmentTags.TAG_FGT_UPDATECONTACT.getValue().equals(tag)) {
+			dao.insert((Contact) bean);
+		} else if (FragmentTags.TAG_FGT_UPDATECONTACT.getValue().equals(tag)) {
 			Log.d(TAG, "Save contact in update mode: " + bean);
-			Preconditions.checkArgument(bean.getId() > 0, "Invalid db id for contact");
-			dao.update(bean.getId(), (Contact) bean); 
+			Preconditions.checkArgument(bean.getId() > 0,
+					"Invalid db id for contact");
+			dao.update(bean.getId(), (Contact) bean);
 		}
 		// Replace add contact fragment by list fragment
-		replaceFragment(this,FragmentTags.TAG_FGT_GUESTLIST);
+		replaceFragment(this, FragmentTags.TAG_FGT_GUESTLIST);
 		Log.d(TAG, "Contact saved: " + bean);
 	}
 

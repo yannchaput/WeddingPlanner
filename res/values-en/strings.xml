@@ -48,6 +48,13 @@
     <string name="contact_item_absent">Unattended</string>
     <string name="contact_button_validate">Submit</string>
 
+    <!-- Contact dialog -->
+    <string name="contact_title_choice_dialog">Contact</string>
+    <string-array name="contact_choice_dialog_entries">
+        <item>Create</item>
+        <item>Import</item>
+    </string-array>
+
     <!-- Task activity -->
     <string name="title_activity_task">Tasks</string>
     <string name="title_section1">Task list</string>
@@ -96,8 +103,8 @@
     <string name="action_add_vendor">New vendor</string>
     <string name="action_delete_vendor">Delete vendor</string>
     <string name="action_update_vendor">Update vendor</string>
-    
-    <!--  budget list -->
+
+    <!-- budget list -->
     <string name="action_add_budget_item">New budget item</string>
     <string name="action_delete_budget_item">Delete expense</string>
     <string name="action_update_budget_item">Update expense</string>
@@ -172,8 +179,8 @@
     <string name="vendor_label_note">Memo</string>
     <string name="vendor_button_validate">Submit</string>
     <string name="vendor_label_phone">Tel.</string>
-    
-    <!--  Budget -->
+
+    <!-- Budget -->
     <string name="title_activity_budget">Budget</string>
     <string name="budget_hint_field_caption">Caption</string>
     <string name="budget_label_vendor">Vendor</string>
@@ -182,12 +189,13 @@
     <string name="budget_hint_field_total_amount">Total amount</string>
     <string name="budget_hint_field_paid_amount">Paid amount</string>
     <string name="budget_hint_field_note">Memo</string>
-	<string name="budget_button_validate">Submit</string>
-	<string name="budget_list_total_amount_label">Total expense</string>
-	<string name="budget_list_outstanding_amount_label">Outsanding amount</string>
-	<string name="budget_list_paid_amount_label">Paid</string>
-	
-	<!-- Budget pie -->
-	<string name="budget_pie_chart_title">Total budget</string>
-	<string name="budget_pie_chart_title2">Actual budget</string>
+    <string name="budget_button_validate">Submit</string>
+    <string name="budget_list_total_amount_label">Total expense</string>
+    <string name="budget_list_outstanding_amount_label">Outsanding amount</string>
+    <string name="budget_list_paid_amount_label">Paid</string>
+
+    <!-- Budget pie -->
+    <string name="budget_pie_chart_title">Total budget</string>
+    <string name="budget_pie_chart_title2">Actual budget</string>
+
 </resources>
