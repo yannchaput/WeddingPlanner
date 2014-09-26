@@ -14,6 +14,7 @@ import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Toast;
 
 /**
  * Window dialog with 2 choices: import or create contact
@@ -40,13 +41,20 @@ public class ContactDialogFragment extends DialogFragment {
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
 		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-		builder.setTitle(R.string.contact_title_choice_dialog).setItems(R.array.contact_choice_dialog_entries,
+		builder.setTitle(R.string.contact_title_choice_dialog).setItems(
+				R.array.contact_choice_dialog_entries,
 				new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int which) {
-						
-					dismiss();
-					// Create contact action
-					replaceFragment(getActivity(), FragmentTags.TAG_FGT_CREATECONTACT);
+
+						dismiss();
+						if (which == 0) {
+							// Create contact action
+							replaceFragment(getActivity(),
+									FragmentTags.TAG_FGT_CREATECONTACT);
+						} else {
+							Toast.makeText(getActivity(), "En construction",
+									Toast.LENGTH_SHORT).show();
+						}
 					}
 				});
 		return builder.create();

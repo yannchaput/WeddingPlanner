@@ -191,7 +191,8 @@ public final class WeddingPlannerHelper {
 		// attribute in every fragment
 		switch (tag) {
 		case TAG_FGT_GUESTLIST:
-			fgt = GuestListFragment.newInstance();
+			fgt = parent.getFragmentManager().findFragmentByTag(tag.getValue());
+			if (null == fgt) fgt = GuestListFragment.newInstance();
 			resId = R.id.LayoutGuest;
 			break;
 		case TAG_FGT_CREATECONTACT:
