@@ -3,6 +3,8 @@ package com.innovention.weddingplanner;
 import static com.innovention.weddingplanner.utils.WeddingPlannerHelper.hideKeyboard;
 import static com.innovention.weddingplanner.utils.WeddingPlannerHelper.replaceFragment;
 import android.app.Activity;
+import android.app.Fragment;
+import android.app.FragmentManager;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.util.Log;
@@ -16,7 +18,7 @@ import com.innovention.weddingplanner.dao.DaoLocator.SERVICES;
 import com.innovention.weddingplanner.dao.VendorDao;
 
 public class VendorActivity extends Activity implements OnValidateVendor {
-	
+
 	private static final String TAG = VendorActivity.class.getSimpleName();
 
 	@Override
@@ -25,15 +27,31 @@ public class VendorActivity extends Activity implements OnValidateVendor {
 		Log.v(TAG, "onCreate");
 		setContentView(R.layout.activity_vendor);
 		// At start, display list fragment
-		getFragmentManager().beginTransaction().add(R.id.LayoutVendor, VendorListFragment.newInstance(), FragmentTags.TAG_FGT_VENDORLIST.getValue()).commit();
+//		getFragmentManager()
+//				.beginTransaction()
+//				.add(R.id.LayoutVendor, VendorListFragment.newInstance(),
+//						FragmentTags.TAG_FGT_VENDORLIST.getValue()).commit();
+		// Add list guest fragment
+		FragmentManager fgtMgr = getFragmentManager();
+		Fragment fgt = fgtMgr.findFragmentByTag(FragmentTags.TAG_FGT_VENDORLIST
+				.getValue());
+		// Test in case we recreate the activity because we switch to landscape
+		// mode
+		// Then no need to recreate the fragment
+		if ((fgt == null)) {
+			getFragmentManager()
+					.beginTransaction()
+					.add(R.id.LayoutVendor, VendorListFragment.newInstance(),
+							FragmentTags.TAG_FGT_VENDORLIST.getValue()).commit();
+		}
 	}
 
-//	@Override
-//	public boolean onCreateOptionsMenu(Menu menu) {
-//		// Inflate the menu; this adds items to the action bar if it is present.
-//		getMenuInflater().inflate(R.menu.vendor, menu);
-//		return true;
-//	}
+	// @Override
+	// public boolean onCreateOptionsMenu(Menu menu) {
+	// // Inflate the menu; this adds items to the action bar if it is present.
+	// getMenuInflater().inflate(R.menu.vendor, menu);
+	// return true;
+	// }
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
@@ -59,25 +77,23 @@ public class VendorActivity extends Activity implements OnValidateVendor {
 	@Override
 	public void onValidateVendor(Vendor vendor, FragmentTags source) {
 		Log.d(TAG, "onValidateVendor - click on validate vendor button");
-		
+
 		// Hide virtual keyboard if opened
 		hideKeyboard(this);
-		
-		VendorDao dao = DaoLocator.getInstance(getApplicationContext()).get(SERVICES.VENDOR);
+
+		VendorDao dao = DaoLocator.getInstance(getApplicationContext()).get(
+				SERVICES.VENDOR);
 		Log.v(TAG, "Save vendor: " + vendor + " in mode " + source.toString());
 		// Create vendor
 		if (FragmentTags.TAG_FGT_CREATE_VENDOR.equals(source)) {
 			// TODO use content provider
 			dao.insert(vendor);
-		}
-		else if (FragmentTags.TAG_FGT_UPDATE_VENDOR.equals(source)) {
+		} else if (FragmentTags.TAG_FGT_UPDATE_VENDOR.equals(source)) {
 			// TODO use content provider
 			dao.update(vendor.getId(), vendor);
 		}
-		
+
 		replaceFragment(this, FragmentTags.TAG_FGT_VENDORLIST);
 	}
-
-	
 
 }

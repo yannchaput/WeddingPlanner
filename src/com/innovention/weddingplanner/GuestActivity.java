@@ -5,6 +5,8 @@ import static com.innovention.weddingplanner.utils.WeddingPlannerHelper.replaceF
 import static com.innovention.weddingplanner.utils.WeddingPlannerHelper.showAlert;
 import static com.innovention.weddingplanner.utils.WeddingPlannerHelper.showFragmentDialog;
 import android.app.Activity;
+import android.app.Fragment;
+import android.app.FragmentManager;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.util.Log;
@@ -33,10 +35,17 @@ public class GuestActivity extends Activity implements OnGuestSelectedListener,
 		// Show the Up button in the action bar.
 		setupActionBar();
 		// Add list guest fragment
-		getFragmentManager()
-				.beginTransaction()
-				.add(R.id.LayoutGuest, GuestListFragment.newInstance(),
-						FragmentTags.TAG_FGT_GUESTLIST.getValue()).commit();
+		FragmentManager fgtMgr = getFragmentManager();
+		Fragment fgt = fgtMgr.findFragmentByTag(FragmentTags.TAG_FGT_GUESTLIST
+				.getValue());
+		// Test in case we recreate the activity because we switch to landscape mode
+		// Then no need to recreate the fragment
+		if ( (fgt == null) ) {
+			getFragmentManager()
+					.beginTransaction()
+					.add(R.id.LayoutGuest, GuestListFragment.newInstance(),
+							FragmentTags.TAG_FGT_GUESTLIST.getValue()).commit();
+		}
 	}
 
 	/**
@@ -71,7 +80,8 @@ public class GuestActivity extends Activity implements OnGuestSelectedListener,
 			return true;
 		case R.id.action_add_contact:
 
-			Log.d(TAG, "User action : create new contact -> open the option list");
+			Log.d(TAG,
+					"User action : create new contact -> open the option list");
 			showFragmentDialog(this, ContactDialogFragment.newInstance(),
 					FragmentTags.TAG_FGT_GUEST_ADD_ACTION);
 

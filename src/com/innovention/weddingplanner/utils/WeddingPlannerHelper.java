@@ -33,6 +33,7 @@ import com.innovention.weddingplanner.BudgetListFragment;
 import com.innovention.weddingplanner.BudgetPieFragment;
 import com.innovention.weddingplanner.Constantes.FragmentTags;
 import com.innovention.weddingplanner.ContactFragment;
+import com.innovention.weddingplanner.ContactListFragment;
 import com.innovention.weddingplanner.GuestListFragment;
 import com.innovention.weddingplanner.R;
 import com.innovention.weddingplanner.TaskFragment;
@@ -206,6 +207,11 @@ public final class WeddingPlannerHelper {
 					"There should be exactly 1 contact to update");
 			fgt = ContactFragment.newInstance(
 					FragmentTags.TAG_FGT_UPDATECONTACT, (Contact) params[0]);
+			resId = R.id.LayoutGuest;
+			break;
+		case TAG_FGT_IMPORTCONTACT:
+			fgt = parent.getFragmentManager().findFragmentByTag(tag.getValue());
+			if (null == fgt) fgt = ContactListFragment.newInstance();
 			resId = R.id.LayoutGuest;
 			break;
 		case TAG_FGT_CREATETASK:

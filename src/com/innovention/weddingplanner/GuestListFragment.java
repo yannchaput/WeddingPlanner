@@ -348,8 +348,8 @@ public class GuestListFragment extends Fragment implements
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		// TODO Auto-generated method stub
-		// super.onCreateOptionsMenu(menu, inflater);
 		inflater.inflate(R.menu.guest, menu);
+		super.onCreateOptionsMenu(menu, inflater);
 	}
 
 	@Override

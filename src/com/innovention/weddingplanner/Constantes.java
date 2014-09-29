@@ -12,6 +12,7 @@ public interface Constantes {
 	 */
 	enum FragmentTags {
 		TAG_FGT_CREATECONTACT("createContactFgt"),
+		TAG_FGT_IMPORTCONTACT("importContactFgt"),
 		TAG_FGT_UPDATECONTACT("updateContactFgt"),
 		TAG_FGT_DELETECONTACT("deleteContactFgt"),
 		TAG_FGT_GUESTLIST("guestListFgt"),

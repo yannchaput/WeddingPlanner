@@ -52,8 +52,9 @@ public class ContactDialogFragment extends DialogFragment {
 							replaceFragment(getActivity(),
 									FragmentTags.TAG_FGT_CREATECONTACT);
 						} else {
-							Toast.makeText(getActivity(), "En construction",
-									Toast.LENGTH_SHORT).show();
+							// Import contact action
+							replaceFragment(getActivity(),
+									FragmentTags.TAG_FGT_IMPORTCONTACT);
 						}
 					}
 				});
