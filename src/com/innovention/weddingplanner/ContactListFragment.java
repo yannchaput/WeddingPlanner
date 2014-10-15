@@ -3,6 +3,10 @@
  */
 package com.innovention.weddingplanner;
 
+import java.util.HashMap;
+
+import org.apache.commons.lang3.mutable.MutableBoolean;
+
 import android.app.ListFragment;
 import android.app.LoaderManager.LoaderCallbacks;
 import android.content.Context;
@@ -12,11 +16,18 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract.Contacts;
+import android.util.Log;
+import android.util.SparseArray;
+import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.CursorAdapter;
-import android.widget.SimpleCursorAdapter;
 
 /**
  * Fragment which displays a list of contacts stored in the cloud/phone so as to
@@ -27,12 +38,96 @@ import android.widget.SimpleCursorAdapter;
  */
 public class ContactListFragment extends ListFragment implements
 		LoaderCallbacks<Cursor> {
+	
+	// LOG
+	private static final String TAG = ContactListFragment.class.getSimpleName();
 
 	/**
 	 * ListView cursorAdapter
 	 */
 	private CursorAdapter mAdapter;
+	
+	/**
+	 * List of db ids whose checkbox was checked
+	 */
+	private SparseBooleanArray mListContactIds;
+	
+	/**
+	 * ContactListCursorAdapter is the adapter layout for a list of contact from
+	 * the android device
+	 * @author ychaput
+	 *
+	 */
+	private class ContactListCursorAdapter extends CursorAdapter {
+		
+		private LayoutInflater mInflater;
+		
+		/**
+		 * Should be stateless and contain only reference to the checkbox view.
+		 * Content and state of the checkbox should be discarded in bindView and replace with actual data
+		 * @author ychaput
+		 *
+		 */
+		private class ViewHolder {
+			// Views
+			private CheckBox check;
+		}
+		
+		public ContactListCursorAdapter(final Context ctx, final Cursor c, int flags) {
+			super(ctx,c,flags);
+			mInflater = (LayoutInflater) ctx.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		}
 
+		/* (non-Javadoc)
+		 * @see android.widget.CursorAdapter#newView(android.content.Context, android.database.Cursor, android.view.ViewGroup)
+		 */
+		@Override
+		public View newView(Context context, Cursor cursor, ViewGroup parent) {
+			View view = mInflater.inflate(R.layout.fragment_contact_adapter, parent, false);
+			CheckBox ck = (CheckBox) view.findViewById(R.id.checkboxContactList);
+			ck.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+				
+				@Override
+				public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+					Integer id = (Integer) buttonView.getTag();
+					Log.d(TAG, "Click on checkbox item whose id is " + id);
+					// Map the value of the check to this id value in db
+					// Will replace the previous entry if exists
+					mListContactIds.put(id, isChecked);
+				}
+			});
+			
+			ViewHolder holder = new ViewHolder();
+			holder.check = ck;
+			view.setTag(holder);
+			
+			return view;
+		}
+
+		/* (non-Javadoc)
+		 * @see android.widget.CursorAdapter#bindView(android.view.View, android.content.Context, android.database.Cursor)
+		 */
+		@Override
+		public void bindView(View view, Context context, Cursor cursor) {
+			
+			ViewHolder holder = (ViewHolder) view.getTag();
+			CheckBox ckView = holder.check;
+			// Set checkbox caption
+			String name = cursor.getString(cursor.getColumnIndex(Contacts.DISPLAY_NAME_PRIMARY));
+			ckView.setText(name);
+			// Save db id as a tag of the checkbox
+			int id = cursor.getInt(cursor.getColumnIndex(Contacts._ID));
+			ckView.setTag(id);
+			// Set the check mark
+			ckView.setChecked(mListContactIds.get(id));
+		}
+		
+	}
+
+	
+	public ContactListFragment() {
+		mListContactIds = new SparseBooleanArray(30);
+	}
 
 	/**
 	 * Factory method
@@ -49,10 +144,9 @@ public class ContactListFragment extends ListFragment implements
 
 		// create adapter once
 		Context context = getActivity();
-		int layout = android.R.layout.simple_list_item_1;
 		Cursor c = null; // there is no cursor yet
 		int flags = 0; // no auto-requery! Loader requeries.
-		mAdapter = new SimpleCursorAdapter(context, layout, c, FROM, TO, flags);
+		mAdapter = new ContactListCursorAdapter(context, c, flags);
 	}
 
 	@Override
@@ -76,20 +170,61 @@ public class ContactListFragment extends ListFragment implements
 			Bundle savedInstanceState) {
 		View v = inflater.inflate(R.layout.fragment_contact_list, container,
 				false);
+		// Necessary to set the menu visible for fragment
+		setHasOptionsMenu(true);
 
 		return v;
 	}
 
+	/* (non-Javadoc)
+	 * @see android.app.Fragment#onCreateOptionsMenu(android.view.Menu, android.view.MenuInflater)
+	 */
+	@Override
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+		inflater.inflate(R.menu.import_contact_menu, menu);
+		super.onCreateOptionsMenu(menu, inflater);
+	}
+
+	/* (non-Javadoc)
+	 * @see android.app.Fragment#onOptionsItemSelected(android.view.MenuItem)
+	 */
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch(item.getItemId()) {
+		case R.id.action_validate_import_contact:
+			Log.d(TAG, "Click on validate import button");
+			importContacts();
+			break;
+		default:
+			return super.onOptionsItemSelected(item);
+		}
+		
+		return true;
+	}
+	
+	private void importContacts() {
+		Log.i(TAG, "Import and save contacts from address book");
+		for (int i=0; i < mListContactIds.size(); i++) {
+			int key = mListContactIds.keyAt(i);
+			boolean value = mListContactIds.valueAt(i);
+			if (value) {
+				// TODO
+			}
+		}
+	}
+
+
+	// -----------------------------------------------------------------------------------------
+	// -- Implémentation LoaderCallbacks
+	// -----------------------------------------------------------------------------------------
+	
 	// columns requested from the database
 	private static final String[] PROJECTION = { Contacts._ID, // _ID is always
-																// required
-			Contacts.DISPLAY_NAME_PRIMARY // that's what we want to display
-	};
-
-	// and name should be displayed in the text1 textview in item layout
-	private static final String[] FROM = { Contacts.DISPLAY_NAME_PRIMARY };
-	private static final int[] TO = { android.R.id.text1 };
-
+																	// required
+				Contacts.DISPLAY_NAME_PRIMARY // that's what we want to display
+		};
+		
+		
 	@Override
 	public Loader<Cursor> onCreateLoader(int id, Bundle args) {
 

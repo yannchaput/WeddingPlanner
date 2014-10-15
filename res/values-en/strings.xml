@@ -54,6 +54,7 @@
         <item>Create</item>
         <item>Import</item>
     </string-array>
+    <string name="action_validate_import_contact">OK</string>
 
     <!-- Task activity -->
     <string name="title_activity_task">Tasks</string>

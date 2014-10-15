@@ -184,7 +184,7 @@ public class GuestListFragment extends Fragment implements
 
 			// If view does not already exists we create it
 			if (row == null) {
-				row = View.inflate(context, R.layout.fragment_contact_adapter,
+				row = View.inflate(context, R.layout.fragment_guest_adapter,
 						null);
 				holder = new ViewHolder();
 				holder.icon = (ImageView) row.findViewById(R.id.itemGuestIcon);
@@ -299,7 +299,7 @@ public class GuestListFragment extends Fragment implements
 
 		// TODO Use a CursorLoader
 		mAdapter = new GuestCursorAdapter(getActivity(),
-				R.layout.fragment_contact_adapter, c, new String[] {
+				R.layout.fragment_guest_adapter, c, new String[] {
 						COL_SURNAME, COL_NAME }, new int[] {
 						R.id.itemGuestSurname, R.id.itemGuestName }, 1);
 
