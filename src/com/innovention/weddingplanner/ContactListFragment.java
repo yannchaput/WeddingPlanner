@@ -3,9 +3,11 @@
  */
 package com.innovention.weddingplanner;
 
-import java.util.HashMap;
+import java.util.LinkedList;
 
-import org.apache.commons.lang3.mutable.MutableBoolean;
+import org.apache.commons.lang3.StringUtils;
+
+import com.google.android.gms.wearable.NodeApi.GetConnectedNodesResult;
 
 import android.app.ListFragment;
 import android.app.LoaderManager.LoaderCallbacks;
@@ -15,9 +17,10 @@ import android.content.Loader;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.provider.ContactsContract.Contacts;
+import android.provider.ContactsContract.Data;
 import android.util.Log;
-import android.util.SparseArray;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -49,6 +52,7 @@ public class ContactListFragment extends ListFragment implements
 	
 	/**
 	 * List of db ids whose checkbox was checked
+	 * Use a sparsearray for better performance while walking through the screen
 	 */
 	private SparseBooleanArray mListContactIds;
 	
@@ -202,15 +206,40 @@ public class ContactListFragment extends ListFragment implements
 		return true;
 	}
 	
+	/**
+	 * Import contacts checked in the ListView
+	 * and transforms them into Contacts in a view to persisting them in db
+	 */
 	private void importContacts() {
 		Log.i(TAG, "Import and save contacts from address book");
+		// Transform into list so as to use CollectionUtils features
+		LinkedList<String> listIds = new LinkedList<String>();
 		for (int i=0; i < mListContactIds.size(); i++) {
 			int key = mListContactIds.keyAt(i);
 			boolean value = mListContactIds.valueAt(i);
+			// If contact is marked to import
 			if (value) {
-				// TODO
+				listIds.add(String.valueOf(key));
 			}
 		}
+		// Build query
+		StringBuilder clauseWhere = new StringBuilder()
+		.append(Data.CONTACT_ID)
+		.append(" IN (")
+		.append(StringUtils.join(listIds, ','))
+		.append(")");
+		Log.v(TAG, "Clause where :" + clauseWhere);
+		// Query db
+		final String[] fields = {ContactsContract.CommonDataKinds.StructuredName.GIVEN_NAME, ContactsContract.CommonDataKinds.StructuredName.FAMILY_NAME};
+		Cursor c = getActivity().getContentResolver().query(Data.CONTENT_URI, fields, clauseWhere.toString(), null, null);
+		// Transform into Contacts
+		for (c.moveToFirst(); !c.isAfterLast(); c.moveToNext()) {
+			String name = c.getString(c.getColumnIndex(ContactsContract.CommonDataKinds.StructuredName.GIVEN_NAME));
+			Log.v(TAG, "Name: " + name);
+			String surname = c.getString(c.getColumnIndex(ContactsContract.CommonDataKinds.StructuredName.FAMILY_NAME));
+			Log.v(TAG, "Surname: " + surname);
+		}
+		c.close();
 	}
 
 
