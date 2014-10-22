@@ -3,6 +3,7 @@
  */
 package com.innovention.weddingplanner;
 
+import java.util.Iterator;
 import java.util.LinkedList;
 
 import org.apache.commons.lang3.StringUtils;
@@ -21,6 +22,7 @@ import android.provider.ContactsContract;
 import android.provider.ContactsContract.Contacts;
 import android.provider.ContactsContract.Data;
 import android.util.Log;
+import android.util.SparseArray;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -41,7 +43,7 @@ import android.widget.CursorAdapter;
  */
 public class ContactListFragment extends ListFragment implements
 		LoaderCallbacks<Cursor> {
-	
+
 	// LOG
 	private static final String TAG = ContactListFragment.class.getSimpleName();
 
@@ -49,88 +51,130 @@ public class ContactListFragment extends ListFragment implements
 	 * ListView cursorAdapter
 	 */
 	private CursorAdapter mAdapter;
-	
+
 	/**
-	 * List of db ids whose checkbox was checked
-	 * Use a sparsearray for better performance while walking through the screen
+	 * List of db ids whose checkbox was checked Use a sparsearray for better
+	 * performance while walking through the screen
 	 */
-	private SparseBooleanArray mListContactIds;
+	private SparseArray<Mapping> mListContacts;
+
+	// columns requested from the database
+	private static final String[] PROJECTION = { Contacts._ID, // _ID is always
+																// required
+			Contacts.LOOKUP_KEY, Contacts.DISPLAY_NAME_PRIMARY // that's what we
+																// want to
+																// display
+	};
 	
 	/**
-	 * ContactListCursorAdapter is the adapter layout for a list of contact from
-	 * the android device
+	 * Utility class for ContactListCursorAdapter. Represents the mapping between one row of the 
+	 * list and what is saved in cache
 	 * @author ychaput
 	 *
 	 */
-	private class ContactListCursorAdapter extends CursorAdapter {
+	private class Mapping {
+		private long _id;
+		private String _lookupKey;
+		private boolean _checked;
 		
+		private Mapping() {
+			_checked=false;
+		}
+		
+		private Mapping(long id, String lookupKey) {
+			_id = id;
+			_lookupKey = lookupKey;
+			_checked = false;
+		}
+		
+		private Mapping(long id, String lookupKey, boolean checked) {
+			this(id, lookupKey);
+			_checked = checked;
+		}
+	}
+
+
+	/**
+	 * ContactListCursorAdapter is the adapter layout for a list of contact from
+	 * the android device
+	 * 
+	 * @author ychaput
+	 * 
+	 */
+	private class ContactListCursorAdapter extends CursorAdapter {
+
 		private LayoutInflater mInflater;
 		
-		/**
-		 * Should be stateless and contain only reference to the checkbox view.
-		 * Content and state of the checkbox should be discarded in bindView and replace with actual data
-		 * @author ychaput
-		 *
-		 */
-		private class ViewHolder {
-			// Views
-			private CheckBox check;
-		}
-		
-		public ContactListCursorAdapter(final Context ctx, final Cursor c, int flags) {
-			super(ctx,c,flags);
-			mInflater = (LayoutInflater) ctx.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+		public ContactListCursorAdapter(final Context ctx, final Cursor c,
+				int flags) {
+			super(ctx, c, flags);
+			mInflater = (LayoutInflater) ctx
+					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		}
 
-		/* (non-Javadoc)
-		 * @see android.widget.CursorAdapter#newView(android.content.Context, android.database.Cursor, android.view.ViewGroup)
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see android.widget.CursorAdapter#newView(android.content.Context,
+		 * android.database.Cursor, android.view.ViewGroup)
 		 */
 		@Override
 		public View newView(Context context, Cursor cursor, ViewGroup parent) {
-			View view = mInflater.inflate(R.layout.fragment_contact_adapter, parent, false);
-			CheckBox ck = (CheckBox) view.findViewById(R.id.checkboxContactList);
+			View view = mInflater.inflate(R.layout.fragment_contact_adapter,
+					parent, false);
+			CheckBox ck = (CheckBox) view
+					.findViewById(R.id.checkboxContactList);
 			ck.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-				
+
 				@Override
-				public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-					Integer id = (Integer) buttonView.getTag();
-					Log.d(TAG, "Click on checkbox item whose id is " + id);
+				public void onCheckedChanged(CompoundButton buttonView,
+						boolean isChecked) {
+					Mapping bean = (Mapping) buttonView.getTag();
+					Log.d(TAG, "Click on checkbox item whose id is " + bean._id);
+					bean._checked = isChecked;
 					// Map the value of the check to this id value in db
 					// Will replace the previous entry if exists
-					mListContactIds.put(id, isChecked);
+					mListContacts.put((int) bean._id, bean);
 				}
 			});
-			
-			ViewHolder holder = new ViewHolder();
-			holder.check = ck;
-			view.setTag(holder);
-			
+
+
 			return view;
 		}
 
-		/* (non-Javadoc)
-		 * @see android.widget.CursorAdapter#bindView(android.view.View, android.content.Context, android.database.Cursor)
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see android.widget.CursorAdapter#bindView(android.view.View,
+		 * android.content.Context, android.database.Cursor)
 		 */
 		@Override
 		public void bindView(View view, Context context, Cursor cursor) {
-			
-			ViewHolder holder = (ViewHolder) view.getTag();
-			CheckBox ckView = holder.check;
+
+			CheckBox ckView = (CheckBox) view.findViewById(R.id.checkboxContactList);
 			// Set checkbox caption
-			String name = cursor.getString(cursor.getColumnIndex(Contacts.DISPLAY_NAME_PRIMARY));
+			String name = cursor.getString(cursor
+					.getColumnIndex(Contacts.DISPLAY_NAME_PRIMARY));
 			ckView.setText(name);
 			// Save db id as a tag of the checkbox
-			int id = cursor.getInt(cursor.getColumnIndex(Contacts._ID));
-			ckView.setTag(id);
+			long id = cursor.getLong(cursor.getColumnIndex(Contacts._ID));
+			String lookupKey = cursor.getString(cursor.getColumnIndex(Contacts.LOOKUP_KEY));
+			Mapping cachedBean = mListContacts.get((int) id);
+			if (cachedBean == null) {
+				cachedBean = new Mapping(id,lookupKey,false);
+			}
+			// We store the cache object temporarily as a tag
+			// in order to retrieve it and save in the cache is selected
+			ckView.setTag(cachedBean);
 			// Set the check mark
-			ckView.setChecked(mListContactIds.get(id));
+			ckView.setChecked(cachedBean._checked );
 		}
-		
+
 	}
 
-	
 	public ContactListFragment() {
-		mListContactIds = new SparseBooleanArray(30);
+		mListContacts = new SparseArray<Mapping>(30);
 	}
 
 	/**
@@ -180,8 +224,11 @@ public class ContactListFragment extends ListFragment implements
 		return v;
 	}
 
-	/* (non-Javadoc)
-	 * @see android.app.Fragment#onCreateOptionsMenu(android.view.Menu, android.view.MenuInflater)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see android.app.Fragment#onCreateOptionsMenu(android.view.Menu,
+	 * android.view.MenuInflater)
 	 */
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -189,12 +236,14 @@ public class ContactListFragment extends ListFragment implements
 		super.onCreateOptionsMenu(menu, inflater);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see android.app.Fragment#onOptionsItemSelected(android.view.MenuItem)
 	 */
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		switch(item.getItemId()) {
+		switch (item.getItemId()) {
 		case R.id.action_validate_import_contact:
 			Log.d(TAG, "Click on validate import button");
 			importContacts();
@@ -202,58 +251,67 @@ public class ContactListFragment extends ListFragment implements
 		default:
 			return super.onOptionsItemSelected(item);
 		}
-		
+
 		return true;
 	}
-	
+
 	/**
-	 * Import contacts checked in the ListView
-	 * and transforms them into Contacts in a view to persisting them in db
+	 * Import contacts checked in the ListView and transforms them into Contacts
+	 * in a view to persisting them in db
 	 */
 	private void importContacts() {
-		Log.i(TAG, "Import and save contacts from address book");
-		// Transform into list so as to use CollectionUtils features
-		LinkedList<String> listIds = new LinkedList<String>();
-		for (int i=0; i < mListContactIds.size(); i++) {
-			int key = mListContactIds.keyAt(i);
-			boolean value = mListContactIds.valueAt(i);
-			// If contact is marked to import
-			if (value) {
-				listIds.add(String.valueOf(key));
-			}
-		}
-		// Build query
-		StringBuilder clauseWhere = new StringBuilder()
-		.append(Data.CONTACT_ID)
-		.append(" IN (")
-		.append(StringUtils.join(listIds, ','))
-		.append(")");
-		Log.v(TAG, "Clause where :" + clauseWhere);
-		// Query db
-		final String[] fields = {ContactsContract.CommonDataKinds.StructuredName.GIVEN_NAME, ContactsContract.CommonDataKinds.StructuredName.FAMILY_NAME};
-		Cursor c = getActivity().getContentResolver().query(Data.CONTENT_URI, fields, clauseWhere.toString(), null, null);
-		// Transform into Contacts
-		for (c.moveToFirst(); !c.isAfterLast(); c.moveToNext()) {
-			String name = c.getString(c.getColumnIndex(ContactsContract.CommonDataKinds.StructuredName.GIVEN_NAME));
-			Log.v(TAG, "Name: " + name);
-			String surname = c.getString(c.getColumnIndex(ContactsContract.CommonDataKinds.StructuredName.FAMILY_NAME));
-			Log.v(TAG, "Surname: " + surname);
-		}
-		c.close();
-	}
 
+		// Log.i(TAG, "Import and save contacts from address book");
+		// // Transform into list so as to use CollectionUtils features
+		// // Filter on contacts marked as to import
+		// LinkedList<String> listIds = new LinkedList<String>();
+		// for (int i=0; i < mListContactIds.size(); i++) {
+		// int key = mListContactIds.keyAt(i);
+		// boolean value = mListContactIds.valueAt(i);
+		// // If contact is marked to import
+		// if (value) {
+		// listIds.add(String.valueOf(key));
+		// }
+		// }
+		// // First iterate over the contact
+		// for (String id : listIds) {
+		// // Query db
+		// String[] fields = {Contacts._ID, Contacts.LOOKUP_KEY,
+		// Contacts.DISPLAY_NAME_PRIMARY, Contacts.HAS_PHONE_NUMBER};
+		// String whereContact = Contacts._ID + "= ?";
+		// String[] whereContactParams = new String[] {id};
+		// Cursor c =
+		// getActivity().getContentResolver().query(Contacts.CONTENT_URI,
+		// fields, whereContact, whereContactParams, null);
+		// for (c.moveToFirst(); !c.isAfterLast(); c.moveToNext()) {
+		// String displayName = c.getString(c.getColumnIndex(fields[2]));
+		// Log.v(TAG, "Get contact " + displayName);
+		// // Query name and surname
+		// fields = new String[]
+		// {ContactsContract.CommonDataKinds.StructuredName.GIVEN_NAME,
+		// ContactsContract.CommonDataKinds.StructuredName.FAMILY_NAME};
+		// whereContact = Data.MIMETYPE + "= ? AND " + Data.CONTACT_ID + "= ?";
+		// whereContactParams = new String[]
+		// {ContactsContract.CommonDataKinds.StructuredName.CONTENT_ITEM_TYPE,
+		// id};
+		// Cursor c2 =
+		// getActivity().getContentResolver().query(Data.CONTENT_URI, fields,
+		// whereContact, whereContactParams, null);
+		// for (c2.moveToFirst();!c2.isAfterLast(); c2.moveToNext()) {
+		// String name = c2.getString(c2.getColumnIndex(fields[0]));
+		// Log.v(TAG, "Name: " + name);
+		// String surname = c2.getString(c2.getColumnIndex(fields[1]));
+		// Log.v(TAG, "Surname: " + surname);
+		// }
+		// }
+		// c.close();
+		// }
+	}
 
 	// -----------------------------------------------------------------------------------------
 	// -- Implémentation LoaderCallbacks
 	// -----------------------------------------------------------------------------------------
-	
-	// columns requested from the database
-	private static final String[] PROJECTION = { Contacts._ID, // _ID is always
-																	// required
-				Contacts.DISPLAY_NAME_PRIMARY // that's what we want to display
-		};
-		
-		
+
 	@Override
 	public Loader<Cursor> onCreateLoader(int id, Bundle args) {
 
