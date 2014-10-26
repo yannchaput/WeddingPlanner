@@ -38,9 +38,10 @@ public class GuestActivity extends Activity implements OnGuestSelectedListener,
 		FragmentManager fgtMgr = getFragmentManager();
 		Fragment fgt = fgtMgr.findFragmentByTag(FragmentTags.TAG_FGT_GUESTLIST
 				.getValue());
-		// Test in case we recreate the activity because we switch to landscape mode
+		// Test in case we recreate the activity because we switch to landscape
+		// mode
 		// Then no need to recreate the fragment
-		if ( (fgt == null) ) {
+		if ((fgt == null)) {
 			getFragmentManager()
 					.beginTransaction()
 					.add(R.id.LayoutGuest, GuestListFragment.newInstance(),
@@ -143,12 +144,14 @@ public class GuestActivity extends Activity implements OnGuestSelectedListener,
 		Preconditions.checkArgument(!Strings.isNullOrEmpty(tag),
 				"Fragment tag passed is empty which is incorrect");
 
-		hideKeyboard(this);
+		if (!FragmentTags.TAG_FGT_IMPORTCONTACT.getValue().equals(tag))
+			hideKeyboard(this);
 
 		GuestsDao dao = DaoLocator.getInstance(getApplication()).get(
 				SERVICES.GUEST);
 
-		if (FragmentTags.TAG_FGT_CREATECONTACT.getValue().equals(tag)) {
+		if (FragmentTags.TAG_FGT_CREATECONTACT.getValue().equals(tag)
+				|| FragmentTags.TAG_FGT_IMPORTCONTACT.getValue().equals(tag)) {
 			Log.d(TAG, "Save contact in creation mode: " + bean);
 			dao.insert((Contact) bean);
 		} else if (FragmentTags.TAG_FGT_UPDATECONTACT.getValue().equals(tag)) {
@@ -158,7 +161,8 @@ public class GuestActivity extends Activity implements OnGuestSelectedListener,
 			dao.update(bean.getId(), (Contact) bean);
 		}
 		// Replace add contact fragment by list fragment
-		replaceFragment(this, FragmentTags.TAG_FGT_GUESTLIST);
+		if (!FragmentTags.TAG_FGT_IMPORTCONTACT.getValue().equals(tag))
+			replaceFragment(this, FragmentTags.TAG_FGT_GUESTLIST);
 		Log.d(TAG, "Contact saved: " + bean);
 	}
 

@@ -3,15 +3,21 @@
  */
 package com.innovention.weddingplanner;
 
+import static com.innovention.weddingplanner.utils.WeddingPlannerHelper.replaceFragment;
+
 import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.LinkedList;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 
-import com.google.android.gms.wearable.NodeApi.GetConnectedNodesResult;
+import com.innovention.weddingplanner.Constantes.FragmentTags;
+import com.innovention.weddingplanner.ContactFragment.OnValidateContactListener;
+import com.innovention.weddingplanner.bean.Contact;
+import com.innovention.weddingplanner.utils.WeddingPlannerHelper;
 
+
+
+import android.app.Activity;
 import android.app.ListFragment;
 import android.app.LoaderManager.LoaderCallbacks;
 import android.content.Context;
@@ -22,7 +28,9 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.provider.ContactsContract.CommonDataKinds.Email;
+import android.provider.ContactsContract.CommonDataKinds.Phone;
 import android.provider.ContactsContract.CommonDataKinds.StructuredName;
+import android.provider.ContactsContract.CommonDataKinds.StructuredPostal;
 import android.provider.ContactsContract.Contacts;
 import android.provider.ContactsContract.Data;
 import android.util.Log;
@@ -33,10 +41,13 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.CursorAdapter;
+import android.widget.Toast;
 
 /**
  * Fragment which displays a list of contacts stored in the cloud/phone so as to
@@ -52,8 +63,18 @@ public class ContactListFragment extends ListFragment implements
 	private static final String TAG = ContactListFragment.class.getSimpleName();
 	// LoaderCallback ids
 	private static final int QUERY_LIST_ID = 1;
-	private static final int QUERY_DETAIL_ID = 2;
+	private static final int QUERY_DETAIL_NAMES_ID = 2;
 
+	/**
+	 * Activity listens to create contact events
+	 */
+	private OnValidateContactListener mListener;
+	
+	/**
+	 * Bouton fin de l'import
+	 */
+	private Button okButton;
+	
 	/**
 	 * ListView cursorAdapter
 	 */
@@ -66,17 +87,24 @@ public class ContactListFragment extends ListFragment implements
 	private SparseArray<Mapping> mListContacts;
 
 	// columns requested from the database for query list
-	private static final String[] PROJECTION_QUERY_LIST = { Contacts._ID, // _ID is always
-																// required
-			Contacts.LOOKUP_KEY, Contacts.DISPLAY_NAME_PRIMARY // that's what we
-																// want to
-																// display
-	};
-	// columns requested from the database for query contact details
-	private static final String[] PROJECTION_QUERY_DETAILS = { StructuredName.GIVEN_NAME,
-		StructuredName.FAMILY_NAME, Email.ADDRESS
+	private static final String[] PROJECTION_QUERY_LIST = { ContactsContract.Contacts._ID, 
+		ContactsContract.Contacts.LOOKUP_KEY, ContactsContract.Contacts.DISPLAY_NAME_PRIMARY 
 	};
 	
+	// columns requested from the database for query contact details
+	private static final String[] PROJECTION_QUERY_DETAIL_NAMES = { StructuredName.LOOKUP_KEY, StructuredName.GIVEN_NAME,
+		StructuredName.FAMILY_NAME
+	};
+	private static final String[] PROJECTION_QUERY_DETAIL_EMAIL = { Email.ADDRESS
+	};
+	private static final String[] PROJECTION_QUERY_DETAIL_PHONE = { Phone.NUMBER
+	};
+	private static final String[] PROJECTION_QUERY_DETAIL_ADDRESS = { StructuredPostal.FORMATTED_ADDRESS
+	};
+	
+	/**
+	 * Where clause for cursor loader queries
+	 */
 	private String mSelectionDetail;
 	/**
 	 * Where clause arguments for contact details
@@ -167,17 +195,18 @@ public class ContactListFragment extends ListFragment implements
 		public void bindView(View view, Context context, Cursor cursor) {
 
 			CheckBox ckView = (CheckBox) view.findViewById(R.id.checkboxContactList);
-			// Set checkbox caption
+			
 			String name = cursor.getString(cursor
-					.getColumnIndex(Contacts.DISPLAY_NAME_PRIMARY));
-			ckView.setText(name);
+					.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME_PRIMARY));
 			// Save db id as a tag of the checkbox
-			long id = cursor.getLong(cursor.getColumnIndex(Contacts._ID));
-			String lookupKey = cursor.getString(cursor.getColumnIndex(Contacts.LOOKUP_KEY));
+			long id = cursor.getLong(cursor.getColumnIndex(ContactsContract.Contacts._ID));
+			String lookupKey = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.LOOKUP_KEY));
 			Mapping cachedBean = mListContacts.get((int) id);
 			if (cachedBean == null) {
 				cachedBean = new Mapping(id,lookupKey,false);
 			}
+			// Set checkbox caption
+			ckView.setText(name);
 			// We store the cache object temporarily as a tag
 			// in order to retrieve it and save in the cache is selected
 			ckView.setTag(cachedBean);
@@ -234,6 +263,17 @@ public class ContactListFragment extends ListFragment implements
 				false);
 		// Necessary to set the menu visible for fragment
 		setHasOptionsMenu(true);
+		
+		okButton = (Button) v.findViewById(R.id.contactImportButtonOK);
+		okButton.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				WeddingPlannerHelper.replaceFragment(ContactListFragment.this.getActivity(), FragmentTags.TAG_FGT_GUESTLIST);
+				
+			}
+		});
+		okButton.setEnabled(false);
 
 		return v;
 	}
@@ -268,6 +308,25 @@ public class ContactListFragment extends ListFragment implements
 
 		return true;
 	}
+	
+	@Override
+	public void onAttach(Activity activity) {
+		// TODO Auto-generated method stub
+		super.onAttach(activity);
+		try {
+			mListener = (OnValidateContactListener) activity;
+		} catch (ClassCastException e) {
+			throw new ClassCastException(activity.toString()
+					+ " must implement OnValidateContactListener");
+		}
+	}
+
+	@Override
+	public void onDetach() {
+		// TODO Auto-generated method stub
+		super.onDetach();
+		mListener = null;
+	}
 
 	/**
 	 * Import contacts checked in the ListView and transforms them into Contacts
@@ -278,7 +337,6 @@ public class ContactListFragment extends ListFragment implements
 		Log.i(TAG, "Import and save contacts from address book");
 		
 		Mapping bean = null;
-		//mSelectionDetailArgs = new String[mListContacts.size()+1];
 		ArrayList<String> listWhereArgs = new ArrayList<String>();
 		StringBuilder whereClause = new StringBuilder();
 		whereClause.append(Data.LOOKUP_KEY).append(" IN (");
@@ -288,7 +346,6 @@ public class ContactListFragment extends ListFragment implements
 			if (bean != null && bean._checked && bean._id != -1
 					&& !StringUtils.isEmpty(bean._lookupKey)) {
 					whereClause.append("?,");
-				//mSelectionDetailArgs[i] = bean._lookupKey;
 				listWhereArgs.add(bean._lookupKey);
 			}
 		}
@@ -296,35 +353,92 @@ public class ContactListFragment extends ListFragment implements
 		whereClause.append(")");
 		whereClause.append(" AND ").append(Data.MIMETYPE).append(" = ?");
 		mSelectionDetail = whereClause.toString();
-		//mSelectionDetailArgs[i] = StructuredName.CONTENT_ITEM_TYPE;
 		listWhereArgs.add(StructuredName.CONTENT_ITEM_TYPE);
 		mSelectionDetailArgs = listWhereArgs.toArray(new String[listWhereArgs.size()]);
 		Log.v(TAG, "Where clause = " + mSelectionDetail);
 		Log.v(TAG, "Lookup keys: " + ArrayUtils.toString(mSelectionDetailArgs));
-		// Get contact details
-		getLoaderManager().restartLoader(QUERY_DETAIL_ID, null, this);
+		
+		// Then load the contacts in background
+		getLoaderManager().restartLoader(QUERY_DETAIL_NAMES_ID, null, this);
 		// Results are received in onLoadReset method
 	}
 	
-	private void processImportContacts(final Cursor data) {
+	/**
+	 * Process retrieved contacts and store them in db
+	 * as guests
+	 * @param data cursor of contacts
+	 */
+	private void processContacts(final Cursor data) {
 		
+		String lookupKey = "";
 		String name = "";
 		String surname = "";
-		String email = "";
+		String eMail = "";
+		String phone = "";
+		String address = "";
+		Contact bean = null;
 		Log.v(TAG, "Get a cursor of contacts with size " + data.getCount());
 		for (data.moveToFirst();!data.isAfterLast();data.moveToNext()) {
 			Log.i(TAG, "Process contact:");
+			lookupKey = data.getString(data.getColumnIndex(StructuredName.LOOKUP_KEY));
+			Log.i(TAG, "Lookup key : " + lookupKey);
 			name = data.getString(data.getColumnIndex(StructuredName.GIVEN_NAME));
 			Log.i(TAG, "Name : " + name);
 			surname = data.getString(data.getColumnIndex(StructuredName.FAMILY_NAME));
-			Log.i(TAG, "Name : " + surname);
-			email = data.getString(data.getColumnIndex(Email.ADDRESS));
-			Log.i(TAG, "EMail : " + email);
+			Log.i(TAG, "Surname : " + surname);
+			// Get email
+			StringBuilder selection = new StringBuilder().append(Data.LOOKUP_KEY).append(" = ?")
+					.append(" AND ").append(Data.MIMETYPE).append(" = ?");
+			String[] selArgs = {lookupKey, Email.CONTENT_ITEM_TYPE};
+			Cursor c = getActivity().getContentResolver().query(Data.CONTENT_URI, PROJECTION_QUERY_DETAIL_EMAIL, selection.toString(), selArgs, null);
+			Log.v(TAG, "Size of cursor of mail: " + c.getCount());
+			// We only take one mail the first one
+			if (c.getCount() > 0) {
+				c.moveToFirst();
+				eMail = c.getString(c.getColumnIndex(Email.ADDRESS));
+				Log.i(TAG,"EMail : " + eMail);
+			}
+			// Get phone
+			selection = new StringBuilder().append(Data.LOOKUP_KEY).append(" = ?")
+					.append(" AND ").append(Data.MIMETYPE).append(" = ?");
+			selArgs = new String[] {lookupKey, Phone.CONTENT_ITEM_TYPE};
+			c = getActivity().getContentResolver().query(Data.CONTENT_URI, PROJECTION_QUERY_DETAIL_PHONE, selection.toString(), selArgs, null);
+			Log.v(TAG, "Size of cursor of phone: " + c.getCount());
+			// We only take one mail the first one
+			if (c.getCount() > 0) {
+				c.moveToFirst();
+				phone = c.getString(c.getColumnIndex(Phone.NUMBER));
+				Log.i(TAG,"Phone : " + phone);
+			}
+			// Get address (if available)
+			selection = new StringBuilder().append(Data.LOOKUP_KEY).append(" = ?")
+					.append(" AND ").append(Data.MIMETYPE).append(" = ?");
+			selArgs = new String[] {lookupKey, StructuredPostal.CONTENT_ITEM_TYPE};
+			c = getActivity().getContentResolver().query(Data.CONTENT_URI, PROJECTION_QUERY_DETAIL_ADDRESS, selection.toString(), selArgs, null);
+			Log.v(TAG, "Size of cursor of address: " + c.getCount());
+			// We only take one mail the first one
+			if (c.getCount() > 0) {
+				c.moveToFirst();
+				address = c.getString(c.getColumnIndex(StructuredPostal.FORMATTED_ADDRESS));
+				Log.i(TAG,"Address : " + address);
+			}
+			
+			// Save contact into db
+			bean = new Contact.ContactBuilder().name(name).surname(surname).mail(eMail).telephone(phone)
+			.address(address).build();
+			mListener.onValidateContact(bean, this.getTag());
 		}
+		
+		// Show notification
+		String msg = getString(R.string.contact_import_notification_message, data.getCount());
+		Toast.makeText(getActivity(), msg, Toast.LENGTH_LONG).show();
+		data.close();
+		okButton.setEnabled(true);
+		
 	}
 
 	// -----------------------------------------------------------------------------------------
-	// -- Implémentation LoaderCallbacks
+	// -- Implï¿½mentation LoaderCallbacks
 	// -----------------------------------------------------------------------------------------
 
 	@Override
@@ -335,15 +449,17 @@ public class ContactListFragment extends ListFragment implements
 		String[] projection = null;
 		String selection = null;
 		String[] selectionArgs = null;
+		String sortOrder = null;
 		switch (id) {
 		case QUERY_LIST_ID:
 		default:
-			contentUri = Contacts.CONTENT_URI;
+			contentUri = ContactsContract.Contacts.CONTENT_URI;
 			projection = PROJECTION_QUERY_LIST;
+			sortOrder = ContactsContract.Contacts.DISPLAY_NAME_PRIMARY;
 			break;
-		case QUERY_DETAIL_ID:
+		case QUERY_DETAIL_NAMES_ID:
 			contentUri = Data.CONTENT_URI;
-			projection = PROJECTION_QUERY_DETAILS;
+			projection = PROJECTION_QUERY_DETAIL_NAMES;
 			selection = mSelectionDetail;
 			selectionArgs = mSelectionDetailArgs;
 		}
@@ -351,7 +467,7 @@ public class ContactListFragment extends ListFragment implements
 		// no sub-selection, no sort order, simply every row
 		// projection says we want just the _id and the name column
 		return new CursorLoader(getActivity(), contentUri, projection, selection,
-				selectionArgs, null);
+				selectionArgs, sortOrder);
 	}
 
 	@Override
@@ -362,9 +478,9 @@ public class ContactListFragment extends ListFragment implements
 			// Once cursor is loaded, give it to adapter
 			mAdapter.swapCursor(data);
 			break;
-		case QUERY_DETAIL_ID:
+		case QUERY_DETAIL_NAMES_ID:
 			Log.v(TAG, "Get loader result for query contact details");
-			processImportContacts(data);
+			processContacts(data);
 		}
 		
 	}
@@ -377,7 +493,8 @@ public class ContactListFragment extends ListFragment implements
 			// on reset take any old cursor away
 			mAdapter.swapCursor(null);
 			break;
-		case QUERY_DETAIL_ID:
+		case QUERY_DETAIL_NAMES_ID:
 		}
 	}
+
 }

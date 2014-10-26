@@ -55,6 +55,7 @@
         <item>Import</item>
     </string-array>
     <string name="action_validate_import_contact">OK</string>
+     <string name="action_finish_import">I\'m done</string>
 
     <!-- Task activity -->
     <string name="title_activity_task">Tasks</string>
@@ -149,6 +150,7 @@
 
     <!-- Notifications -->
     <string name="task_notification_title">Reminder</string>
+    <string name="contact_import_notification_message">%1$d contacts were imported</string>
 
     <!-- Vendors -->
     <string name="title_activity_vendor">Vendors</string>

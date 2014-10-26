@@ -146,13 +146,21 @@ public class Contact implements IDtoBean {
 		}
 		
 		private ResponseType getEnumValue() {
-			if (attend == null) return null;
+			if (attend == null) return ResponseType.PENDING;
 			else if(attend.booleanValue()) return ResponseType.ATTEND;
 			else if (notAttend.booleanValue()) return ResponseType.NOTATTEND;
 			else return ResponseType.PENDING;
 		}
 		
 	}
+	
+	/**
+	 * Default constructor
+	 */
+	public Contact() {
+		
+	}
+	
 	
 	/**
 	 * Constructor (from a builder object)
