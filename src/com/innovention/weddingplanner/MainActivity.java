@@ -135,6 +135,14 @@ public class MainActivity extends Activity {
 				Toast.makeText(this, R.string.item_recreateDb_failed_toast, Toast.LENGTH_LONG).show();
 			}
 			return true;
+		case R.id.action_resetDb:
+			try {
+				locator.getDbHelper().resetDb(locator.getDbHelper().getWritableDatabase());
+				Toast.makeText(this, R.string.item_recreateDb_toast, Toast.LENGTH_LONG).show();
+			} catch (TechnicalException e) {
+				Toast.makeText(this, R.string.item_recreateDb_failed_toast, Toast.LENGTH_LONG).show();
+			}
+			return true;
 		default:
 			return super.onOptionsItemSelected(item);
 		}

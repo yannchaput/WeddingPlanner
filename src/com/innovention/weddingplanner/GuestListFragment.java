@@ -47,7 +47,7 @@ import com.innovention.weddingplanner.utils.WeddingPlannerHelper;
  * interface.
  */
 public class GuestListFragment extends Fragment implements
-		AbsListView.OnItemLongClickListener, Refreshable {
+		AbsListView.OnItemClickListener, Refreshable {
 
 	private final static String TAG = GuestListFragment.class.getSimpleName();
 
@@ -326,7 +326,7 @@ public class GuestListFragment extends Fragment implements
 		((AdapterView<ListAdapter>) mListView).setAdapter(mAdapter);
 
 		// Set OnItemClickListener so we can be notified on item clicks
-		mListView.setOnItemLongClickListener(this);
+		mListView.setOnItemClickListener(this);
 
 		// Set empty view
 		mListView.setEmptyView(view.findViewById(R.id.empty));
@@ -383,14 +383,14 @@ public class GuestListFragment extends Fragment implements
 	 * @return
 	 */
 	@Override
-	public boolean onItemLongClick(AdapterView<?> parent, View view,
+	public void onItemClick(AdapterView<?> parent, View view,
 			int position, long id) {
 
 		Log.v(TAG, "onItemLongClick - Long click on item id " + id);
 		Log.v(TAG, "onItemLongClick - Long click on item position " + position);
 
 		if ((null == mListener) || (mActionMode != null)) {
-			return false;
+			return;
 		}
 
 		// Starts the CAB using the ActionMode.Callbakc defined above
@@ -398,9 +398,6 @@ public class GuestListFragment extends Fragment implements
 		((GuestCursorAdapter) mAdapter).currentSelectionPos = position;
 		((GuestCursorAdapter) mAdapter).currentSelectionId = id;
 		view.setSelected(true);
-
-		// consume the event
-		return true;
 	}
 
 	/**

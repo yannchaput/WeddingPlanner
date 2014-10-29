@@ -20,7 +20,8 @@
 
     <!-- settings -->
     <string name="action_settings">Settings</string>
-    <string name="item_recreateDb_action">Data reset</string>
+    <string name="item_recreateDb_action">Rebuild database</string>
+    <string name="item_resetDb_action">Reset database</string>
     <string name="item_recreateDb_toast">Thank you to restart the application</string>
     <string name="item_recreateDb_failed_toast">An error occurred. Data were not restored successfully</string>
 
@@ -124,7 +125,8 @@
     <string name="vendor_mandatory_validator_message">Company name is mandatory. Can you provide one please?</string>
     <string name="budget_alert_dialog_title">Information missing</string>
     <string name="budget_mandatory_validator_message">Caption, vendor name, amount are mandatory fields. Can you provide them please?</string>
-
+	<string name="import_contact_validator_message">Several contacts were partially imported because of information are missing</string>
+    
     <!-- Autres -->
     <string name="placeholder">placeholder</string>
     <string name="empty">Empty</string>
@@ -135,7 +137,7 @@
     <string name="delete_guest_OK_alert_dialog_title">Delete successful</string>
     <string name="delete_guest_0_alert_message">No data available for this guest in database.</string>
     <string name="delete_guest_multiple_alert_message">More than one record were found for the selected guest.</string>
-    <string name="delete_guest_OK_alert_message">Contact was sucessfully removed from the list!</string>
+    <string name="delete_guest_OK_alert_message">Contact was successfully removed from the list!</string>
     <string name="update_task_alert_dialog_title">Update error</string>
     <string name="update_task_OK_alert_dialog_title">Update succesful</string>
     <string name="update_task_0_alert_message">No data available for the selected task.</string>

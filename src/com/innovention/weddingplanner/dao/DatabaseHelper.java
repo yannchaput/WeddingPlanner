@@ -80,6 +80,11 @@ public final class DatabaseHelper extends SQLiteOpenHelper {
 		createDb(db);
 		transferData(db, backup);
 	}
+	
+	public void resetDb(SQLiteDatabase db) throws TechnicalException {
+		dropDb(db);
+		createDb(db);
+	}
 
 	/**
 	 * Backup the db in order to transfer data after an upgrade

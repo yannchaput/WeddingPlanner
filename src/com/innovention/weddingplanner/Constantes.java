@@ -2,7 +2,7 @@ package com.innovention.weddingplanner;
 
 public interface Constantes {
 	
-	Boolean DEBUG = Boolean.TRUE;
+	Boolean DEBUG = Boolean.FALSE;
 	
 	/**
 	 * List of tags to identify fragments. Also serves to identify the mode

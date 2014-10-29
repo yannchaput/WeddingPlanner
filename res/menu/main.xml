@@ -8,5 +8,8 @@
     <item android:id="@+id/action_recreateDb"
           android:title="@string/item_recreateDb_action"
           android:showAsAction="never"/>
+    <item android:id="@+id/action_resetDb"
+          android:title="@string/item_resetDb_action"
+          android:showAsAction="never"/>
 
 </menu>
