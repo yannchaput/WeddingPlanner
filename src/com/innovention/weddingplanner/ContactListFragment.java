@@ -351,9 +351,13 @@ public class ContactListFragment extends ListFragment implements
 		}
 		whereClause.deleteCharAt(whereClause.length()-1);
 		whereClause.append(")");
-		whereClause.append(" AND ").append(Data.MIMETYPE).append(" = ?");
+		whereClause.append(" AND ").append(" ( ").append(" ( ")
+		.append(Data.MIMETYPE).append(" = ?").append(" ) ")
+		.append(" OR ").append(" ( ").append(Data.MIMETYPE).append(" = ?")
+		.append(" ) ").append(" ) ");
 		mSelectionDetail = whereClause.toString();
 		listWhereArgs.add(StructuredName.CONTENT_ITEM_TYPE);
+		listWhereArgs.add(Email.CONTENT_ITEM_TYPE);
 		mSelectionDetailArgs = listWhereArgs.toArray(new String[listWhereArgs.size()]);
 		Log.v(TAG, "Where clause = " + mSelectionDetail);
 		Log.v(TAG, "Lookup keys: " + ArrayUtils.toString(mSelectionDetailArgs));
