@@ -47,7 +47,7 @@ import com.innovention.weddingplanner.utils.WeddingPlannerHelper;
  * interface.
  */
 public class GuestListFragment extends Fragment implements
-		AbsListView.OnItemLongClickListener {
+		AbsListView.OnItemLongClickListener, Refreshable {
 
 	private final static String TAG = GuestListFragment.class.getSimpleName();
 
@@ -61,7 +61,7 @@ public class GuestListFragment extends Fragment implements
 	private String mParam2;
 
 	private OnGuestSelectedListener mListener;
-	
+
 	/**
 	 * Ad widget
 	 */
@@ -264,20 +264,23 @@ public class GuestListFragment extends Fragment implements
 	public void onResume() {
 		// TODO Auto-generated method stub
 		super.onResume();
-		if (adView != null) adView.resume();
+		if (adView != null)
+			adView.resume();
 	}
 
 	@Override
 	public void onPause() {
 		// TODO Auto-generated method stub
 		super.onPause();
-		if (adView != null) adView.pause();
+		if (adView != null)
+			adView.pause();
 	}
 
 	@Override
 	public void onDestroy() {
 		// TODO Auto-generated method stub
-		if (adView != null) adView.destroy();
+		if (adView != null)
+			adView.destroy();
 		super.onDestroy();
 	}
 
@@ -299,9 +302,9 @@ public class GuestListFragment extends Fragment implements
 
 		// TODO Use a CursorLoader
 		mAdapter = new GuestCursorAdapter(getActivity(),
-				R.layout.fragment_guest_adapter, c, new String[] {
-						COL_SURNAME, COL_NAME }, new int[] {
-						R.id.itemGuestSurname, R.id.itemGuestName }, 1);
+				R.layout.fragment_guest_adapter, c, new String[] { COL_SURNAME,
+						COL_NAME }, new int[] { R.id.itemGuestSurname,
+						R.id.itemGuestName }, 1);
 
 		// mAdapter = new SimpleCursorAdapter(getActivity(),
 		// R.layout.fragment_contact_list, c,
@@ -312,7 +315,8 @@ public class GuestListFragment extends Fragment implements
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		View view = inflater.inflate(R.layout.fragment_guest_list, container, false);
+		View view = inflater.inflate(R.layout.fragment_guest_list, container,
+				false);
 
 		// Necessary to set the menu visible for fragment
 		setHasOptionsMenu(true);
@@ -336,8 +340,8 @@ public class GuestListFragment extends Fragment implements
 		layoutAd.addView(adView);
 
 		// Initiez une demande générique.
-		AdRequest adRequest = WeddingPlannerHelper
-				.buildAdvert(this.getActivity(),Constantes.DEBUG);
+		AdRequest adRequest = WeddingPlannerHelper.buildAdvert(
+				this.getActivity(), Constantes.DEBUG);
 
 		// Chargez l'objet adView avec la demande d'annonce.
 		adView.loadAd(adRequest);
@@ -410,6 +414,20 @@ public class GuestListFragment extends Fragment implements
 		if (emptyText instanceof TextView) {
 			((TextView) emptyView).setText(emptyText);
 		}
+	}
+
+	/**
+	 * Refreshes the content of the list when invoked
+	 */
+	@Override
+	public void refresh() {
+		// Refresh list view
+		Cursor c = DaoLocator
+				.getInstance(getActivity().getApplicationContext())
+				.get(SERVICES.GUEST).getCursor();
+		GuestCursorAdapter adapter = (GuestCursorAdapter) mAdapter;
+		adapter.changeCursor(c);
+		adapter.notifyDataSetChanged();
 	}
 
 }

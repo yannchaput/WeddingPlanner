@@ -193,7 +193,14 @@ public final class WeddingPlannerHelper {
 		switch (tag) {
 		case TAG_FGT_GUESTLIST:
 			fgt = parent.getFragmentManager().findFragmentByTag(tag.getValue());
-			if (null == fgt) fgt = GuestListFragment.newInstance();
+			if (null == fgt) {
+				Log.v(TAG, "Create new GuestListFragment instance");
+				fgt = GuestListFragment.newInstance();
+			}
+			else {
+				Log.v(TAG, "Reuse existing GuestListFragment instance");
+				((GuestListFragment) fgt).refresh();
+			}
 			resId = R.id.LayoutGuest;
 			break;
 		case TAG_FGT_CREATECONTACT:
