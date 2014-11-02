@@ -3,22 +3,17 @@
  */
 package com.innovention.weddingplanner;
 
-import static com.innovention.weddingplanner.utils.WeddingPlannerHelper.replaceFragment;
-import static com.innovention.weddingplanner.utils.WeddingPlannerHelper.showAlert;
-
 import java.util.ArrayList;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
-
-import com.innovention.weddingplanner.Constantes.FragmentTags;
-import com.innovention.weddingplanner.ContactFragment.OnValidateContactListener;
-import com.innovention.weddingplanner.bean.Contact;
-import com.innovention.weddingplanner.exception.IncorrectMailException;
-import com.innovention.weddingplanner.exception.IncorrectTelephoneException;
-import com.innovention.weddingplanner.exception.MissingMandatoryFieldException;
-import com.innovention.weddingplanner.exception.WeddingPlannerException;
-import com.innovention.weddingplanner.utils.WeddingPlannerHelper;
 
 import android.app.Activity;
 import android.app.ListFragment;
@@ -29,28 +24,33 @@ import android.content.Loader;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.ContactsContract;
 import android.provider.ContactsContract.CommonDataKinds.Email;
 import android.provider.ContactsContract.CommonDataKinds.Phone;
 import android.provider.ContactsContract.CommonDataKinds.StructuredName;
 import android.provider.ContactsContract.CommonDataKinds.StructuredPostal;
-import android.provider.ContactsContract.Contacts;
 import android.provider.ContactsContract.Data;
 import android.util.Log;
 import android.util.SparseArray;
-import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.CursorAdapter;
+import android.widget.ProgressBar;
 import android.widget.Toast;
+
+import com.innovention.weddingplanner.Constantes.FragmentTags;
+import com.innovention.weddingplanner.ContactFragment.OnValidateContactListener;
+import com.innovention.weddingplanner.bean.Contact;
+import com.innovention.weddingplanner.exception.WeddingPlannerException;
+import com.innovention.weddingplanner.utils.WeddingPlannerHelper;
 
 /**
  * Fragment which displays a list of contacts stored in the cloud/phone so as to
@@ -72,6 +72,11 @@ public class ContactListFragment extends ListFragment implements
 	 * Activity listens to create contact events
 	 */
 	private OnValidateContactListener mListener;
+
+	/**
+	 * Progress bar
+	 */
+	private ProgressBar bar;
 
 	/**
 	 * Bouton fin de l'import
@@ -281,6 +286,9 @@ public class ContactListFragment extends ListFragment implements
 		});
 		okButton.setEnabled(false);
 
+		bar = (ProgressBar) v.findViewById(R.id.contactImportProgress);
+		bar.setVisibility(View.GONE);
+
 		return v;
 	}
 
@@ -369,6 +377,8 @@ public class ContactListFragment extends ListFragment implements
 		Log.v(TAG, "Where clause = " + mSelectionDetail);
 		Log.v(TAG, "Lookup keys: " + ArrayUtils.toString(mSelectionDetailArgs));
 
+		// Show progress bar
+		bar.setVisibility(View.VISIBLE);
 		// Then load the contacts in background
 		getLoaderManager().restartLoader(QUERY_DETAIL_NAMES_ID, null, this);
 		// Results are received in onLoadReset method
@@ -381,102 +391,130 @@ public class ContactListFragment extends ListFragment implements
 	 *            cursor of contacts
 	 */
 	private void processContacts(final Cursor data) {
+
+		final Handler handler = new Handler();
+
+		// Do the process in another thread so that the gui queue is not impeded
+		Runnable taskDesc = new Runnable() {
+
+			@Override
+			public void run() {
+				// TODO Auto-generated method stub
+				Contact bean = null;
+				final String msg;
+				boolean hasErrors = false;
+				short count = 0;
+				Log.v(TAG,
+						"Get a cursor of contacts with size " + data.getCount());
+				for (data.moveToFirst(); !data.isAfterLast(); data.moveToNext()) {
+					String lookupKey = "";
+					String name = "";
+					String surname = "";
+					String eMail = "";
+					String phone = "";
+					String address = "";
+					Log.i(TAG, "Process contact:");
+					lookupKey = data.getString(data
+							.getColumnIndex(StructuredName.LOOKUP_KEY));
+					Log.i(TAG, "Lookup key : " + lookupKey);
+					name = data.getString(data
+							.getColumnIndex(StructuredName.GIVEN_NAME));
+					Log.i(TAG, "Name : " + name);
+					surname = data.getString(data
+							.getColumnIndex(StructuredName.FAMILY_NAME));
+					Log.i(TAG, "Surname : " + surname);
+					// Get email
+					StringBuilder selection = new StringBuilder()
+							.append(Data.LOOKUP_KEY).append(" = ?")
+							.append(" AND ").append(Data.MIMETYPE)
+							.append(" = ?");
+					String[] selArgs = { lookupKey, Email.CONTENT_ITEM_TYPE };
+					Cursor c = getActivity().getContentResolver().query(
+							Data.CONTENT_URI, PROJECTION_QUERY_DETAIL_EMAIL,
+							selection.toString(), selArgs, null);
+					Log.v(TAG, "Size of cursor of mail: " + c.getCount());
+					// We only take one mail the first one
+					if (c.getCount() > 0) {
+						c.moveToFirst();
+						eMail = c.getString(c.getColumnIndex(Email.ADDRESS));
+						Log.i(TAG, "EMail : " + eMail);
+					}
+					// Get phone
+					selection = new StringBuilder().append(Data.LOOKUP_KEY)
+							.append(" = ?").append(" AND ")
+							.append(Data.MIMETYPE).append(" = ?");
+					selArgs = new String[] { lookupKey, Phone.CONTENT_ITEM_TYPE };
+					c = getActivity().getContentResolver().query(
+							Data.CONTENT_URI, PROJECTION_QUERY_DETAIL_PHONE,
+							selection.toString(), selArgs, null);
+					Log.v(TAG, "Size of cursor of phone: " + c.getCount());
+					// We only take one mail the first one
+					if (c.getCount() > 0) {
+						c.moveToFirst();
+						phone = c.getString(c.getColumnIndex(Phone.NUMBER));
+						Log.i(TAG, "Phone : " + phone);
+					}
+					// Get address (if available)
+					selection = new StringBuilder().append(Data.LOOKUP_KEY)
+							.append(" = ?").append(" AND ")
+							.append(Data.MIMETYPE).append(" = ?");
+					selArgs = new String[] { lookupKey,
+							StructuredPostal.CONTENT_ITEM_TYPE };
+					c = getActivity().getContentResolver().query(
+							Data.CONTENT_URI, PROJECTION_QUERY_DETAIL_ADDRESS,
+							selection.toString(), selArgs, null);
+					Log.v(TAG, "Size of cursor of address: " + c.getCount());
+					// We only take one mail the first one
+					if (c.getCount() > 0) {
+						c.moveToFirst();
+						address = c
+								.getString(c
+										.getColumnIndex(StructuredPostal.FORMATTED_ADDRESS));
+						Log.i(TAG, "Address : " + address);
+					}
+
+					// Save contact into db
+					bean = new Contact.ContactBuilder().name(name)
+							.surname(surname).mail(eMail).telephone(phone)
+							.address(address).build();
+					try {
+						bean.validate(ContactListFragment.this.getActivity());
+					} catch (WeddingPlannerException e) {
+						hasErrors = true;
+						continue;
+					}
+					mListener.onValidateContact(bean,
+							ContactListFragment.this.getTag());
+					++count;
+				}
+
+				// Show notification
+				if (!hasErrors) {
+					msg = getString(
+							R.string.contact_import_notification_message, count);
+
+				} else {
+					msg = getString(R.string.import_contact_validator_message);
+				}
+
+				handler.post(new Runnable() {
+
+					@Override
+					public void run() {
+						bar.setVisibility(View.GONE);
+						Toast.makeText(getActivity(), msg, Toast.LENGTH_LONG)
+								.show();
+						okButton.setEnabled(true);
+
+					}
+				});
+				data.close();
+			}
+		};
+
+		ExecutorService executor = Executors.newSingleThreadExecutor();
+		executor.submit(taskDesc);
 		
-		Contact bean = null;
-		boolean hasErrors = false;
-		short count = 0;
-		Log.v(TAG, "Get a cursor of contacts with size " + data.getCount());
-		for (data.moveToFirst(); !data.isAfterLast(); data.moveToNext()) {
-			String lookupKey = "";
-			String name = "";
-			String surname = "";
-			String eMail = "";
-			String phone = "";
-			String address = "";
-			Log.i(TAG, "Process contact:");
-			lookupKey = data.getString(data
-					.getColumnIndex(StructuredName.LOOKUP_KEY));
-			Log.i(TAG, "Lookup key : " + lookupKey);
-			name = data.getString(data
-					.getColumnIndex(StructuredName.GIVEN_NAME));
-			Log.i(TAG, "Name : " + name);
-			surname = data.getString(data
-					.getColumnIndex(StructuredName.FAMILY_NAME));
-			Log.i(TAG, "Surname : " + surname);
-			// Get email
-			StringBuilder selection = new StringBuilder()
-					.append(Data.LOOKUP_KEY).append(" = ?").append(" AND ")
-					.append(Data.MIMETYPE).append(" = ?");
-			String[] selArgs = { lookupKey, Email.CONTENT_ITEM_TYPE };
-			Cursor c = getActivity().getContentResolver().query(
-					Data.CONTENT_URI, PROJECTION_QUERY_DETAIL_EMAIL,
-					selection.toString(), selArgs, null);
-			Log.v(TAG, "Size of cursor of mail: " + c.getCount());
-			// We only take one mail the first one
-			if (c.getCount() > 0) {
-				c.moveToFirst();
-				eMail = c.getString(c.getColumnIndex(Email.ADDRESS));
-				Log.i(TAG, "EMail : " + eMail);
-			}
-			// Get phone
-			selection = new StringBuilder().append(Data.LOOKUP_KEY)
-					.append(" = ?").append(" AND ").append(Data.MIMETYPE)
-					.append(" = ?");
-			selArgs = new String[] { lookupKey, Phone.CONTENT_ITEM_TYPE };
-			c = getActivity().getContentResolver().query(Data.CONTENT_URI,
-					PROJECTION_QUERY_DETAIL_PHONE, selection.toString(),
-					selArgs, null);
-			Log.v(TAG, "Size of cursor of phone: " + c.getCount());
-			// We only take one mail the first one
-			if (c.getCount() > 0) {
-				c.moveToFirst();
-				phone = c.getString(c.getColumnIndex(Phone.NUMBER));
-				Log.i(TAG, "Phone : " + phone);
-			}
-			// Get address (if available)
-			selection = new StringBuilder().append(Data.LOOKUP_KEY)
-					.append(" = ?").append(" AND ").append(Data.MIMETYPE)
-					.append(" = ?");
-			selArgs = new String[] { lookupKey,
-					StructuredPostal.CONTENT_ITEM_TYPE };
-			c = getActivity().getContentResolver().query(Data.CONTENT_URI,
-					PROJECTION_QUERY_DETAIL_ADDRESS, selection.toString(),
-					selArgs, null);
-			Log.v(TAG, "Size of cursor of address: " + c.getCount());
-			// We only take one mail the first one
-			if (c.getCount() > 0) {
-				c.moveToFirst();
-				address = c.getString(c
-						.getColumnIndex(StructuredPostal.FORMATTED_ADDRESS));
-				Log.i(TAG, "Address : " + address);
-			}
-
-			// Save contact into db
-			bean = new Contact.ContactBuilder().name(name).surname(surname)
-					.mail(eMail).telephone(phone).address(address).build();
-			try {
-				bean.validate(ContactListFragment.this.getActivity());
-			} catch (WeddingPlannerException e) {
-				hasErrors = true;
-				continue;
-			}
-			mListener.onValidateContact(bean, this.getTag());
-			++count;
-		}
-
-		// Show notification
-		String msg;
-		if (!hasErrors) {
-			msg = getString(
-					R.string.contact_import_notification_message,
-					count);
-			
-		} else {
-			msg = getString(R.string.import_contact_validator_message);
-		}
-		Toast.makeText(getActivity(), msg, Toast.LENGTH_LONG).show();
-		data.close();
-		okButton.setEnabled(true);
 
 	}
 
@@ -537,6 +575,7 @@ public class ContactListFragment extends ListFragment implements
 			mAdapter.swapCursor(null);
 			break;
 		case QUERY_DETAIL_NAMES_ID:
+			break;
 		}
 	}
 

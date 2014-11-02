@@ -217,8 +217,10 @@ public final class WeddingPlannerHelper {
 			resId = R.id.LayoutGuest;
 			break;
 		case TAG_FGT_IMPORTCONTACT:
-			fgt = parent.getFragmentManager().findFragmentByTag(tag.getValue());
-			if (null == fgt) fgt = ContactListFragment.newInstance();
+			//fgt = parent.getFragmentManager().findFragmentByTag(tag.getValue());
+			//if (null == fgt) fgt = ContactListFragment.newInstance();
+			// We recreate a new one in order not to keep old imported contact checks
+			fgt = ContactListFragment.newInstance();
 			resId = R.id.LayoutGuest;
 			break;
 		case TAG_FGT_CREATETASK:

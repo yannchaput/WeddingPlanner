@@ -29,6 +29,7 @@
     <string name="action_add_contact">Add guest</string>
     <string name="action_delete_contact">Remove guest</string>
     <string name="action_update_contact">Update guest</string>
+    <string name="action_call_contact">Call guest</string>
 
     <!-- Contact form -->
     <string name="contact_field_surname">Name</string>

@@ -29,6 +29,7 @@
     <string name="action_add_contact">Ajouter invité</string>
     <string name="action_delete_contact">Supprimer invité</string>
     <string name="action_update_contact">Modifier invité</string>
+    <string name="action_call_contact">Appeler invité</string>
 
     <!-- Contact form -->
     <string name="contact_field_surname">Nom</string>

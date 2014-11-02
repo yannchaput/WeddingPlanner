@@ -146,6 +146,9 @@ public class GuestListFragment extends Fragment implements
 				// close the CAB
 				mode.finish();
 				return true;
+			case R.id.action_call_contact:
+				mode.finish();
+				return true;
 			default:
 				return false;
 			}
