@@ -51,6 +51,11 @@ public class TaskAlarmService extends Service {
 		
 		TasksDao dao = DaoLocator.getInstance(this).get(
 				SERVICES.TASK);
+		
+		// Correction du plantage ANR 17-11-2014
+		if (intent.getAction() == null) {
+			return super.onStartCommand(intent, flags, startId);
+		}
 
 		// Schedules tasks
 		if (Constantes.TASK_SCHEDULE_NOTIF_ACTION.equals(intent.getAction())) {

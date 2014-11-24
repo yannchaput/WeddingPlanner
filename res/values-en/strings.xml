@@ -21,7 +21,7 @@
     <!-- settings -->
     <string name="action_settings">Settings</string>
     <string name="item_recreateDb_action">Rebuild database</string>
-    <string name="item_resetDb_action">Reset database</string>
+    <string name="item_resetDb_action">Erase database</string>
     <string name="item_recreateDb_toast">Thank you to restart the application</string>
     <string name="item_recreateDb_failed_toast">An error occurred. Data were not restored successfully</string>
 
@@ -30,6 +30,12 @@
     <string name="action_delete_contact">Remove guest</string>
     <string name="action_update_contact">Update guest</string>
     <string name="action_call_contact">Call guest</string>
+    <string name="action_mail_contact">Email to guest</string>
+    
+    <!-- Contact mail -->
+    <string name="contact_mail_subject">Wedding invitation</string>
+    <string name="contact_mail_message">Hello there!\n We\'re getting married the %1$s. And we\'ll be very happy if you could come.</string>
+    <string name="contact_mail_provider">Choix du client mail:</string>
 
     <!-- Contact form -->
     <string name="contact_field_surname">Name</string>
@@ -150,6 +156,8 @@
     <string name="delete_vendor_OK_alert_message">Vendor was sucessfully removed from the list!</string>
     <string name="inconsistent_paid_amount">Paid amount can not be greater than due amount.</string>
     <string name="delete_budget_OK_alert_message">Budget item removed from the list!</string>
+    <string name="call_guest_alert_message">No phone number available</string>
+    <string name="mail_guest_alert_message">Mail address is not available for this contact</string>
 
     <!-- Notifications -->
     <string name="task_notification_title">Reminder</string>

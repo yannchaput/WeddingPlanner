@@ -88,8 +88,9 @@ public class GuestListFragment extends Fragment implements
 	 * >Communicating with Other Fragments</a> for more information.
 	 */
 	public interface OnGuestSelectedListener {
-		// TODO: Update argument type and name
-		public void onSelectGuest(long id, final FragmentTags action);
+		void onSelectGuest(long id, final FragmentTags action);
+		void onCallGuest(long id);
+		void onMailGuest(long id);
 	}
 
 	// Contextual action mode in activity
@@ -147,6 +148,11 @@ public class GuestListFragment extends Fragment implements
 				mode.finish();
 				return true;
 			case R.id.action_call_contact:
+				mListener.onCallGuest(id);
+				mode.finish();
+				return true;
+			case R.id.action_mail_contact:
+				mListener.onMailGuest(id);
 				mode.finish();
 				return true;
 			default:
@@ -389,8 +395,8 @@ public class GuestListFragment extends Fragment implements
 	public void onItemClick(AdapterView<?> parent, View view,
 			int position, long id) {
 
-		Log.v(TAG, "onItemLongClick - Long click on item id " + id);
-		Log.v(TAG, "onItemLongClick - Long click on item position " + position);
+		Log.v(TAG, "onItemClick - click on item id " + id);
+		Log.v(TAG, "onItemClick - click on item position " + position);
 
 		if ((null == mListener) || (mActionMode != null)) {
 			return;

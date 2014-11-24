@@ -4,13 +4,20 @@ import static com.innovention.weddingplanner.utils.WeddingPlannerHelper.hideKeyb
 import static com.innovention.weddingplanner.utils.WeddingPlannerHelper.replaceFragment;
 import static com.innovention.weddingplanner.utils.WeddingPlannerHelper.showAlert;
 import static com.innovention.weddingplanner.utils.WeddingPlannerHelper.showFragmentDialog;
+
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
+
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.util.Log;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
@@ -19,9 +26,12 @@ import com.innovention.weddingplanner.ContactFragment.OnValidateContactListener;
 import com.innovention.weddingplanner.GuestListFragment.OnGuestSelectedListener;
 import com.innovention.weddingplanner.bean.Contact;
 import com.innovention.weddingplanner.bean.IDtoBean;
+import com.innovention.weddingplanner.bean.WeddingInfo;
 import com.innovention.weddingplanner.dao.DaoLocator;
+import com.innovention.weddingplanner.dao.WeddingInfoDao;
 import com.innovention.weddingplanner.dao.DaoLocator.SERVICES;
 import com.innovention.weddingplanner.dao.GuestsDao;
+import com.innovention.weddingplanner.utils.WeddingPlannerHelper;
 
 public class GuestActivity extends Activity implements OnGuestSelectedListener,
 		OnValidateContactListener {
@@ -129,6 +139,62 @@ public class GuestActivity extends Activity implements OnGuestSelectedListener,
 						getFragmentManager());
 			}
 		}
+	}
+
+	/**
+	 * Performs a phone call to the selected guest
+	 */
+	@Override
+	public void onCallGuest(long id) {
+
+		Log.d(TAG, "onCallGuest - Call contact with id:" + id);
+		GuestsDao dao = DaoLocator.getInstance(getApplication()).get(
+				SERVICES.GUEST);
+		Contact selectedGuest = dao.get(id);
+		String phone = selectedGuest.getTelephone();
+		Log.v(TAG, "Call contact with phone number " + phone);
+		if (!WeddingPlannerHelper.isEmpty(phone)) {
+			Intent callIntent = new Intent(Intent.ACTION_CALL);
+			callIntent.setData(Uri.parse("tel:" + phone));
+			startActivity(callIntent);
+		} else
+			Toast.makeText(this, R.string.call_guest_alert_message,
+					Toast.LENGTH_SHORT).show();
+	}
+
+	/**
+	 * Sends a mail to the selected guest
+	 * 
+	 * @param id
+	 *            id of the contact guest
+	 */
+	@Override
+	public void onMailGuest(long id) {
+		Log.d(TAG, "onMailGuest - Mail contact with id:" + id);
+		GuestsDao dao = DaoLocator.getInstance(getApplication()).get(
+				SERVICES.GUEST);
+		WeddingInfoDao infoDao = DaoLocator.getInstance(getApplication()).get(
+				SERVICES.INFO);
+		Contact selectedGuest = dao.get(id);
+		WeddingInfo info = infoDao.get();
+		DateTimeFormatter fmt =DateTimeFormat.fullDate();
+		String weddingDate = (info!=null ? info.getWeddingDate().toString(fmt) : "XXX");
+		String mail = selectedGuest.getMail();
+		Log.v(TAG, "Send mail to contact with email " + mail);
+		if (!WeddingPlannerHelper.isEmpty(mail)) {
+			Intent email = new Intent(Intent.ACTION_SEND);
+			email.putExtra(Intent.EXTRA_EMAIL, new String[] { mail });
+			email.putExtra(Intent.EXTRA_SUBJECT, WeddingPlannerHelper
+					.getStringResource(this, R.string.contact_mail_subject));
+			email.putExtra(Intent.EXTRA_TEXT,
+					this.getString(R.string.contact_mail_message, weddingDate));
+			email.setType("message/rfc822");
+			startActivity(Intent.createChooser(email, WeddingPlannerHelper
+					.getStringResource(this, R.string.contact_mail_provider)));
+		} else
+			Toast.makeText(this, R.string.mail_guest_alert_message,
+					Toast.LENGTH_SHORT).show();
+
 	}
 
 	/**
