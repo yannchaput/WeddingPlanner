@@ -55,6 +55,11 @@
     <string name="contact_item_attend">Présent</string>
     <string name="contact_item_absent">Absent</string>
     <string name="contact_button_validate">Valider</string>
+    <string name="contact_label_category">Catégorie</string>
+    <string name="contact_category_family">Famille</string>
+    <string name="contact_category_friend">Amis</string>
+    <string name="contact_category_collegue">Collègues</string>
+    <string name="contact_category_other">Autre</string>
     
     <!-- Contact dialog -->
     <string name="contact_title_choice_dialog">Contact</string>

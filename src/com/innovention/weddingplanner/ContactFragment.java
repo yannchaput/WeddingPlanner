@@ -48,6 +48,10 @@ public class ContactFragment extends Fragment {
 	private static final String ARG_RSVP_ATTEND = "rsvp_attend";
 	private static final String ARG_RSVP_NOTATTEND = "rsvp_NotAttend";
 	private static final String ARG_RSVP_PENDING = "rsvp_pending";
+	private static final String ARG_FAMILY = "family";
+	private static final String ARG_FRIEND = "friend";
+	private static final String ARG_COLLEGUE = "collegue";
+	private static final String ARG_OTHER = "other";
 
 	private final static String TAG = ContactFragment.class.getSimpleName();
 
@@ -63,6 +67,10 @@ public class ContactFragment extends Fragment {
 	private Boolean mTownHall;
 	private Boolean mCocktail;
 	private Boolean mParty;
+	private Boolean mFamily;
+	private Boolean mFriend;
+	private Boolean mCollegue;
+	private Boolean mOther;
 	private Boolean mRsvpAttend = Boolean.FALSE;
 	private Boolean mRsvpNotAttend = Boolean.FALSE;
 	private Boolean mRsvpPending = Boolean.FALSE;
@@ -119,6 +127,10 @@ public class ContactFragment extends Fragment {
 					.answerNotAttend(
 							((RadioButton) findView(ContactFragment.this,
 									R.id.contactRadioAbsent)).isChecked())
+					.isFamily(((RadioButton) findView(ContactFragment.this, R.id.contactCheckBoxFamily)).isChecked())
+					.isFriend(((RadioButton) findView(ContactFragment.this, R.id.contactCheckBoxFriend)).isChecked())
+					.isCollegue(((RadioButton) findView(ContactFragment.this, R.id.contactCheckBoxCollegue)).isChecked())
+					.isOther(((RadioButton) findView(ContactFragment.this, R.id.contactCheckBoxOther)).isChecked())
 					.build();
 			// TODO Make a helper out of it
 			Log.d(TAG, "Build contact object" + bean);
@@ -173,6 +185,10 @@ public class ContactFragment extends Fragment {
 			args.putBoolean(ARG_COCKTAIL, guest.getCocktail());
 			args.putBoolean(ARG_TOWNHALL, guest.getTownHall());
 			args.putBoolean(ARG_PARTY, guest.getParty());
+			args.putBoolean(ARG_FAMILY, guest.getFamily());
+			args.putBoolean(ARG_FRIEND, guest.getFriend());
+			args.putBoolean(ARG_COLLEGUE, guest.getCollegue());
+			args.putBoolean(ARG_OTHER, guest.getOther());
 
 			ResponseType response = guest.getResponse();
 			switch (response) {
@@ -236,6 +252,10 @@ public class ContactFragment extends Fragment {
 			mRsvpAttend = getArguments().getBoolean(ARG_RSVP_ATTEND);
 			mRsvpNotAttend = getArguments().getBoolean(ARG_RSVP_NOTATTEND);
 			mRsvpPending = getArguments().getBoolean(ARG_RSVP_PENDING);
+			mFamily = getArguments().getBoolean(ARG_FAMILY);
+			mFriend = getArguments().getBoolean(ARG_FRIEND);
+			mCollegue = getArguments().getBoolean(ARG_COLLEGUE);
+			mOther = getArguments().getBoolean(ARG_OTHER);
 		}
 	}
 
@@ -275,6 +295,15 @@ public class ContactFragment extends Fragment {
 					.setChecked(mRsvpAttend.booleanValue());
 			((RadioButton) v.findViewById(R.id.contactRadioNoAnswer))
 					.setChecked(mRsvpPending.booleanValue());
+			
+			((RadioButton) v.findViewById(R.id.contactCheckBoxFamily))
+			.setChecked(mFamily.booleanValue());
+			((RadioButton) v.findViewById(R.id.contactCheckBoxFriend))
+			.setChecked(mFriend.booleanValue());
+			((RadioButton) v.findViewById(R.id.contactCheckBoxCollegue))
+			.setChecked(mCollegue.booleanValue());
+			((RadioButton) v.findViewById(R.id.contactCheckBoxOther))
+			.setChecked(mOther.booleanValue());
 		}
 
 		return v;

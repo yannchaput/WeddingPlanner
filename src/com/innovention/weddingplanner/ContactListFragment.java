@@ -476,7 +476,9 @@ public class ContactListFragment extends ListFragment implements
 					// Save contact into db
 					bean = new Contact.ContactBuilder().name(name)
 							.surname(surname).mail(eMail).telephone(phone)
-							.address(address).build();
+							.address(address).answerPending(true).inviteSent(false)
+							.isOther(true)
+							.build();
 					try {
 						bean.validate(ContactListFragment.this.getActivity());
 					} catch (WeddingPlannerException e) {

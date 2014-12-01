@@ -12,6 +12,10 @@ import static com.innovention.weddingplanner.dao.ConstantesDAO.COL_RSVP;
 import static com.innovention.weddingplanner.dao.ConstantesDAO.COL_SURNAME;
 import static com.innovention.weddingplanner.dao.ConstantesDAO.COL_TEL;
 import static com.innovention.weddingplanner.dao.ConstantesDAO.COL_TOWNHALL;
+import static com.innovention.weddingplanner.dao.ConstantesDAO.COL_FAMILY;
+import static com.innovention.weddingplanner.dao.ConstantesDAO.COL_FRIEND;
+import static com.innovention.weddingplanner.dao.ConstantesDAO.COL_COLLEGUE;
+import static com.innovention.weddingplanner.dao.ConstantesDAO.COL_OTHER;
 import static com.innovention.weddingplanner.dao.ConstantesDAO.NUM_COL_ADDRESS;
 import static com.innovention.weddingplanner.dao.ConstantesDAO.NUM_COL_CHURCH;
 import static com.innovention.weddingplanner.dao.ConstantesDAO.NUM_COL_COCKTAIL;
@@ -24,7 +28,12 @@ import static com.innovention.weddingplanner.dao.ConstantesDAO.NUM_COL_RSVP;
 import static com.innovention.weddingplanner.dao.ConstantesDAO.NUM_COL_SURNAME;
 import static com.innovention.weddingplanner.dao.ConstantesDAO.NUM_COL_TEL;
 import static com.innovention.weddingplanner.dao.ConstantesDAO.NUM_COL_TOWNHALL;
+import static com.innovention.weddingplanner.dao.ConstantesDAO.NUM_COL_FAMILY;
+import static com.innovention.weddingplanner.dao.ConstantesDAO.NUM_COL_FRIEND;
+import static com.innovention.weddingplanner.dao.ConstantesDAO.NUM_COL_COLLEGUE;
+import static com.innovention.weddingplanner.dao.ConstantesDAO.NUM_COL_OTHER;
 import static com.innovention.weddingplanner.dao.ConstantesDAO.TABLE_GUESTS;
+import static com.innovention.weddingplanner.dao.DatabaseHelper.convertIntToBool;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -73,6 +82,10 @@ public class GuestsDao implements IDao<Contact> {
 		values.put(COL_COCKTAIL, bean.getCocktail());
 		values.put(COL_PARTY, bean.getParty());
 		values.put(COL_RSVP, bean.getResponse().toString());
+		values.put(COL_FAMILY, bean.getFamily());
+		values.put(COL_FRIEND, bean.getFriend());
+		values.put(COL_COLLEGUE, bean.getCollegue());
+		values.put(COL_OTHER, bean.getOther());
 		return DaoLocator.getInstance(context).getWritableDatabase()
 				.insert(TABLE_GUESTS, null, values);
 	}
@@ -92,6 +105,10 @@ public class GuestsDao implements IDao<Contact> {
 		values.put(COL_COCKTAIL, bean.getCocktail());
 		values.put(COL_PARTY, bean.getParty());
 		values.put(COL_RSVP, bean.getResponse().toString());
+		values.put(COL_FAMILY, bean.getFamily());
+		values.put(COL_FRIEND, bean.getFriend());
+		values.put(COL_COLLEGUE, bean.getCollegue());
+		values.put(COL_OTHER, bean.getOther());
 		int result = DaoLocator.getInstance(context).getWritableDatabase()
 				.update(TABLE_GUESTS, values, COL_ID + "=?", new String[] {String.valueOf(id)});
 		Log.d(TAG, "" + result + "rows affected");
@@ -117,7 +134,8 @@ public class GuestsDao implements IDao<Contact> {
 		
 		Cursor c = DaoLocator.getInstance(context).getReadDatabase()
 				.query(TABLE_GUESTS, new String[] {COL_ID, COL_SURNAME, COL_NAME, COL_TEL, COL_EMAIL,
-				COL_ADDRESS, COL_INVITATION, COL_CHURCH, COL_TOWNHALL, COL_COCKTAIL, COL_PARTY, COL_RSVP}
+				COL_ADDRESS, COL_INVITATION, COL_CHURCH, COL_TOWNHALL, COL_COCKTAIL, COL_PARTY, COL_RSVP, COL_FAMILY,
+				COL_FRIEND, COL_COLLEGUE, COL_OTHER}
 		, COL_ID + "=?", new String[] {String.valueOf(id)}, null, null, null);
 		
 		if (c.getCount() == 0){
@@ -140,6 +158,10 @@ public class GuestsDao implements IDao<Contact> {
 				.answerPending(Objects.equal(c.getString(NUM_COL_RSVP), ResponseType.PENDING.toString()) ? Boolean.TRUE : Boolean.FALSE )
 				.answerAttend(Objects.equal(c.getString(NUM_COL_RSVP), ResponseType.ATTEND.toString()) ? Boolean.TRUE : Boolean.FALSE )
 				.answerNotAttend(Objects.equal(c.getString(NUM_COL_RSVP), ResponseType.NOTATTEND.toString()) ? Boolean.TRUE : Boolean.FALSE )
+				.isFamily(convertIntToBool(c.getInt(NUM_COL_FAMILY)))
+				.isFriend(convertIntToBool(c.getInt(NUM_COL_FRIEND)))
+				.isCollegue(convertIntToBool(c.getInt(NUM_COL_COLLEGUE)))
+				.isOther(convertIntToBool(c.getInt(NUM_COL_OTHER)))
 				.build();
 		c.close();
 		
@@ -151,7 +173,8 @@ public class GuestsDao implements IDao<Contact> {
 		// TODO Auto-generated method stub
 		return DaoLocator.getInstance(context).getReadDatabase()
 				.query(TABLE_GUESTS, new String[] {COL_ID, COL_SURNAME, COL_NAME, COL_TEL, COL_EMAIL,
-				COL_ADDRESS, COL_INVITATION, COL_CHURCH, COL_TOWNHALL, COL_COCKTAIL, COL_PARTY, COL_RSVP}
+				COL_ADDRESS, COL_INVITATION, COL_CHURCH, COL_TOWNHALL, COL_COCKTAIL, COL_PARTY, COL_RSVP,
+				COL_FAMILY, COL_FRIEND, COL_COLLEGUE, COL_OTHER}
 		, null, null, null, null, null);
 	}
 	

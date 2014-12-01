@@ -33,6 +33,10 @@ public class Contact implements IDtoBean {
 	private Boolean townHall;
 	private Boolean cocktail;
 	private Boolean party;
+	private Boolean family;
+	private Boolean friend;
+	private Boolean collegue;
+	private Boolean other;
 	
 	private ResponseType response;
 	
@@ -68,6 +72,11 @@ public class Contact implements IDtoBean {
 		private Boolean pending;
 		private Boolean attend;
 		private Boolean notAttend;
+		
+		private Boolean family;
+		private Boolean friend;
+		private Boolean collegue;
+		private Boolean other;
 		
 		public ContactBuilder() {}
 		
@@ -141,6 +150,26 @@ public class Contact implements IDtoBean {
 			return this;
 		}
 		
+		public ContactBuilder isFamily(final boolean family) {
+			this.family = Boolean.valueOf(family);
+			return this;
+		}
+		
+		public ContactBuilder isFriend(final boolean friend) {
+			this.friend = Boolean.valueOf(friend);
+			return this;
+		}
+		
+		public ContactBuilder isCollegue(final boolean collegue) {
+			this.collegue = Boolean.valueOf(collegue);
+			return this;
+		}
+		
+		public ContactBuilder isOther(final boolean other) {
+			this.other = Boolean.valueOf(other);
+			return this;
+		}
+		
 		public Contact build() {
 			return new Contact(this);
 		}
@@ -179,6 +208,10 @@ public class Contact implements IDtoBean {
 		this.townHall = builder.townHall;
 		this.party = builder.party;
 		this.response = builder.getEnumValue();
+		this.family = builder.family;
+		this.friend = builder.friend;
+		this.collegue = builder.collegue;
+		this.other = builder.other;
 	}
 	/**
 	 * Validate contact bean
@@ -219,6 +252,10 @@ public class Contact implements IDtoBean {
 				.add("townhall", this.getTownHall())
 				.add("party", this.getParty())
 				.add("response", this.getResponse())
+				.add("family", this.getFamily())
+				.add("friend", this.getFriend())
+				.add("Collegue", this.getCollegue())
+				.add("other", this.getOther())
 				.toString();
 	}
 	public String getSurname() {
@@ -286,6 +323,46 @@ public class Contact implements IDtoBean {
 	}
 	public void setResponse(ResponseType response) {
 		this.response = response;
+	}
+
+
+	public Boolean getFamily() {
+		return family;
+	}
+
+
+	public void setFamily(Boolean family) {
+		this.family = family;
+	}
+
+
+	public Boolean getFriend() {
+		return friend;
+	}
+
+
+	public void setFriend(Boolean friend) {
+		this.friend = friend;
+	}
+
+
+	public Boolean getCollegue() {
+		return collegue;
+	}
+
+
+	public void setCollegue(Boolean collegue) {
+		this.collegue = collegue;
+	}
+
+
+	public Boolean getOther() {
+		return other;
+	}
+
+
+	public void setOther(Boolean other) {
+		this.other = other;
 	}
 
 
