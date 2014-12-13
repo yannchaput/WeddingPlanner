@@ -31,6 +31,12 @@
     <string name="action_update_contact">Modifier invité</string>
     <string name="action_call_contact">Appeler invité</string>
     <string name="action_mail_contact">Envoi email invité</string>
+    <string-array name="contact_category_list">
+        <item>Famille</item>
+        <item>Amis</item>
+        <item>Collègues</item>
+        <item>Autres</item>
+    </string-array>
     
     <!-- Contact mail -->
     <string name="contact_mail_subject">Invitation à mon mariage</string>

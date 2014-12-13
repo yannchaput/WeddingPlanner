@@ -17,6 +17,7 @@ import android.widget.RadioButton;
 
 import com.innovention.weddingplanner.Constantes.FragmentTags;
 import com.innovention.weddingplanner.bean.Contact;
+import com.innovention.weddingplanner.bean.Contact.Category;
 import com.innovention.weddingplanner.bean.Contact.ResponseType;
 import com.innovention.weddingplanner.bean.IDtoBean;
 import com.innovention.weddingplanner.exception.IncorrectMailException;
@@ -67,10 +68,10 @@ public class ContactFragment extends Fragment {
 	private Boolean mTownHall;
 	private Boolean mCocktail;
 	private Boolean mParty;
-	private Boolean mFamily;
-	private Boolean mFriend;
-	private Boolean mCollegue;
-	private Boolean mOther;
+	private Boolean mFamily = Boolean.FALSE;
+	private Boolean mFriend = Boolean.FALSE;
+	private Boolean mCollegue = Boolean.FALSE;
+	private Boolean mOther = Boolean.FALSE;
 	private Boolean mRsvpAttend = Boolean.FALSE;
 	private Boolean mRsvpNotAttend = Boolean.FALSE;
 	private Boolean mRsvpPending = Boolean.FALSE;
@@ -83,6 +84,14 @@ public class ContactFragment extends Fragment {
 	private OnClickListener validateBtnListener = new OnClickListener() {
 		public void onClick(View v) {
 			Log.v(TAG, "Click on validate button");
+			
+			Category category = Category.OTHER;
+			if (((RadioButton) findView(ContactFragment.this, R.id.contactCheckBoxFamily)).isChecked())
+				category = Category.FAMILY;
+			else if (((RadioButton) findView(ContactFragment.this, R.id.contactCheckBoxFriend)).isChecked())
+				category = Category.FRIEND;
+			else if (((RadioButton) findView(ContactFragment.this, R.id.contactCheckBoxCollegue)).isChecked())
+				category = Category.COLLEGUE;
 
 			// Create a "contact" bean object
 			Contact bean = new Contact.ContactBuilder()
@@ -127,10 +136,7 @@ public class ContactFragment extends Fragment {
 					.answerNotAttend(
 							((RadioButton) findView(ContactFragment.this,
 									R.id.contactRadioAbsent)).isChecked())
-					.isFamily(((RadioButton) findView(ContactFragment.this, R.id.contactCheckBoxFamily)).isChecked())
-					.isFriend(((RadioButton) findView(ContactFragment.this, R.id.contactCheckBoxFriend)).isChecked())
-					.isCollegue(((RadioButton) findView(ContactFragment.this, R.id.contactCheckBoxCollegue)).isChecked())
-					.isOther(((RadioButton) findView(ContactFragment.this, R.id.contactCheckBoxOther)).isChecked())
+					.withCategory(category)
 					.build();
 			// TODO Make a helper out of it
 			Log.d(TAG, "Build contact object" + bean);
@@ -185,11 +191,27 @@ public class ContactFragment extends Fragment {
 			args.putBoolean(ARG_COCKTAIL, guest.getCocktail());
 			args.putBoolean(ARG_TOWNHALL, guest.getTownHall());
 			args.putBoolean(ARG_PARTY, guest.getParty());
-			args.putBoolean(ARG_FAMILY, guest.getFamily());
-			args.putBoolean(ARG_FRIEND, guest.getFriend());
-			args.putBoolean(ARG_COLLEGUE, guest.getCollegue());
-			args.putBoolean(ARG_OTHER, guest.getOther());
-
+			args.putBoolean(ARG_FAMILY, Boolean.FALSE);
+			args.putBoolean(ARG_FRIEND, Boolean.FALSE);
+			args.putBoolean(ARG_COLLEGUE, Boolean.FALSE);
+			args.putBoolean(ARG_OTHER, Boolean.FALSE);
+			
+			Category categ = guest.getCategory();
+			switch(categ) {
+			case FAMILY:
+				args.putBoolean(ARG_FAMILY, Boolean.TRUE);
+				break;
+			case FRIEND:
+				args.putBoolean(ARG_FRIEND, Boolean.TRUE);
+				break;
+			case COLLEGUE:
+				args.putBoolean(ARG_COLLEGUE, Boolean.TRUE);
+				break;
+			case OTHER:
+				args.putBoolean(ARG_OTHER, Boolean.TRUE);
+				break;
+			}
+			
 			ResponseType response = guest.getResponse();
 			switch (response) {
 			case ATTEND:

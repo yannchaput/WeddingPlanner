@@ -40,14 +40,8 @@ public interface ConstantesDAO {
 	byte NUM_COL_PARTY = 10;
 	String COL_RSVP="rsvp";
 	byte NUM_COL_RSVP = 11;
-	String COL_FAMILY="family";
-	byte NUM_COL_FAMILY = 12;
-	String COL_FRIEND="friend";
-	byte NUM_COL_FRIEND = 13;
-	String COL_COLLEGUE="collegue";
-	byte NUM_COL_COLLEGUE = 14;
-	String COL_OTHER="other";
-	byte NUM_COL_OTHER = 15;
+	String COL_GUEST_CATEGORY="other";
+	byte NUM_COL_GUEST_CATEGORY = 12;
 	
 	// Columns tasks table
 	String COL_TASK_STATUS = "active";
@@ -137,14 +131,8 @@ public interface ConstantesDAO {
 	.append(" INTEGER, ")
 	.append(COL_RSVP)
 	.append(" TEXT NOT NULL, ")
-	.append(COL_FAMILY)
-	.append(" INTEGER, ")
-	.append(COL_FRIEND)
-	.append(" INTEGER, ")
-	.append(COL_COLLEGUE)
-	.append(" INTEGER, ")
-	.append(COL_OTHER)
-	.append(" INTEGER ")
+	.append(COL_GUEST_CATEGORY)
+	.append(" TEXT ")
 	.append(");")
 	.toString();
 	

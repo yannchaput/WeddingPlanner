@@ -49,6 +49,7 @@ import android.widget.Toast;
 import com.innovention.weddingplanner.Constantes.FragmentTags;
 import com.innovention.weddingplanner.ContactFragment.OnValidateContactListener;
 import com.innovention.weddingplanner.bean.Contact;
+import com.innovention.weddingplanner.bean.Contact.Category;
 import com.innovention.weddingplanner.exception.WeddingPlannerException;
 import com.innovention.weddingplanner.utils.WeddingPlannerHelper;
 
@@ -477,7 +478,7 @@ public class ContactListFragment extends ListFragment implements
 					bean = new Contact.ContactBuilder().name(name)
 							.surname(surname).mail(eMail).telephone(phone)
 							.address(address).answerPending(true).inviteSent(false)
-							.isOther(true)
+							.withCategory(Category.OTHER)
 							.build();
 					try {
 						bean.validate(ContactListFragment.this.getActivity());

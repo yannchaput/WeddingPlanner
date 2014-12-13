@@ -11,6 +11,13 @@
 	<dimen name="contact_list_item_margin">5dp</dimen>
 	<dimen name="contact_list_item_padding">5dp</dimen>
 	<dimen name="contact_list_item_icon_size">34dp</dimen>
+	<dimen name="contact_list_padding">8dp</dimen>
+	<dimen name="contact_list_header_font_size">17sp</dimen>
+	<dimen name="contact_list_item_paddingRight">0dp</dimen>
+	<dimen name="contact_list_top_margin">10dp</dimen>
+	<dimen name="contact_list_bottom_margin">10dp</dimen>
+	<dimen name="contact_list_left_margin">10dp</dimen>
+	<dimen name="contact_list_right_margin">10dp</dimen>
 	<!--  tasks -->
 	<dimen name="task_list_row_padding">10dp</dimen>
 	<dimen name="task_list_item_left_margin">5dp</dimen>

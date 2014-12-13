@@ -9,12 +9,19 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:layout_marginBottom="@dimen/contact_list_bottom_margin"
+        android:layout_marginStart="@dimen/contact_list_left_margin"
+        android:layout_marginLeft="@dimen/contact_list_left_margin"
+        android:layout_marginEnd="@dimen/contact_list_right_margin"
+        android:layout_marginRight="@dimen/contact_list_right_margin"
+        android:layout_marginTop="@dimen/contact_list_top_margin"
         android:layout_weight="1" >
-
-        <ListView
+        
+        <ExpandableListView
             android:id="@android:id/list"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="wrap_content" >
+        </ExpandableListView>
 
         <TextView
             android:id="@+id/empty"

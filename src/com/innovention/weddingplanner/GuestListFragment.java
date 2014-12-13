@@ -1,15 +1,24 @@
 package com.innovention.weddingplanner;
 
+import static com.innovention.weddingplanner.dao.ConstantesDAO.COL_GUEST_CATEGORY;
+import static com.innovention.weddingplanner.dao.ConstantesDAO.COL_BUDGET_VENDOR;
+import static com.innovention.weddingplanner.dao.ConstantesDAO.COL_ID;
 import static com.innovention.weddingplanner.dao.ConstantesDAO.COL_NAME;
 import static com.innovention.weddingplanner.dao.ConstantesDAO.COL_SURNAME;
 import static com.innovention.weddingplanner.dao.ConstantesDAO.NUM_COL_INVITATION;
 import static com.innovention.weddingplanner.dao.ConstantesDAO.NUM_COL_NAME;
 import static com.innovention.weddingplanner.dao.ConstantesDAO.NUM_COL_RSVP;
 import static com.innovention.weddingplanner.dao.ConstantesDAO.NUM_COL_SURNAME;
+import static com.innovention.weddingplanner.utils.WeddingPlannerHelper.formatCurrency;
+import static com.innovention.weddingplanner.utils.WeddingPlannerHelper.getDefaultLocale;
 import android.app.Activity;
 import android.app.Fragment;
+import android.app.LoaderManager.LoaderCallbacks;
 import android.content.Context;
+import android.content.CursorLoader;
+import android.content.Loader;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.ActionMode;
@@ -21,6 +30,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
+import android.widget.CursorTreeAdapter;
+import android.widget.ExpandableListView;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ListAdapter;
@@ -31,8 +42,12 @@ import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
 import com.innovention.weddingplanner.Constantes.FragmentTags;
+import com.innovention.weddingplanner.bean.Contact.Category;
 import com.innovention.weddingplanner.bean.Contact.ResponseType;
+import com.innovention.weddingplanner.contentprovider.DBContentProvider;
+import com.innovention.weddingplanner.dao.ConstantesDAO;
 import com.innovention.weddingplanner.dao.DaoLocator;
+import com.innovention.weddingplanner.dao.GuestsDao;
 import com.innovention.weddingplanner.dao.DaoLocator.SERVICES;
 import com.innovention.weddingplanner.dao.DatabaseHelper;
 import com.innovention.weddingplanner.utils.WeddingPlannerHelper;
@@ -46,19 +61,9 @@ import com.innovention.weddingplanner.utils.WeddingPlannerHelper;
  * Activities containing this fragment MUST implement the {@link Callbacks}
  * interface.
  */
-public class GuestListFragment extends Fragment implements
-		AbsListView.OnItemClickListener, Refreshable {
+public class GuestListFragment extends Fragment implements Refreshable {
 
 	private final static String TAG = GuestListFragment.class.getSimpleName();
-
-	// TODO: Rename parameter arguments, choose names that match
-	// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-	private static final String ARG_PARAM1 = "param1";
-	private static final String ARG_PARAM2 = "param2";
-
-	// TODO: Rename and change types of parameters
-	private String mParam1;
-	private String mParam2;
 
 	private OnGuestSelectedListener mListener;
 
@@ -70,13 +75,171 @@ public class GuestListFragment extends Fragment implements
 	/**
 	 * The fragment's ListView/GridView.
 	 */
-	private AbsListView mListView;
+	private ExpandableListView expListView;
 
 	/**
 	 * The Adapter which will be used to populate the ListView/GridView with
 	 * Views.
 	 */
-	private ListAdapter mAdapter;
+	private ExpAdapter expListAdapter;
+
+	/**
+	 * Adapter for Expandable list
+	 * 
+	 * @author YCH
+	 * 
+	 */
+	private final class ExpAdapter extends CursorTreeAdapter {
+
+		private LayoutInflater mInflator;
+
+		public ExpAdapter(Cursor cursor, Context context) {
+			super(cursor, context, true);
+			mInflator = LayoutInflater.from(context);
+		}
+
+		@Override
+		protected void bindChildView(View view, Context context, Cursor cursor,
+				boolean isLastChild) {
+
+			ImageView icon = (ImageView) view.findViewById(R.id.itemGuestIcon);
+			TextView surname = (TextView) view
+					.findViewById(R.id.itemGuestSurname);
+			TextView name = (TextView) view.findViewById(R.id.itemGuestName);
+			surname.setText(cursor.getString(NUM_COL_SURNAME));
+			name.setText(cursor.getString(NUM_COL_NAME));
+
+			Boolean invite = DatabaseHelper.convertIntToBool(cursor
+					.getInt(NUM_COL_INVITATION));
+			ResponseType rsvp = ResponseType.toEnum(cursor
+					.getString(NUM_COL_RSVP));
+
+			int resId;
+			if (!invite.booleanValue())
+				resId = R.drawable.ic_action_unread;
+			else {
+				switch (rsvp) {
+				case PENDING:
+					resId = R.drawable.ic_action_help;
+					break;
+				case ATTEND:
+					resId = R.drawable.ic_action_good;
+					break;
+				case NOTATTEND:
+					resId = R.drawable.ic_action_bad;
+					break;
+				default:
+					resId = R.drawable.ic_action_help;
+				}
+			}
+
+			icon.setImageResource(resId);
+		}
+
+		@Override
+		protected void bindGroupView(View view, Context context, Cursor cursor,
+				boolean isExpanded) {
+			String category = cursor.getString(cursor
+					.getColumnIndex(COL_GUEST_CATEGORY));
+			TextView tvGrp = (TextView) view
+					.findViewById(R.id.lblGuestListHeader);
+			Category eCategory = Category.valueOf(category);
+			switch(eCategory) {
+			case FAMILY:
+				tvGrp.setText(getResources().getStringArray(R.array.contact_category_list)[0]);
+				break;
+			case FRIEND:
+				tvGrp.setText(getResources().getStringArray(R.array.contact_category_list)[1]);
+				break;
+			case COLLEGUE:
+				tvGrp.setText(getResources().getStringArray(R.array.contact_category_list)[2]);
+				break;
+			default:
+				tvGrp.setText(getResources().getStringArray(R.array.contact_category_list)[3]);
+			}
+
+		}
+
+		@Override
+		protected Cursor getChildrenCursor(Cursor groupCursor) {
+			String category = groupCursor.getString(groupCursor
+					.getColumnIndex(COL_GUEST_CATEGORY));
+			Cursor c = DaoLocator
+					.getInstance(getActivity().getApplicationContext())
+					.get(SERVICES.GUEST)
+					.getCursor(COL_GUEST_CATEGORY + "=?",
+							new String[] { category });
+			return c;
+
+		}
+
+		@Override
+		protected View newChildView(Context context, Cursor cursor,
+				boolean isLastChild, ViewGroup parent) {
+			View view = mInflator.inflate(R.layout.fragment_guest_list_item,
+					null);
+			ImageView icon = (ImageView) view.findViewById(R.id.itemGuestIcon);
+			TextView surname = (TextView) view
+					.findViewById(R.id.itemGuestSurname);
+			TextView name = (TextView) view.findViewById(R.id.itemGuestName);
+			surname.setText(cursor.getString(NUM_COL_SURNAME));
+			name.setText(cursor.getString(NUM_COL_NAME));
+
+			Boolean invite = DatabaseHelper.convertIntToBool(cursor
+					.getInt(NUM_COL_INVITATION));
+			ResponseType rsvp = ResponseType.toEnum(cursor
+					.getString(NUM_COL_RSVP));
+
+			int resId;
+			if (!invite.booleanValue())
+				resId = R.drawable.ic_action_unread;
+			else {
+				switch (rsvp) {
+				case PENDING:
+					resId = R.drawable.ic_action_help;
+					break;
+				case ATTEND:
+					resId = R.drawable.ic_action_good;
+					break;
+				case NOTATTEND:
+					resId = R.drawable.ic_action_bad;
+					break;
+				default:
+					resId = R.drawable.ic_action_help;
+				}
+			}
+
+			icon.setImageResource(resId);
+			return view;
+		}
+
+		@Override
+		protected View newGroupView(Context context, Cursor cursor,
+				boolean isExpanded, ViewGroup parent) {
+			View mView = mInflator.inflate(R.layout.fragment_guest_list_group,
+					null);
+			String category = cursor.getString(cursor
+					.getColumnIndex(COL_GUEST_CATEGORY));
+			TextView tvGrp = (TextView) mView
+					.findViewById(R.id.lblGuestListHeader);
+			Category eCategory = Category.valueOf(category);
+			switch(eCategory) {
+			case FAMILY:
+				tvGrp.setText(getResources().getStringArray(R.array.contact_category_list)[0]);
+				break;
+			case FRIEND:
+				tvGrp.setText(getResources().getStringArray(R.array.contact_category_list)[1]);
+				break;
+			case COLLEGUE:
+				tvGrp.setText(getResources().getStringArray(R.array.contact_category_list)[2]);
+				break;
+			default:
+				tvGrp.setText(getResources().getStringArray(R.array.contact_category_list)[3]);
+			}
+			return mView;
+		}
+
+	}
 
 	/**
 	 * This interface must be implemented by activities that contain this
@@ -89,7 +252,9 @@ public class GuestListFragment extends Fragment implements
 	 */
 	public interface OnGuestSelectedListener {
 		void onSelectGuest(long id, final FragmentTags action);
+
 		void onCallGuest(long id);
+
 		void onMailGuest(long id);
 	}
 
@@ -119,8 +284,21 @@ public class GuestListFragment extends Fragment implements
 
 		@Override
 		public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-			int pos = ((GuestCursorAdapter) mAdapter).currentSelectionPos;
-			long id = ((GuestCursorAdapter) mAdapter).currentSelectionId;
+			// Compute position in the expandable list
+			// Flat position
+			int flatPosition = expListView.getCheckedItemPosition();
+			// Compute packed position
+			long packedPosition = expListView
+					.getExpandableListPosition(flatPosition);
+			int packedGroupPos = ExpandableListView
+					.getPackedPositionGroup(packedPosition);
+			int packedChildPos = ExpandableListView
+					.getPackedPositionChild(packedPosition);
+			Log.v(TAG, String.format("Decoding position [group=%d,  child=%d]",
+					packedGroupPos, packedChildPos));
+
+			long id = expListAdapter.getChildId(packedGroupPos, packedChildPos);
+			Log.v(TAG, "Get child id " + id);
 
 			switch (item.getItemId()) {
 			case R.id.action_update_contact:
@@ -138,12 +316,7 @@ public class GuestListFragment extends Fragment implements
 				// Notify activity to perform physical delete in db
 				mListener.onSelectGuest(id, FragmentTags.TAG_FGT_DELETECONTACT);
 				// Refresh list view
-				Cursor c = DaoLocator
-						.getInstance(getActivity().getApplicationContext())
-						.get(SERVICES.GUEST).getCursor();
-				GuestCursorAdapter adapter = (GuestCursorAdapter) mAdapter;
-				adapter.changeCursor(c);
-				adapter.notifyDataSetChanged();
+				refresh();
 				// close the CAB
 				mode.finish();
 				return true;
@@ -160,102 +333,6 @@ public class GuestListFragment extends Fragment implements
 			}
 		}
 	};
-
-	/**
-	 * Override SimpleCursorAdapter in order to have a fancier layout by adding
-	 * icons to row
-	 * 
-	 * @author YCH
-	 * 
-	 */
-	private class GuestCursorAdapter extends SimpleCursorAdapter {
-
-		private Context context;
-		private int currentSelectionPos = -1;
-		private long currentSelectionId = -1;
-
-		private class ViewHolder {
-			private ImageView icon;
-			private TextView surname;
-			private TextView name;
-		}
-
-		public GuestCursorAdapter(Context context, int layout, Cursor c,
-				String[] from, int[] to, int flags) {
-			super(context, layout, c, from, to, flags);
-			this.context = context;
-		}
-
-		@Override
-		public View getView(int position, View convertView, ViewGroup parent) {
-			View row = convertView;
-			ViewHolder holder;
-
-			// If view does not already exists we create it
-			if (row == null) {
-				row = View.inflate(context, R.layout.fragment_guest_adapter,
-						null);
-				holder = new ViewHolder();
-				holder.icon = (ImageView) row.findViewById(R.id.itemGuestIcon);
-				holder.surname = (TextView) row
-						.findViewById(R.id.itemGuestSurname);
-				holder.name = (TextView) row.findViewById(R.id.itemGuestName);
-				row.setTag(holder);
-			}
-
-			holder = (ViewHolder) row.getTag();
-			Cursor c = getCursor();
-			c.moveToPosition(position);
-
-			ImageView icon = holder.icon;
-			TextView surname = holder.surname;
-			// surname.setTypeface(WeddingPlannerHelper.getFont(GuestListFragment.this.getActivity(),
-			// FONT_CURVED));
-			TextView name = (TextView) holder.name;
-			// name.setTypeface(WeddingPlannerHelper.getFont(GuestListFragment.this.getActivity(),
-			// FONT_CURVED));
-			surname.setText(c.getString(NUM_COL_SURNAME));
-			name.setText(c.getString(NUM_COL_NAME));
-
-			Boolean invite = DatabaseHelper.convertIntToBool(c
-					.getInt(NUM_COL_INVITATION));
-			ResponseType rsvp = ResponseType.toEnum(c.getString(NUM_COL_RSVP));
-
-			int resId;
-			if (!invite.booleanValue())
-				resId = R.drawable.ic_action_unread;
-			else {
-				switch (rsvp) {
-				case PENDING:
-					resId = R.drawable.ic_action_help;
-					break;
-				case ATTEND:
-					resId = R.drawable.ic_action_good;
-					break;
-				case NOTATTEND:
-					resId = R.drawable.ic_action_bad;
-					break;
-				default:
-					resId = R.drawable.ic_action_help;
-				}
-			}
-
-			icon.setImageResource(resId);
-
-			return row;
-		}
-
-	}
-
-	// TODO: Rename and change types of parameters
-	public static GuestListFragment newInstance(String param1, String param2) {
-		GuestListFragment fragment = new GuestListFragment();
-		Bundle args = new Bundle();
-		args.putString(ARG_PARAM1, param1);
-		args.putString(ARG_PARAM2, param2);
-		fragment.setArguments(args);
-		return fragment;
-	}
 
 	public static GuestListFragment newInstance() {
 		GuestListFragment fragment = new GuestListFragment();
@@ -297,54 +374,58 @@ public class GuestListFragment extends Fragment implements
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		if (getArguments() != null) {
-			mParam1 = getArguments().getString(ARG_PARAM1);
-			mParam2 = getArguments().getString(ARG_PARAM2);
-		}
-
-		Cursor c = DaoLocator
-				.getInstance(getActivity().getApplicationContext())
-				.get(SERVICES.GUEST).getCursor();
-
-		// TODO update to CursorLoader
-		getActivity().startManagingCursor(c);
-
-		// TODO Use a CursorLoader
-		mAdapter = new GuestCursorAdapter(getActivity(),
-				R.layout.fragment_guest_adapter, c, new String[] { COL_SURNAME,
-						COL_NAME }, new int[] { R.id.itemGuestSurname,
-						R.id.itemGuestName }, 1);
-
-		// mAdapter = new SimpleCursorAdapter(getActivity(),
-		// R.layout.fragment_contact_list, c,
-		// new String[] { COL_SURNAME, COL_NAME },
-		// new int[] {R.id.itemGuestSurname, R.id.itemGuestName },1);
 	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		View view = inflater.inflate(R.layout.fragment_guest_list, container,
-				false);
+		View rootView = inflater.inflate(R.layout.fragment_guest_list,
+				container, false);
 
 		// Necessary to set the menu visible for fragment
 		setHasOptionsMenu(true);
 
-		// Set the adapter
-		mListView = (AbsListView) view.findViewById(android.R.id.list);
-		((AdapterView<ListAdapter>) mListView).setAdapter(mAdapter);
+		// get the listview
+		expListView = (ExpandableListView) rootView
+				.findViewById(android.R.id.list);
+		expListView.setEmptyView(rootView.findViewById(R.id.empty));
+		expListView
+				.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
 
-		// Set OnItemClickListener so we can be notified on item clicks
-		mListView.setOnItemClickListener(this);
+					@Override
+					public boolean onChildClick(ExpandableListView parent,
+							View v, int groupPosition, int childPosition,
+							long id) {
+						Log.v(TAG,
+								String.format(
+										"onChildClick - perform a click on child of expandable list [id=%d, groupPos=%d, childPos=%d",
+										id, groupPosition, childPosition));
+						if (null == mActionMode) {
+							mActionMode = getActivity().startActionMode(
+									mActionModeCallback);
+							expListView
+									.setChoiceMode(ExpandableListView.CHOICE_MODE_SINGLE);
+							int index = parent
+									.getFlatListPosition(ExpandableListView
+											.getPackedPositionForChild(
+													groupPosition,
+													childPosition));
+							expListView.setItemChecked(index, true);
+						}
+						return true;
+					}
+				});
+		// Gets cursor of list of category
+		expListAdapter = new ExpAdapter(null, getActivity());
+		expListView.setAdapter(expListAdapter);
 
-		// Set empty view
-		mListView.setEmptyView(view.findViewById(R.id.empty));
+		refresh();
 
 		// Load Ad
 		adView = new AdView(this.getActivity());
 		adView.setAdUnitId(Constantes.AD_ID);
 		adView.setAdSize(AdSize.BANNER);
-		FrameLayout layoutAd = (FrameLayout) view
+		FrameLayout layoutAd = (FrameLayout) rootView
 				.findViewById(R.id.LayoutGuestAd);
 		layoutAd.addView(adView);
 
@@ -355,7 +436,7 @@ public class GuestListFragment extends Fragment implements
 		// Chargez l'objet adView avec la demande d'annonce.
 		adView.loadAd(adRequest);
 
-		return view;
+		return rootView;
 	}
 
 	@Override
@@ -383,55 +464,15 @@ public class GuestListFragment extends Fragment implements
 	}
 
 	/**
-	 * Triggered when a long click is fired on an list item
-	 * 
-	 * @param parent
-	 * @param view
-	 * @param position
-	 * @param id
-	 * @return
-	 */
-	@Override
-	public void onItemClick(AdapterView<?> parent, View view,
-			int position, long id) {
-
-		Log.v(TAG, "onItemClick - click on item id " + id);
-		Log.v(TAG, "onItemClick - click on item position " + position);
-
-		if ((null == mListener) || (mActionMode != null)) {
-			return;
-		}
-
-		// Starts the CAB using the ActionMode.Callbakc defined above
-		mActionMode = getActivity().startActionMode(mActionModeCallback);
-		((GuestCursorAdapter) mAdapter).currentSelectionPos = position;
-		((GuestCursorAdapter) mAdapter).currentSelectionId = id;
-		view.setSelected(true);
-	}
-
-	/**
-	 * The default content for this Fragment has a TextView that is shown when
-	 * the list is empty. If you would like to change the text, call this method
-	 * to supply the text it should use.
-	 */
-	public void setEmptyText(CharSequence emptyText) {
-		View emptyView = mListView.getEmptyView();
-
-		if (emptyText instanceof TextView) {
-			((TextView) emptyView).setText(emptyText);
-		}
-	}
-
-	/**
 	 * Refreshes the content of the list when invoked
 	 */
 	@Override
 	public void refresh() {
 		// Refresh list view
-		Cursor c = DaoLocator
-				.getInstance(getActivity().getApplicationContext())
-				.get(SERVICES.GUEST).getCursor();
-		GuestCursorAdapter adapter = (GuestCursorAdapter) mAdapter;
+		Cursor c = ((GuestsDao) DaoLocator.getInstance(
+				getActivity().getApplicationContext()).get(SERVICES.GUEST))
+				.getCursorCategory();
+		ExpAdapter adapter = (ExpAdapter) expListAdapter;
 		adapter.changeCursor(c);
 		adapter.notifyDataSetChanged();
 	}
