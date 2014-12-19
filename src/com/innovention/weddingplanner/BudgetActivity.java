@@ -9,13 +9,12 @@ import com.innovention.weddingplanner.contentprovider.DBContentProvider;
 import com.innovention.weddingplanner.contentprovider.DBContentProvider.Budget;
 import com.innovention.weddingplanner.dao.ConstantesDAO;
 
-import android.app.Activity;
-import android.app.Fragment;
 import android.content.ContentUris;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.NavUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -29,7 +28,7 @@ import android.view.ViewGroup;
  * @author YCH
  * 
  */
-public final class BudgetActivity extends Activity implements OnValidateBudget {
+public final class BudgetActivity extends FragmentActivity implements OnValidateBudget {
 
 	private static final String TAG = BudgetActivity.class.getSimpleName();
 
@@ -40,7 +39,7 @@ public final class BudgetActivity extends Activity implements OnValidateBudget {
 		setContentView(R.layout.activity_budget);
 
 		if (savedInstanceState == null) {
-			getFragmentManager().beginTransaction()
+			getSupportFragmentManager().beginTransaction()
 					.add(R.id.LayoutBudget, BudgetListFragment.newInstance())
 					.commit();
 		}

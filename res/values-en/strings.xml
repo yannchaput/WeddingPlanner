@@ -24,8 +24,11 @@
     <string name="item_resetDb_action">Erase database</string>
     <string name="item_recreateDb_toast">Thank you to restart the application</string>
     <string name="item_recreateDb_failed_toast">An error occurred. Data were not restored successfully</string>
+    <string name="item_rate_my_app">Rate my app</string>
 
     <!-- Contact list -->
+    <string name="contact_tab_statistics">Statistics</string>
+    <string name="contact_tab_liste">List</string>
     <string name="action_add_contact">Add guest</string>
     <string name="action_delete_contact">Remove guest</string>
     <string name="action_update_contact">Update guest</string>
@@ -44,6 +47,7 @@
     <string name="contact_mail_provider">Choix du client mail:</string>
 
     <!-- Contact form -->
+    <string name="title_activity_contactformcontainer">Invitations</string>
     <string name="contact_field_surname">Name</string>
     <string name="contact_field_name">First name</string>
     <string name="contact_field_phone">Tel.</string>
@@ -222,5 +226,11 @@
     <!-- Budget pie -->
     <string name="budget_pie_chart_title">Total budget</string>
     <string name="budget_pie_chart_title2">Actual budget</string>
+    
+    	<!-- Guest stats tab -->
+	<string name="contact_stats_nb_invites">Nb. guests</string>
+	<string name="contact_stats_nb_presents">Nb. attendees</string>
+	<string name="contact_stats_nb_absents">Nb. absent</string>
+	<string name="contact_stats_nb_rsvp">Nb. RSVP</string>
 
 </resources>

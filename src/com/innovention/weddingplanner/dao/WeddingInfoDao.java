@@ -151,7 +151,7 @@ public class WeddingInfoDao implements IDao<WeddingInfo> {
 	
 	@Override
 	public Cursor getCursor(String selectionClause, String[] selectionArgs) {
-		throw new UnsupportedOperationException();
+		return getCursor(selectionClause, selectionArgs, null);
 	}
 
 	@Override
@@ -159,5 +159,15 @@ public class WeddingInfoDao implements IDao<WeddingInfo> {
 			String[] selectionArgs) {
 		throw new UnsupportedOperationException();
 	}
+
+	@Override
+	public Cursor getCursor(String selectionClause, String[] selectionArgs,
+			String orderBy) {
+		throw new UnsupportedOperationException();
+	}
 	
+	@Override
+	public Cursor rawQuery(String selectionClause, String[] selectionArgs) {
+		return DaoLocator.getInstance(context).getReadDatabase().rawQuery(selectionClause, selectionArgs);
+	}
 }

@@ -7,12 +7,12 @@ import com.innovention.weddingplanner.Constantes.FragmentTags;
 
 import static com.innovention.weddingplanner.utils.WeddingPlannerHelper.replaceFragment;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.app.DialogFragment;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -49,8 +49,11 @@ public class ContactDialogFragment extends DialogFragment {
 						dismiss();
 						if (which == 0) {
 							// Create contact action
-							replaceFragment(getActivity(),
-									FragmentTags.TAG_FGT_CREATECONTACT);
+							//replaceFragment(getActivity(),
+							//		FragmentTags.TAG_FGT_CREATECONTACT);
+							Intent intent = new Intent(getActivity(), ContactFormContainerActivity.class);
+							intent.setAction(FragmentTags.TAG_FGT_CREATECONTACT.getValue());
+							getActivity().startActivity(intent);
 						} else {
 							// Import contact action
 							replaceFragment(getActivity(),

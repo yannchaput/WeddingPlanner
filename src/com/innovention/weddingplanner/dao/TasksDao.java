@@ -146,10 +146,7 @@ public class TasksDao implements IDao<Task> {
 	
 	@Override
 	public Cursor getCursor(String selectionClause, String[] selectionArgs) {
-		return DaoLocator.getInstance(context).getReadDatabase()
-				.query(TABLE_TASKS, new String[] { COL_ID, COL_TASK_STATUS, COL_TASK_DESC,
-				COL_TASK_DUEDATE, COL_TASK_REMINDDATE, COL_TASK_REMINDOPTION }, selectionClause, selectionArgs, null,
-				null, null);
+		return getCursor(selectionClause, selectionArgs, null);
 	}
 
 	@Override
@@ -182,6 +179,20 @@ public class TasksDao implements IDao<Task> {
 		c.close();
 		
 		return list;
+	}
+
+	@Override
+	public Cursor getCursor(String selectionClause, String[] selectionArgs,
+			String orderBy) {
+		return DaoLocator.getInstance(context).getReadDatabase()
+				.query(TABLE_TASKS, new String[] { COL_ID, COL_TASK_STATUS, COL_TASK_DESC,
+				COL_TASK_DUEDATE, COL_TASK_REMINDDATE, COL_TASK_REMINDOPTION }, selectionClause, selectionArgs, null,
+				null, orderBy);
+	}
+	
+	@Override
+	public Cursor rawQuery(String selectionClause, String[] selectionArgs) {
+		return DaoLocator.getInstance(context).getReadDatabase().rawQuery(selectionClause, selectionArgs);
 	}
 
 }

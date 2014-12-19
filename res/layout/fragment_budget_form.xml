@@ -76,8 +76,10 @@
                     android:layout_height="wrap_content"
                     android:layout_alignBaseline="@id/budgetLabelPaidAmount"
                     android:layout_alignStart="@id/budgetEditTotalAmount"
+                    android:layout_alignLeft="@id/budgetEditTotalAmount"
                     android:layout_below="@id/budgetEditTotalAmount"
                     android:layout_toRightOf="@+id/budgetLabelPaidAmount"
+                    android:layout_toEndOf="@+id/budgetLabelPaidAmount"
                     android:ems="10"
                     android:hint="@string/budget_hint_field_paid_amount"
                     android:inputType="numberDecimal" >

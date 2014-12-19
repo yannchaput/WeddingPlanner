@@ -21,6 +21,7 @@ import java.nio.channels.FileChannel;
 import org.apache.commons.lang3.StringUtils;
 
 import com.innovention.weddingplanner.Constantes;
+import com.innovention.weddingplanner.bean.Contact.Category;
 import com.innovention.weddingplanner.exception.TechnicalException;
 
 import android.app.DownloadManager.Query;
@@ -248,6 +249,7 @@ public final class DatabaseHelper extends SQLiteOpenHelper {
 					values.put(ConstantesDAO.COL_COCKTAIL, cocktail);
 					values.put(ConstantesDAO.COL_PARTY, party);
 					values.put(ConstantesDAO.COL_RSVP, rsvp);
+					values.put(ConstantesDAO.COL_GUEST_CATEGORY, Category.OTHER.toString());
 					dst.insert(ConstantesDAO.TABLE_GUESTS, null, values);
 					c.moveToNext();
 				}

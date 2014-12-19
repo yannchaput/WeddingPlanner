@@ -5,5 +5,17 @@
          screen margins) for sw720dp devices (e.g. 10" tablets) in landscape here.
     -->
     <dimen name="activity_horizontal_margin">128dp</dimen>
+    
+    <!-- Contact stats tab -->
+    <dimen name="contact_stats_top_margin">20dp</dimen>
+	<dimen name="contact_stats_bottom_margin">20dp</dimen>
+	<dimen name="contact_stats_left_margin">30dp</dimen>
+	<dimen name="contact_stats_right_margin">30dp</dimen>
+	
+	<!-- Contact list tab -->
+	<dimen name="contact_list_top_margin">20dp</dimen>
+	<dimen name="contact_list_bottom_margin">20dp</dimen>
+	<dimen name="contact_list_left_margin">20dp</dimen>
+	<dimen name="contact_list_right_margin">20dp</dimen>
 
 </resources>

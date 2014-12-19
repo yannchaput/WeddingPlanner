@@ -1,21 +1,21 @@
 package com.innovention.weddingplanner;
 
-import static com.innovention.weddingplanner.utils.WeddingPlannerHelper.hideKeyboard;
-import static com.innovention.weddingplanner.utils.WeddingPlannerHelper.replaceFragment;
 import static com.innovention.weddingplanner.utils.WeddingPlannerHelper.showAlert;
 import static com.innovention.weddingplanner.utils.WeddingPlannerHelper.showFragmentDialog;
 
+import org.apache.commons.lang3.ObjectUtils;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
-import android.app.Activity;
-import android.app.Fragment;
-import android.app.FragmentManager;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.NavUtils;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Toast;
 
@@ -28,52 +28,31 @@ import com.innovention.weddingplanner.bean.Contact;
 import com.innovention.weddingplanner.bean.IDtoBean;
 import com.innovention.weddingplanner.bean.WeddingInfo;
 import com.innovention.weddingplanner.dao.DaoLocator;
-import com.innovention.weddingplanner.dao.WeddingInfoDao;
 import com.innovention.weddingplanner.dao.DaoLocator.SERVICES;
 import com.innovention.weddingplanner.dao.GuestsDao;
+import com.innovention.weddingplanner.dao.WeddingInfoDao;
 import com.innovention.weddingplanner.utils.WeddingPlannerHelper;
 
-public class GuestActivity extends Activity implements OnGuestSelectedListener,
-		OnValidateContactListener {
+public class GuestActivity extends FragmentActivity implements
+		OnGuestSelectedListener, OnValidateContactListener {
 
-	private final static String TAG = ContactFragment.class.getSimpleName();
+	private final static String TAG = GuestActivity.class.getSimpleName();
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		Log.d(TAG, "onCreate");
 		setContentView(R.layout.activity_guest);
-		// Show the Up button in the action bar.
-		setupActionBar();
-		// Add list guest fragment
-		FragmentManager fgtMgr = getFragmentManager();
-		Fragment fgt = fgtMgr.findFragmentByTag(FragmentTags.TAG_FGT_GUESTLIST
-				.getValue());
-		// Test in case we recreate the activity because we switch to landscape
-		// mode
-		// Then no need to recreate the fragment
-		if ((fgt == null)) {
-			getFragmentManager()
-					.beginTransaction()
-					.add(R.id.LayoutGuest, GuestListFragment.newInstance(),
-							FragmentTags.TAG_FGT_GUESTLIST.getValue()).commit();
+		Fragment fgt = ObjectUtils.defaultIfNull(getSupportFragmentManager().findFragmentByTag(FragmentTags.TAG_FGT_GUESTPAGER.getValue()),GuestPagerFragment.newInstance());
+		if (!fgt.isAdded()) {
+		getSupportFragmentManager()
+				.beginTransaction()
+				.add(R.id.LayoutGuest, fgt,
+						FragmentTags.TAG_FGT_GUESTPAGER.getValue()).commit();
 		}
-	}
-
-	/**
-	 * Set up the {@link android.app.ActionBar}.
-	 */
-	private void setupActionBar() {
-
-		getActionBar().setDisplayHomeAsUpEnabled(true);
+		// Show the Up button in the action bar.
 
 	}
-
-	// @Override
-	// public boolean onCreateOptionsMenu(Menu menu) {
-	// // Inflate the menu; this adds items to the action bar if it is present.
-	// getMenuInflater().inflate(R.menu.guest, menu);
-	// return true;
-	// }
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
@@ -120,23 +99,27 @@ public class GuestActivity extends Activity implements OnGuestSelectedListener,
 		if (FragmentTags.TAG_FGT_UPDATECONTACT.equals(action)) {
 			Contact selectedGuest = dao.get(id);
 			Log.v(TAG, "onSelectGuest - Guest to update is " + selectedGuest);
-			replaceFragment(this, FragmentTags.TAG_FGT_UPDATECONTACT,
-					selectedGuest);
+			// replaceFragment(this, FragmentTags.TAG_FGT_UPDATECONTACT,
+			// selectedGuest);
+			Intent intent = new Intent(this, ContactFormContainerActivity.class);
+			intent.setAction(FragmentTags.TAG_FGT_UPDATECONTACT.getValue());
+			intent.putExtra(Contact.KEY_INTENT_SELECTED_GUEST, selectedGuest);
+			startActivity(intent);
 		} else if (FragmentTags.TAG_FGT_DELETECONTACT.equals(action)) {
 			Log.v(TAG, "onSelectGuest - Suppress guest with id " + id);
 			int count = dao.removeWithId((int) id);
 			if (count > 1)
 				showAlert(R.string.delete_guest_alert_dialog_title,
 						R.string.delete_guest_multiple_alert_message,
-						getFragmentManager());
+						getSupportFragmentManager());
 			else if (count == 0) {
 				showAlert(R.string.delete_guest_alert_dialog_title,
 						R.string.delete_guest_0_alert_message,
-						getFragmentManager());
+						getSupportFragmentManager());
 			} else {
 				showAlert(R.string.delete_guest_OK_alert_dialog_title,
 						R.string.delete_guest_OK_alert_message,
-						getFragmentManager());
+						getSupportFragmentManager());
 			}
 		}
 	}
@@ -177,8 +160,9 @@ public class GuestActivity extends Activity implements OnGuestSelectedListener,
 				SERVICES.INFO);
 		Contact selectedGuest = dao.get(id);
 		WeddingInfo info = infoDao.get();
-		DateTimeFormatter fmt =DateTimeFormat.fullDate();
-		String weddingDate = (info!=null ? info.getWeddingDate().toString(fmt) : "XXX");
+		DateTimeFormatter fmt = DateTimeFormat.fullDate();
+		String weddingDate = (info != null ? info.getWeddingDate()
+				.toString(fmt) : "XXX");
 		String mail = selectedGuest.getMail();
 		Log.v(TAG, "Send mail to contact with email " + mail);
 		if (!WeddingPlannerHelper.isEmpty(mail)) {
@@ -205,30 +189,18 @@ public class GuestActivity extends Activity implements OnGuestSelectedListener,
 	public void onValidateContact(IDtoBean bean, String tag) {
 		// TODO Auto-generated method stub
 
+		// Called from ContactListFragment during import
 		Preconditions.checkNotNull(bean,
 				"Contact bean can't be null on validation");
 		Preconditions.checkArgument(!Strings.isNullOrEmpty(tag),
 				"Fragment tag passed is empty which is incorrect");
 
-		if (!FragmentTags.TAG_FGT_IMPORTCONTACT.getValue().equals(tag))
-			hideKeyboard(this);
-
 		GuestsDao dao = DaoLocator.getInstance(getApplication()).get(
 				SERVICES.GUEST);
 
-		if (FragmentTags.TAG_FGT_CREATECONTACT.getValue().equals(tag)
-				|| FragmentTags.TAG_FGT_IMPORTCONTACT.getValue().equals(tag)) {
-			Log.d(TAG, "Save contact in creation mode: " + bean);
-			dao.insert((Contact) bean);
-		} else if (FragmentTags.TAG_FGT_UPDATECONTACT.getValue().equals(tag)) {
-			Log.d(TAG, "Save contact in update mode: " + bean);
-			Preconditions.checkArgument(bean.getId() > 0,
-					"Invalid db id for contact");
-			dao.update(bean.getId(), (Contact) bean);
-		}
-		// Replace add contact fragment by list fragment
-		if (!FragmentTags.TAG_FGT_IMPORTCONTACT.getValue().equals(tag))
-			replaceFragment(this, FragmentTags.TAG_FGT_GUESTLIST);
+		Log.d(TAG, "Save contact in creation mode: " + bean);
+		dao.insert((Contact) bean);
+
 		Log.d(TAG, "Contact saved: " + bean);
 	}
 

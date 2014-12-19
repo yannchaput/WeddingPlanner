@@ -121,4 +121,16 @@ public class VendorDao implements IDao<Vendor> {
 		return null;
 	}
 
+	@Override
+	public Cursor getCursor(String selectionClause, String[] selectionArgs,
+			String orderBy) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	@Override
+	public Cursor rawQuery(String selectionClause, String[] selectionArgs) {
+		return DaoLocator.getInstance(context).getReadDatabase().rawQuery(selectionClause, selectionArgs);
+	}
+
 }

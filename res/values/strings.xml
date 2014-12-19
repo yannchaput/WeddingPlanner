@@ -24,8 +24,11 @@
     <string name="item_resetDb_action">Formattage de la base</string>
     <string name="item_recreateDb_toast">Merci de redémarrer l\'application</string>
     <string name="item_recreateDb_failed_toast">Une erreur est intervenue. Les données n\'ont pu être sauvegardées</string>
+    <string name="item_rate_my_app">Notez WeddingPlanner</string>
 
     <!-- Contact list -->
+    <string name="contact_tab_statistics">Statistiques</string>
+    <string name="contact_tab_liste">Liste</string>
     <string name="action_add_contact">Ajouter invité</string>
     <string name="action_delete_contact">Supprimer invité</string>
     <string name="action_update_contact">Modifier invité</string>
@@ -44,6 +47,7 @@
     <string name="contact_mail_provider">Choix du client mail:</string>
 
     <!-- Contact form -->
+    <string name="title_activity_contactformcontainer">Invitations</string>
     <string name="contact_field_surname">Nom</string>
     <string name="contact_field_name">Prénom</string>
     <string name="contact_field_phone">Tel.</string>
@@ -222,4 +226,10 @@
 	<!-- Budget pie -->
 	<string name="budget_pie_chart_title">Budget total</string>
 	<string name="budget_pie_chart_title2">Dépenses actuelles</string>
+	
+	<!-- Guest stats tab -->
+	<string name="contact_stats_nb_invites">Nb. invités</string>
+	<string name="contact_stats_nb_presents">Nb. présents</string>
+	<string name="contact_stats_nb_absents">Nb. absents</string>
+	<string name="contact_stats_nb_rsvp">Nb. RSVP</string>
 </resources>

@@ -13,13 +13,14 @@ import org.joda.time.DateTime;
 import org.joda.time.Days;
 
 import android.app.Activity;
-import android.app.DialogFragment;
-import android.app.Fragment;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.text.TextUtils;
 import android.util.Log;
 import android.util.Patterns;
@@ -35,6 +36,7 @@ import com.innovention.weddingplanner.Constantes.FragmentTags;
 import com.innovention.weddingplanner.ContactFragment;
 import com.innovention.weddingplanner.ContactListFragment;
 import com.innovention.weddingplanner.GuestListFragment;
+import com.innovention.weddingplanner.GuestPagerFragment;
 import com.innovention.weddingplanner.R;
 import com.innovention.weddingplanner.TaskFragment;
 import com.innovention.weddingplanner.TaskListFragment;
@@ -182,9 +184,9 @@ public final class WeddingPlannerHelper {
 	 * @param tag
 	 *            tag of the fragment to display
 	 */
-	public static void replaceFragment(Activity parent, FragmentTags tag,
+	public static void replaceFragment(FragmentActivity parent, FragmentTags tag,
 			final IDtoBean... params) {
-		FragmentTransaction tx = parent.getFragmentManager().beginTransaction();
+		FragmentTransaction tx = parent.getSupportFragmentManager().beginTransaction();
 		Fragment fgt = null;
 		int resId;
 
@@ -192,7 +194,7 @@ public final class WeddingPlannerHelper {
 		// attribute in every fragment
 		switch (tag) {
 		case TAG_FGT_GUESTLIST:
-			fgt = parent.getFragmentManager().findFragmentByTag(tag.getValue());
+			fgt = parent.getSupportFragmentManager().findFragmentByTag(tag.getValue());
 			if (null == fgt) {
 				Log.v(TAG, "Create new GuestListFragment instance");
 				fgt = GuestListFragment.newInstance();
@@ -200,6 +202,14 @@ public final class WeddingPlannerHelper {
 			else {
 				Log.v(TAG, "Reuse existing GuestListFragment instance");
 				((GuestListFragment) fgt).refresh();
+			}
+			resId = R.id.LayoutGuest;
+			break;
+		case TAG_FGT_GUESTPAGER:
+			fgt = parent.getSupportFragmentManager().findFragmentByTag(tag.getValue());
+			if (null == fgt) {
+				Log.v(TAG, "Create new GuestPagerFragment instance");
+				fgt = GuestPagerFragment.newInstance();
 			}
 			resId = R.id.LayoutGuest;
 			break;
@@ -253,7 +263,7 @@ public final class WeddingPlannerHelper {
 			break;
 		case TAG_FGT_VENDORLIST:
 			// Reuse existing fragment if possible
-			fgt = parent.getFragmentManager().findFragmentByTag(tag.getValue());
+			fgt = parent.getSupportFragmentManager().findFragmentByTag(tag.getValue());
 			if (null == fgt) {
 				Log.v(TAG, "Create new VendorListFragment instance");
 				fgt = VendorListFragment.newInstance();
@@ -264,7 +274,7 @@ public final class WeddingPlannerHelper {
 			resId = R.id.LayoutVendor;
 			break;
 		case TAG_FGT_BUDGET_LIST:
-			fgt = parent.getFragmentManager().findFragmentByTag(tag.getValue());
+			fgt = parent.getSupportFragmentManager().findFragmentByTag(tag.getValue());
 			if (null == fgt) {
 				fgt = BudgetListFragment.newInstance();
 			} else {
@@ -273,7 +283,7 @@ public final class WeddingPlannerHelper {
 			resId = R.id.LayoutBudget;
 			break;
 		case TAG_FGT_BUDGET_PIE:
-			fgt = parent.getFragmentManager().findFragmentByTag(tag.getValue());
+			fgt = parent.getSupportFragmentManager().findFragmentByTag(tag.getValue());
 			if (null == fgt) {
 				fgt = BudgetPieFragment.newInstance();
 			} 
@@ -310,9 +320,9 @@ public final class WeddingPlannerHelper {
 	 * @param tag
 	 *            tag of the fragment to display
 	 */
-	public static void showFragmentDialog(Activity parent,
+	public static void showFragmentDialog(FragmentActivity parent,
 			DialogFragment dialog, FragmentTags tag) {
-		FragmentTransaction ft = parent.getFragmentManager().beginTransaction();
+		FragmentTransaction ft = parent.getSupportFragmentManager().beginTransaction();
 		ft.addToBackStack(tag.getValue());
 		dialog.show(ft, tag.getValue());
 	}

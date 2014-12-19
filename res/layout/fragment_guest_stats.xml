@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".GuestActivity" >
+
+    <RelativeLayout
+        android:id="@+id/LayoutGuestStats"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginBottom="@dimen/contact_stats_bottom_margin"
+        android:layout_marginEnd="@dimen/contact_stats_right_margin"
+        android:layout_marginLeft="@dimen/contact_stats_left_margin"
+        android:layout_marginRight="@dimen/contact_stats_right_margin"
+        android:layout_marginStart="@dimen/contact_stats_left_margin"
+        android:layout_marginTop="@dimen/contact_stats_top_margin"
+        android:layout_weight="1"
+        android:orientation="vertical" >
+
+        <TextView
+            android:id="@+id/lblGuestStatsNb"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:text="@string/contact_stats_nb_invites"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+
+        <TextView
+            android:id="@+id/lblGuestStatsNbAttend"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/lblGuestStatsNb"
+            android:text="@string/contact_stats_nb_presents"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+
+        <TextView
+            android:id="@+id/lblGuestStatsNbAbsent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/lblGuestStatsNbAttend"
+            android:text="@string/contact_stats_nb_absents"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+
+        <TextView
+            android:id="@+id/lblGuestStatsNbRsvp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/lblGuestStatsNbAbsent"
+            android:text="@string/contact_stats_nb_rsvp"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+
+        <TextView
+            android:id="@+id/lblGuestStatsResult"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/lblGuestStatsNb"
+            android:layout_alignBottom="@+id/lblGuestStatsNb"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:text="@string/placeholder"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <TextView
+            android:id="@+id/lblGuestStatsNbAttendResult"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/lblGuestStatsNbAbsent"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:text="@string/placeholder"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <TextView
+            android:id="@+id/lblGuestStatsNbRsvpResult"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/lblGuestStatsNbRsvp"
+            android:layout_alignBottom="@+id/lblGuestStatsNbRsvp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:text="@string/placeholder"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <TextView
+            android:id="@+id/lblGuestStatsNbAbsentResult"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/lblGuestStatsNbRsvp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:text="@string/placeholder"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    </RelativeLayout>
+
+    <FrameLayout
+        android:id="@+id/LayoutGuestStatsAd"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/ad_banner_minwidth"
+        android:background="@color/LightCyan" />
+
+</LinearLayout>

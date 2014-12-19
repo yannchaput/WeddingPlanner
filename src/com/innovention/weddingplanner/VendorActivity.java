@@ -6,6 +6,7 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.NavUtils;
 import android.util.Log;
 import android.view.MenuItem;
@@ -17,7 +18,7 @@ import com.innovention.weddingplanner.dao.DaoLocator;
 import com.innovention.weddingplanner.dao.DaoLocator.SERVICES;
 import com.innovention.weddingplanner.dao.VendorDao;
 
-public class VendorActivity extends Activity implements OnValidateVendor {
+public class VendorActivity extends FragmentActivity implements OnValidateVendor {
 
 	private static final String TAG = VendorActivity.class.getSimpleName();
 
@@ -39,7 +40,7 @@ public class VendorActivity extends Activity implements OnValidateVendor {
 		// mode
 		// Then no need to recreate the fragment
 		if ((fgt == null)) {
-			getFragmentManager()
+			getSupportFragmentManager()
 					.beginTransaction()
 					.add(R.id.LayoutVendor, VendorListFragment.newInstance(),
 							FragmentTags.TAG_FGT_VENDORLIST.getValue()).commit();

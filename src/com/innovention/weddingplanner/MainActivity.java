@@ -8,12 +8,12 @@ import static com.innovention.weddingplanner.Constantes.KEY_DTPICKER_Y;
 import static com.innovention.weddingplanner.utils.WeddingPlannerHelper.computeDate;
 import static com.innovention.weddingplanner.utils.WeddingPlannerHelper.getFont;
 import static com.innovention.weddingplanner.utils.WeddingPlannerHelper.showFragmentDialog;
-import android.app.Activity;
-import android.app.DialogFragment;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
+import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -35,9 +35,10 @@ import com.innovention.weddingplanner.dao.DaoLocator;
 import com.innovention.weddingplanner.dao.DaoLocator.SERVICES;
 import com.innovention.weddingplanner.dao.WeddingInfoDao;
 import com.innovention.weddingplanner.exception.TechnicalException;
+import com.innovention.weddingplanner.utils.AppRater;
 import com.innovention.weddingplanner.utils.WeddingPlannerHelper;
 
-public class MainActivity extends Activity {
+public class MainActivity extends FragmentActivity {
 	
 	private final static String TAG = MainActivity.class.getSimpleName();
 	
@@ -57,6 +58,8 @@ public class MainActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		
 		Log.d(TAG, "onCreate - " + "Create main activity");
+		
+		AppRater.app_launched(getApplication());
 		
 		setContentView(R.layout.activity_main);
 		
@@ -142,6 +145,9 @@ public class MainActivity extends Activity {
 			} catch (TechnicalException e) {
 				Toast.makeText(this, R.string.item_recreateDb_failed_toast, Toast.LENGTH_LONG).show();
 			}
+			return true;
+		case R.id.action_rateMyApp:
+			AppRater.showRateDialog(this, null);
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);

@@ -10,10 +10,11 @@
 
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.INTERNET"/>
-  	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-  	<uses-permission android:name="android.permission.READ_CONTACTS" />
-  	<uses-permission android:name="android.permission.CALL_PHONE"></uses-permission>
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
+    <uses-permission android:name="android.permission.CALL_PHONE" >
+    </uses-permission>
 
     <application
         android:allowBackup="true"
@@ -32,6 +33,7 @@
         </activity>
         <activity
             android:name="com.innovention.weddingplanner.GuestActivity"
+            android:configChanges="orientation|keyboardHidden"
             android:label="@string/title_activity_guest"
             android:parentActivityName="com.innovention.weddingplanner.MainActivity"
             android:windowSoftInputMode="adjustResize" >
@@ -66,6 +68,15 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.innovention.weddingplanner.MainActivity" />
         </activity>
+        <activity
+            android:name="com.innovention.weddingplanner.ContactFormContainerActivity"
+            android:label="@string/title_activity_contactformcontainer"
+            android:parentActivityName="com.innovention.weddingplanner.GuestActivity"
+            android:windowSoftInputMode="stateHidden|adjustResize" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.innovention.weddingplanner.GuestActivity" />
+        </activity>
 
         <receiver android:name="com.innovention.weddingplanner.service.BootstrapReceiver" >
             <intent-filter>
@@ -85,13 +96,14 @@
             android:authorities="com.innovention.weddingplanner.contentprovider.DBContentProvider"
             android:exported="false" >
         </provider>
-        
-         <meta-data
+
+        <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
-        
-        <activity android:name="com.google.android.gms.ads.AdActivity"
-             android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"/>
+
+        <activity
+            android:name="com.google.android.gms.ads.AdActivity"
+            android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize" />
     </application>
 
 </manifest>

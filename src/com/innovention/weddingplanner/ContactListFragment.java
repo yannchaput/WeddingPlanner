@@ -16,11 +16,8 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import android.app.Activity;
-import android.app.ListFragment;
-import android.app.LoaderManager.LoaderCallbacks;
 import android.content.Context;
-import android.content.CursorLoader;
-import android.content.Loader;
+import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -31,6 +28,10 @@ import android.provider.ContactsContract.CommonDataKinds.Phone;
 import android.provider.ContactsContract.CommonDataKinds.StructuredName;
 import android.provider.ContactsContract.CommonDataKinds.StructuredPostal;
 import android.provider.ContactsContract.Data;
+import android.support.v4.app.ListFragment;
+import android.support.v4.app.LoaderManager.LoaderCallbacks;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
 import android.util.Log;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
@@ -68,6 +69,9 @@ public class ContactListFragment extends ListFragment implements
 	// LoaderCallback ids
 	private static final int QUERY_LIST_ID = 1;
 	private static final int QUERY_DETAIL_NAMES_ID = 2;
+	// Bundle key names
+	private static final String BUNDLE_LOADER_WHERE = "where";
+	private static final String BUNDLE_LOADER_WHERE_ARGS = "whereArgs";
 
 	/**
 	 * Activity listens to create contact events
@@ -108,15 +112,6 @@ public class ContactListFragment extends ListFragment implements
 	private static final String[] PROJECTION_QUERY_DETAIL_EMAIL = { Email.ADDRESS };
 	private static final String[] PROJECTION_QUERY_DETAIL_PHONE = { Phone.NUMBER };
 	private static final String[] PROJECTION_QUERY_DETAIL_ADDRESS = { StructuredPostal.FORMATTED_ADDRESS };
-
-	/**
-	 * Where clause for cursor loader queries
-	 */
-	private String mSelectionDetail;
-	/**
-	 * Where clause arguments for contact details
-	 */
-	private String[] mSelectionDetailArgs;
 
 	/**
 	 * Utility class for ContactListCursorAdapter. Represents the mapping
@@ -279,9 +274,11 @@ public class ContactListFragment extends ListFragment implements
 
 			@Override
 			public void onClick(View v) {
-				WeddingPlannerHelper.replaceFragment(
-						ContactListFragment.this.getActivity(),
-						FragmentTags.TAG_FGT_GUESTLIST);
+//				WeddingPlannerHelper.replaceFragment(
+//						ContactListFragment.this.getActivity(),
+//						FragmentTags.TAG_FGT_GUESTPAGER);
+				Intent guestActivityIntent = new Intent(ContactListFragment.this.getActivity(), GuestActivity.class);
+				startActivity(guestActivityIntent);
 
 			}
 		});
@@ -302,7 +299,7 @@ public class ContactListFragment extends ListFragment implements
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		inflater.inflate(R.menu.import_contact_menu, menu);
-		super.onCreateOptionsMenu(menu, inflater);
+		return;
 	}
 
 	/*
@@ -370,18 +367,19 @@ public class ContactListFragment extends ListFragment implements
 				.append(Data.MIMETYPE).append(" = ?").append(" ) ")
 				.append(" OR ").append(" ( ").append(Data.MIMETYPE)
 				.append(" = ?").append(" ) ").append(" ) ");
-		mSelectionDetail = whereClause.toString();
 		listWhereArgs.add(StructuredName.CONTENT_ITEM_TYPE);
 		listWhereArgs.add(Email.CONTENT_ITEM_TYPE);
-		mSelectionDetailArgs = listWhereArgs.toArray(new String[listWhereArgs
-				.size()]);
-		Log.v(TAG, "Where clause = " + mSelectionDetail);
-		Log.v(TAG, "Lookup keys: " + ArrayUtils.toString(mSelectionDetailArgs));
+		Log.v(TAG, "Where clause = " + whereClause);
+		Log.v(TAG, "Lookup keys: " + ArrayUtils.toString(listWhereArgs));
 
 		// Show progress bar
 		bar.setVisibility(View.VISIBLE);
+		Bundle args = new Bundle();
+		args.putString(BUNDLE_LOADER_WHERE, whereClause.toString());
+		args.putStringArray(BUNDLE_LOADER_WHERE_ARGS, listWhereArgs.toArray(new String[listWhereArgs
+		                                                               				.size()]));
 		// Then load the contacts in background
-		getLoaderManager().restartLoader(QUERY_DETAIL_NAMES_ID, null, this);
+		getLoaderManager().restartLoader(QUERY_DETAIL_NAMES_ID, args, this);
 		// Results are received in onLoadReset method
 	}
 
@@ -539,13 +537,15 @@ public class ContactListFragment extends ListFragment implements
 		default:
 			contentUri = ContactsContract.Contacts.CONTENT_URI;
 			projection = PROJECTION_QUERY_LIST;
+			selection = new StringBuilder().append(ContactsContract.Contacts.HAS_PHONE_NUMBER).append("= ?").toString();
+			selectionArgs = new String[] { "1" };
 			sortOrder = ContactsContract.Contacts.DISPLAY_NAME_PRIMARY;
 			break;
 		case QUERY_DETAIL_NAMES_ID:
 			contentUri = Data.CONTENT_URI;
 			projection = PROJECTION_QUERY_DETAIL_NAMES;
-			selection = mSelectionDetail;
-			selectionArgs = mSelectionDetailArgs;
+			selection = args.getString(BUNDLE_LOADER_WHERE);
+			selectionArgs = args.getStringArray(BUNDLE_LOADER_WHERE_ARGS);
 		}
 
 		// no sub-selection, no sort order, simply every row

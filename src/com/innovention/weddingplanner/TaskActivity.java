@@ -9,6 +9,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.NavUtils;
 import android.util.Log;
 import android.view.MenuItem;
@@ -23,7 +25,7 @@ import com.innovention.weddingplanner.dao.DaoLocator;
 import com.innovention.weddingplanner.dao.DaoLocator.SERVICES;
 import com.innovention.weddingplanner.dao.TasksDao;
 
-public class TaskActivity extends Activity implements
+public class TaskActivity extends FragmentActivity implements
 		ActionBar.OnNavigationListener, OnValidateTask, OnTaskSelectedListener {
 
 	private static final String TAG = TaskActivity.class.getSimpleName();
@@ -120,11 +122,11 @@ public class TaskActivity extends Activity implements
 	public boolean onNavigationItemSelected(int position, long id) {
 		// When the given dropdown item is selected, show its contents in the
 		// container view.
-		android.app.Fragment fragment = new TaskListFragment();
+		Fragment fragment = new TaskListFragment();
 		Bundle args = new Bundle();
 		args.putInt(TaskListFragment.ARG_SECTION_NUMBER, position);
 		fragment.setArguments(args);
-		getFragmentManager().beginTransaction()
+		getSupportFragmentManager().beginTransaction()
 				.replace(R.id.layoutTask, fragment).commit();
 		return true;
 	}
@@ -148,7 +150,7 @@ public class TaskActivity extends Activity implements
 					replaceFragment(this, FragmentTags.TAG_FGT_UPDATETASK, task);
 				}
 				else {
-					showAlert(R.string.update_task_alert_dialog_title, R.string.update_task_0_alert_message, getFragmentManager());
+					showAlert(R.string.update_task_alert_dialog_title, R.string.update_task_0_alert_message, getSupportFragmentManager());
 				}
 				break;
 			case TAG_FGT_DELETETASK:
@@ -157,16 +159,16 @@ public class TaskActivity extends Activity implements
 				if (count > 1)
 					showAlert(R.string.delete_task_alert_dialog_title,
 							R.string.delete_guest_multiple_alert_message,
-							getFragmentManager());
+							getSupportFragmentManager());
 				else if (count == 0){
 					showAlert(R.string.delete_task_alert_dialog_title,
 							R.string.delete_guest_0_alert_message,
-							getFragmentManager());
+							getSupportFragmentManager());
 				}
 				else {
 					showAlert(R.string.delete_task_OK_alert_dialog_title,
 							R.string.delete_guest_OK_alert_message,
-							getFragmentManager());
+							getSupportFragmentManager());
 				}
 				break;
 			default:

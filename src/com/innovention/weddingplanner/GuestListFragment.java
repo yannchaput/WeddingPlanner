@@ -12,7 +12,6 @@ import static com.innovention.weddingplanner.dao.ConstantesDAO.NUM_COL_SURNAME;
 import static com.innovention.weddingplanner.utils.WeddingPlannerHelper.formatCurrency;
 import static com.innovention.weddingplanner.utils.WeddingPlannerHelper.getDefaultLocale;
 import android.app.Activity;
-import android.app.Fragment;
 import android.app.LoaderManager.LoaderCallbacks;
 import android.content.Context;
 import android.content.CursorLoader;
@@ -20,6 +19,7 @@ import android.content.Loader;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.ActionMode;
 import android.view.LayoutInflater;
@@ -68,11 +68,6 @@ public class GuestListFragment extends Fragment implements Refreshable {
 	private OnGuestSelectedListener mListener;
 
 	/**
-	 * Ad widget
-	 */
-	private AdView adView;
-
-	/**
 	 * The fragment's ListView/GridView.
 	 */
 	private ExpandableListView expListView;
@@ -82,6 +77,11 @@ public class GuestListFragment extends Fragment implements Refreshable {
 	 * Views.
 	 */
 	private ExpAdapter expListAdapter;
+	
+	/**
+	 * Ad widget
+	 */
+	private AdView adView;
 
 	/**
 	 * Adapter for Expandable list
@@ -143,19 +143,28 @@ public class GuestListFragment extends Fragment implements Refreshable {
 					.getColumnIndex(COL_GUEST_CATEGORY));
 			TextView tvGrp = (TextView) view
 					.findViewById(R.id.lblGuestListHeader);
-			Category eCategory = Category.valueOf(category);
-			switch(eCategory) {
+			Category eCategory = null;
+			try {
+				eCategory = Category.valueOf(category);
+			} catch (NullPointerException e) {
+				eCategory = Category.OTHER;
+			}
+			switch (eCategory) {
 			case FAMILY:
-				tvGrp.setText(getResources().getStringArray(R.array.contact_category_list)[0]);
+				tvGrp.setText(getResources().getStringArray(
+						R.array.contact_category_list)[0]);
 				break;
 			case FRIEND:
-				tvGrp.setText(getResources().getStringArray(R.array.contact_category_list)[1]);
+				tvGrp.setText(getResources().getStringArray(
+						R.array.contact_category_list)[1]);
 				break;
 			case COLLEGUE:
-				tvGrp.setText(getResources().getStringArray(R.array.contact_category_list)[2]);
+				tvGrp.setText(getResources().getStringArray(
+						R.array.contact_category_list)[2]);
 				break;
 			default:
-				tvGrp.setText(getResources().getStringArray(R.array.contact_category_list)[3]);
+				tvGrp.setText(getResources().getStringArray(
+						R.array.contact_category_list)[3]);
 			}
 
 		}
@@ -168,7 +177,8 @@ public class GuestListFragment extends Fragment implements Refreshable {
 					.getInstance(getActivity().getApplicationContext())
 					.get(SERVICES.GUEST)
 					.getCursor(COL_GUEST_CATEGORY + "=?",
-							new String[] { category });
+							new String[] { category },
+							COL_NAME + " COLLATE NOCASE ASC");
 			return c;
 
 		}
@@ -222,19 +232,28 @@ public class GuestListFragment extends Fragment implements Refreshable {
 					.getColumnIndex(COL_GUEST_CATEGORY));
 			TextView tvGrp = (TextView) mView
 					.findViewById(R.id.lblGuestListHeader);
-			Category eCategory = Category.valueOf(category);
-			switch(eCategory) {
+			Category eCategory = null;
+			try {
+				eCategory = Category.valueOf(category);
+			} catch (NullPointerException e) {
+				eCategory = Category.OTHER;
+			}
+			switch (eCategory) {
 			case FAMILY:
-				tvGrp.setText(getResources().getStringArray(R.array.contact_category_list)[0]);
+				tvGrp.setText(getResources().getStringArray(
+						R.array.contact_category_list)[0]);
 				break;
 			case FRIEND:
-				tvGrp.setText(getResources().getStringArray(R.array.contact_category_list)[1]);
+				tvGrp.setText(getResources().getStringArray(
+						R.array.contact_category_list)[1]);
 				break;
 			case COLLEGUE:
-				tvGrp.setText(getResources().getStringArray(R.array.contact_category_list)[2]);
+				tvGrp.setText(getResources().getStringArray(
+						R.array.contact_category_list)[2]);
 				break;
 			default:
-				tvGrp.setText(getResources().getStringArray(R.array.contact_category_list)[3]);
+				tvGrp.setText(getResources().getStringArray(
+						R.array.contact_category_list)[3]);
 			}
 			return mView;
 		}
@@ -347,30 +366,6 @@ public class GuestListFragment extends Fragment implements Refreshable {
 	}
 
 	@Override
-	public void onResume() {
-		// TODO Auto-generated method stub
-		super.onResume();
-		if (adView != null)
-			adView.resume();
-	}
-
-	@Override
-	public void onPause() {
-		// TODO Auto-generated method stub
-		super.onPause();
-		if (adView != null)
-			adView.pause();
-	}
-
-	@Override
-	public void onDestroy() {
-		// TODO Auto-generated method stub
-		if (adView != null)
-			adView.destroy();
-		super.onDestroy();
-	}
-
-	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
@@ -381,9 +376,6 @@ public class GuestListFragment extends Fragment implements Refreshable {
 			Bundle savedInstanceState) {
 		View rootView = inflater.inflate(R.layout.fragment_guest_list,
 				container, false);
-
-		// Necessary to set the menu visible for fragment
-		setHasOptionsMenu(true);
 
 		// get the listview
 		expListView = (ExpandableListView) rootView
@@ -425,8 +417,7 @@ public class GuestListFragment extends Fragment implements Refreshable {
 		adView = new AdView(this.getActivity());
 		adView.setAdUnitId(Constantes.AD_ID);
 		adView.setAdSize(AdSize.BANNER);
-		FrameLayout layoutAd = (FrameLayout) rootView
-				.findViewById(R.id.LayoutGuestAd);
+		FrameLayout layoutAd = (FrameLayout) rootView.findViewById(R.id.LayoutGuestListAd);
 		layoutAd.addView(adView);
 
 		// Initiez une demande générique.
@@ -437,13 +428,6 @@ public class GuestListFragment extends Fragment implements Refreshable {
 		adView.loadAd(adRequest);
 
 		return rootView;
-	}
-
-	@Override
-	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-		// TODO Auto-generated method stub
-		inflater.inflate(R.menu.guest, menu);
-		super.onCreateOptionsMenu(menu, inflater);
 	}
 
 	@Override
@@ -462,6 +446,31 @@ public class GuestListFragment extends Fragment implements Refreshable {
 		super.onDetach();
 		mListener = null;
 	}
+	
+	@Override
+	public void onResume() {
+		// TODO Auto-generated method stub
+		super.onResume();
+		if (adView != null)
+			adView.resume();
+	}
+
+	@Override
+	public void onPause() {
+		// TODO Auto-generated method stub
+		super.onPause();
+		if (adView != null)
+			adView.pause();
+	}
+
+	@Override
+	public void onDestroy() {
+		// TODO Auto-generated method stub
+		if (adView != null)
+			adView.destroy();
+		super.onDestroy();
+	}
+
 
 	/**
 	 * Refreshes the content of the list when invoked

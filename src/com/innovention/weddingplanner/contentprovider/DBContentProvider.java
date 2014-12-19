@@ -269,7 +269,6 @@ public final class DBContentProvider extends ContentProvider {
 			break;
 		case CODE_BUDGET_SUM_TOTAL:
 			projection = new String[] {COL_ID, COL_BUDGET_TOTAL_AMOUNT};
-			queryBuilder.setTables(TABLE_BUDGET);
 			buildQuery = new StringBuilder().append("select sum(")
 					.append(COL_BUDGET_TOTAL_AMOUNT)
 					.append(") from ")

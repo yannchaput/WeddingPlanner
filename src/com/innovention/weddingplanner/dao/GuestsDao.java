@@ -203,13 +203,19 @@ public class GuestsDao implements IDao<Contact> {
 		c.close();
 		return list;
 	}
-
+	
 	@Override
 	public Cursor getCursor(String selectionClause, String[] selectionArgs) {
+		
+		return getCursor(selectionClause, selectionArgs, null);
+	}
+
+	@Override
+	public Cursor getCursor(String selectionClause, String[] selectionArgs, String orderBy) {
 		Cursor c = DaoLocator.getInstance(context).getReadDatabase()
 				.query(TABLE_GUESTS, new String[] {COL_ID, COL_SURNAME, COL_NAME, COL_TEL, COL_EMAIL,
 				COL_ADDRESS, COL_INVITATION, COL_CHURCH, COL_TOWNHALL, COL_COCKTAIL, COL_PARTY, COL_RSVP, COL_GUEST_CATEGORY}
-		, selectionClause, selectionArgs, null, null, null);
+		, selectionClause, selectionArgs, null, null, orderBy);
 		return c;
 	}
 	
@@ -223,6 +229,11 @@ public class GuestsDao implements IDao<Contact> {
 	@Override
 	public List<Contact> getList(String selectionClause, String[] selectionArgs) {
 		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public Cursor rawQuery(String selectionClause, String[] selectionArgs) {
+		return DaoLocator.getInstance(context).getReadDatabase().rawQuery(selectionClause, selectionArgs);
 	}
 
 }

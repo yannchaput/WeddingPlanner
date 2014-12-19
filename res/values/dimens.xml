@@ -18,6 +18,10 @@
 	<dimen name="contact_list_bottom_margin">10dp</dimen>
 	<dimen name="contact_list_left_margin">10dp</dimen>
 	<dimen name="contact_list_right_margin">10dp</dimen>
+	<dimen name="contact_stats_top_margin">10dp</dimen>
+	<dimen name="contact_stats_bottom_margin">10dp</dimen>
+	<dimen name="contact_stats_left_margin">10dp</dimen>
+	<dimen name="contact_stats_right_margin">10dp</dimen>
 	<!--  tasks -->
 	<dimen name="task_list_row_padding">10dp</dimen>
 	<dimen name="task_list_item_left_margin">5dp</dimen>

@@ -34,8 +34,6 @@
                     android:ems="10"
                     android:hint="@string/contact_field_surname"
                     android:inputType="textPersonName" >
-
-                    <requestFocus />
                 </EditText>
             </TableRow>
 

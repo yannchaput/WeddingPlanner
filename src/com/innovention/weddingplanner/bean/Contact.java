@@ -4,7 +4,12 @@ package com.innovention.weddingplanner.bean;
 import static com.innovention.weddingplanner.utils.WeddingPlannerHelper.validateEmail;
 import static com.innovention.weddingplanner.utils.WeddingPlannerHelper.validateMandatory;
 import static com.innovention.weddingplanner.utils.WeddingPlannerHelper.validateTelephone;
+
+import org.joda.time.DateTime;
+
 import android.content.Context;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 import com.google.common.base.Objects;
 import com.innovention.weddingplanner.exception.IncorrectMailException;
@@ -16,9 +21,10 @@ import com.innovention.weddingplanner.exception.MissingMandatoryFieldException;
  * @author YCH
  *
  */
-public class Contact implements IDtoBean {
+public class Contact implements IDtoBean, Parcelable {
 	
 	private final static String TAG = Contact.class.getSimpleName();
+	public static final String KEY_INTENT_SELECTED_GUEST="extraSelectedGuest";
 	
 	private int id;
 	
@@ -158,13 +164,30 @@ public class Contact implements IDtoBean {
 		}
 		
 		private ResponseType getEnumValue() {
-			if (attend == null) return ResponseType.PENDING;
-			else if(attend.booleanValue()) return ResponseType.ATTEND;
-			else if (notAttend.booleanValue()) return ResponseType.NOTATTEND;
+			if (pending != null && pending.booleanValue()) return ResponseType.PENDING;
+			else if(attend!= null && attend.booleanValue()) return ResponseType.ATTEND;
+			else if (notAttend!= null && notAttend.booleanValue()) return ResponseType.NOTATTEND;
 			else return ResponseType.PENDING;
 		}
 		
 	}
+	
+	/**
+	 * Builder for Parcelable feature
+	 */
+	public static final Parcelable.Creator<Contact> CREATOR = new Parcelable.Creator<Contact>() {
+
+		@Override
+		public Contact createFromParcel(Parcel source) {
+			return new Contact(source);
+		}
+
+		@Override
+		public Contact[] newArray(int size) {
+			return new Contact[size];
+		}
+		
+	};
 	
 	/**
 	 * Default constructor
@@ -173,6 +196,25 @@ public class Contact implements IDtoBean {
 		
 	}
 	
+	/**
+	 * Special constructor for Parcelable implementation
+	 * @param in
+	 */
+	private Contact(Parcel in) {
+		this.id = in.readInt();
+		this.surname = in.readString();
+		this.name = in.readString();
+		this.telephone = in.readString();
+		this.mail = in.readString();
+		this.address = in.readString();
+		this.inviteSent = (Boolean) in.readValue(null);
+		this.church = (Boolean) in.readValue(null);
+		this.cocktail = (Boolean) in.readValue(null);
+		this.townHall = (Boolean) in.readValue(null);
+		this.party = (Boolean) in.readValue(null);
+		this.response = ResponseType.valueOf(in.readString());
+		this.category = Category.valueOf(in.readString());
+	}
 	
 	/**
 	 * Constructor (from a builder object)
@@ -203,6 +245,34 @@ public class Contact implements IDtoBean {
 		validateMandatory(this.getName());
 		validateEmail(this.getMail());
 		validateTelephone(this.getTelephone());
+	}
+	
+	/**
+	 * Implements parcelable interface
+	 */
+	@Override
+	public int describeContents() {
+		return 0;
+	}
+
+	/**
+	 * Implements parcelable interface
+	 */
+	@Override
+	public void writeToParcel(Parcel dest, int flags) {
+		dest.writeInt(id);
+		dest.writeString(surname);
+		dest.writeString(name);
+		dest.writeString(telephone);
+		dest.writeString(mail);
+		dest.writeString(address);
+		dest.writeValue(inviteSent);
+		dest.writeValue(church);
+		dest.writeValue(townHall);
+		dest.writeValue(cocktail);
+		dest.writeValue(party);
+		dest.writeString(response.name());
+		dest.writeString(category.name());
 	}
 	
 	@Override
