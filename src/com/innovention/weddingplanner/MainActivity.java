@@ -129,26 +129,13 @@ public class MainActivity extends FragmentActivity {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-		case R.id.action_recreateDb: 
-			// TODO call db connector recreate db
-			try {
-				locator.getDbHelper().recreateDb(locator.getDbHelper().getWritableDatabase());
-				Toast.makeText(this, R.string.item_recreateDb_toast, Toast.LENGTH_LONG).show();
-			} catch (TechnicalException e) {
-				Toast.makeText(this, R.string.item_recreateDb_failed_toast, Toast.LENGTH_LONG).show();
-			}
-			return true;
-		case R.id.action_resetDb:
-			try {
-				locator.getDbHelper().resetDb(locator.getDbHelper().getWritableDatabase());
-				Toast.makeText(this, R.string.item_recreateDb_toast, Toast.LENGTH_LONG).show();
-			} catch (TechnicalException e) {
-				Toast.makeText(this, R.string.item_recreateDb_failed_toast, Toast.LENGTH_LONG).show();
-			}
-			return true;
 		case R.id.action_rateMyApp:
 			AppRater.showRateDialog(this, null);
 			return true;
+		case R.id.action_settings:
+			Intent intent = new Intent();
+			intent.setClass(this, SettingsActivity.class);
+			startActivityForResult(intent, 0);
 		default:
 			return super.onOptionsItemSelected(item);
 		}
@@ -290,6 +277,12 @@ public class MainActivity extends FragmentActivity {
 		
 		Resources res = getResources();
 		days2WeddingTxt.setText(daysToCome + " " + res.getString(R.string.days_to_wedding));
+	}
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		// TODO Auto-generated method stub
+		super.onActivityResult(requestCode, requestCode, data);
 	}
 	
 	

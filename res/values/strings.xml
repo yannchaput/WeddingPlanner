@@ -19,10 +19,13 @@
     <string name="title_activity_guest">Invitations</string>
 
     <!-- settings -->
+    <string name="title_activity_settings">Preferences</string>
     <string name="action_settings">Settings</string>
     <string name="item_recreateDb_action">Réinitialisation de la base</string>
+    <string name="item_recreateDb_summary">Réinitialise la base de données sans perte des données</string>
     <string name="item_resetDb_action">Formattage de la base</string>
-    <string name="item_recreateDb_toast">Merci de redémarrer l\'application</string>
+    <string name="item_resetDb_summary">Reconstruit la base de donnée entièrement. Toutes vos données seront perdues</string>
+    <string name="item_recreateDb_toast">Base de donnée recréée avec succès</string>
     <string name="item_recreateDb_failed_toast">Une erreur est intervenue. Les données n\'ont pu être sauvegardées</string>
     <string name="item_rate_my_app">Notez WeddingPlanner</string>
 

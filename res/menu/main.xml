@@ -5,12 +5,6 @@
         android:orderInCategory="100"
         android:showAsAction="never"
         android:title="@string/action_settings"/>
-    <item android:id="@+id/action_recreateDb"
-          android:title="@string/item_recreateDb_action"
-          android:showAsAction="never"/>
-    <item android:id="@+id/action_resetDb"
-          android:title="@string/item_resetDb_action"
-          android:showAsAction="never"/>
     <item android:id="@+id/action_rateMyApp"
           android:title="@string/item_rate_my_app"
           android:showAsAction="never"/>

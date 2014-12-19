@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+    <Preference android:key="recreateDB" android:title="@string/item_recreateDb_action" android:summary="@string/item_recreateDb_summary"/>
+    <Preference android:key="resetDb" android:title="@string/item_resetDb_action" android:summary="@string/item_resetDb_summary"/>
+    <Preference android:key="rateApp" android:title="@string/item_rate_my_app" />
+    
+</PreferenceScreen>
