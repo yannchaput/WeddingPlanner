@@ -88,7 +88,7 @@ public interface ConstantesDAO {
 	byte NUM_COL_BUDGET_NOTE = NUM_COL_BUDGET_PAID_AMOUNT + 1;
 	
 	// General
-	int VERSION_BDD = 12;
+	int VERSION_BDD = 13;
 	String NOM_BDD = "wedplanner.db";
 	String BDD_BACKUP_NOM = "wedplanner_backup.db";
 	//String BDD_PATH = "//data//data//com.innovention.weddingplanner//databases";
