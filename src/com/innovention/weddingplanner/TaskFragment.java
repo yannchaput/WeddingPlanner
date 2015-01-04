@@ -29,6 +29,7 @@ import android.widget.Spinner;
 import com.innovention.weddingplanner.Constantes.FragmentTags;
 import com.innovention.weddingplanner.bean.IDtoBean;
 import com.innovention.weddingplanner.bean.Task;
+import com.innovention.weddingplanner.bean.Task.Builder;
 import com.innovention.weddingplanner.bean.Task.Period;
 import com.innovention.weddingplanner.exception.InconsistentFieldException;
 import com.innovention.weddingplanner.exception.MissingMandatoryFieldException;
@@ -186,6 +187,7 @@ public class TaskFragment extends Fragment implements OnDateSetListener {
 			descriptionTxt.setText(bean.getDescription());
 			if (bean.getDueDate() != null) 
 				dueDateTxt.setText(DateTimeFormat.shortDate().print(bean.getDueDate()));
+			@SuppressWarnings("unchecked")
 			ArrayAdapter<String> spinAdapter = (ArrayAdapter<String>) remindSpinner.getAdapter();
 			int spinnerPos = spinAdapter.getPosition(bean.getRemindChoice());
 			remindSpinner.setSelection(spinnerPos);
@@ -206,14 +208,17 @@ public class TaskFragment extends Fragment implements OnDateSetListener {
 						Log.v(TAG, "remindDate = " + remindDate);
 					}
 					// Build task bean
-					Task task = new Task.Builder()
+					Builder builder = new Task.Builder()
 							.withId(FragmentTags.TAG_FGT_UPDATETASK.equals(mode) ? bean.getId() : -1)
 							.withDesc(descriptionTxt.getText().toString())
 							.dueDate(dueDate)
 							.remind(remindDate)
 							.remindOption((String) remindSpinner.getSelectedItem())
-							.setPlanning(Period.CUSTOM)
-							.build();
+							.setPlanning(Period.CUSTOM);
+					if (mode.equals(FragmentTags.TAG_FGT_UPDATETASK) && null != bean) {
+						builder.setPlanning(bean.getPeriod());
+					}
+					Task task = builder.build();
 					// Validate task
 					try {
 						task.validate(TaskFragment.this.getActivity());
