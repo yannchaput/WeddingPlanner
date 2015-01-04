@@ -28,6 +28,10 @@
     <string name="item_recreateDb_toast">Base de donnée recréée avec succès</string>
     <string name="item_recreateDb_failed_toast">Une erreur est intervenue. Les données n\'ont pu être sauvegardées</string>
     <string name="item_rate_my_app">Notez WeddingPlanner</string>
+    <string name="item_planning">Planning automatique</string>
+    <string name="item_planning_on_summary">Remplit le planning avec des tâches pré-définies</string>
+    <string name="item_planning_off_summary">Remplissage automatique des tâches non activé</string>
+    
 
     <!-- Contact list -->
     <string name="contact_tab_statistics">Statistiques</string>
@@ -89,6 +93,10 @@
     <string name="title_section2">Tâches en cours</string>
     <string name="title_section3">Tâches terminées</string>
     <string name="title_section4">Tâches en retard</string>
+    <string name="planning_dialog_msg">Voulez-vous définir un planning par défaut?</string>
+    <string name="planning_dialog_msg_option1">Oui</string>
+    <string name="planning_dialog_msg_option2">Non</string>
+    
 
     <!-- Task form -->
     <string name="task_hint_field_description">Description de la tâche</string>
@@ -126,6 +134,17 @@
     <string name="action_add_task">Nouvelle tâche</string>
     <string name="action_delete_task">Supprimer tâche</string>
     <string name="action_update_task">Modifier tâche</string>
+    <string-array name="task_period_list">
+        <item>Avant un an</item>
+        <item>9-12 mois</item>
+        <item>6-9 mois</item>
+        <item>3-6 mois</item>
+        <item>1-3 mois</item>
+        <item>Après 1 semaine</item>
+        <item>Avant 1 semaine</item>
+        <item>Le jour J</item>
+        <item>Mon planning</item>
+    </string-array>
 
     <!-- Vendor list -->
     <string name="action_add_vendor">Nouveau prestataire</string>
@@ -235,4 +254,99 @@
 	<string name="contact_stats_nb_presents">Nb. présents</string>
 	<string name="contact_stats_nb_absents">Nb. absents</string>
 	<string name="contact_stats_nb_rsvp">Nb. RSVP</string>
+	
+	<!-- Planning importer -->
+	<string-array name="planning_over_one_year">
+	    <item>Annoncer vos fiançailles</item>
+	    <item>Plannifier la soirée de fiançailles</item>
+	    <item>Discuter de la taille et du style du mariage</item>
+	    <item>Collecter des idées de thèmes, robe de mariée, etc.</item>
+	    <item>Décider un budget (mettre à jour la vue budget)</item>
+	    <item>Décider du partage des dépenses</item>
+	    <item>Discuter des dates potentielles de mariage</item>
+	    <item>Rencontrer le prêtre et l\'officier d\'état civil</item>
+	    <item>Fixer la date de mariage</item>
+	    <item>Réserver le lieu de cérémonie</item>
+	    <item>Réserver le lieu pour la soirée</item>
+	    <item>Consulter un organisateur de mariage si besoin</item>
+	    <item>Discuter la liste des invités</item>
+	    <item>Rechercher les prestataires dans les environs</item>
+	</string-array>
+	<string-array name="planning_fourth_quarter">
+	    <item>Réserver le photographe et la video</item>
+	    <item>Réserver les musiciens et le DJ</item>
+	    <item>Plannifier des leçons de danse</item>
+	    <item>Reserver le traiteur</item>
+	    <item>Finaliser le design de la robe et plannifier les essayages</item>
+	    <item>Organiser la lune de miel</item>
+	    <item>Choisir les témoins</item>
+	    <item>Reserver le fleuriste</item>
+	    <item>Commander la pièce montée</item>
+	    <item>Finaliser la liste des invités (mettre à jour la vue invités)</item>
+	    <item>Envoyer les cartes d\'information sur la date retenue</item>
+	    <item>Concevoir les invitations</item>
+	    <item>Mettre à jour la liste des prestataires (vue prestataire)</item>
+	</string-array>
+	<string-array name="planning_third_quarter">
+	    <item>Organiser la cérémonie et la réception</item>
+	    <item>Confirmer la réservation aux musiciens et DJ</item>
+	    <item>Choisir une sélection de musique pour la cérémonie et la soirée</item>
+	    <item>Confirmer la réservation du photographe et de la vidéo</item>
+	    <item>Choisir le menu avec le traiteur</item>
+	    <item>Faire les réservations pour la lune de miel</item>
+	    <item>Préparer un contrat de mariage</item>
+	    <item>Commander des surprises pour les invités</item>
+	    <item>Acheter des cadeaux aux témoins et parents</item>
+	    <item>Choisir les tenues avec la mère du marié et de la mariée</item>
+	    <item>Selectionner et commander les décorations</item>
+	</string-array>
+	<string-array name="planning_second_quarter">
+	    <item>Choix des robes des demoiselles d\'honneur et essayages</item>
+	    <item>Organisation des transports pour le jour J</item>
+	    <item>Finaliser la tenue du marié et des garçons d\'honneur</item>
+	    <item>Faire faire ou commander les alliances</item>
+	    <item>Arranger un essai de coiffure et de maquillage</item>
+	    <item>Finaliser la commande au fleuriste</item>
+	    <item>Envoyer les invitations de mariage</item>
+	</string-array>
+	<string-array name="planning_first_quarter">
+	    <item>Finaliser le menu avec le traiteur</item>
+	    <item>Finaliser le choix des boissons avec l\'hébergeur</item>
+	    <item>Dessiner le plan de table</item>
+	    <item>Ecrire les voeux</item>
+	    <item>Réfléchir aux discours &amp; toasts</item>
+	    <item>Discuter du programme avec votre coach</item>
+	    <item>Imprimer les programmes ou faire un site internet</item>
+	    <item>Imprimer les plans vers la réception</item>
+	    <item>Plannifier le dernier essayage</item>
+	    <item>Réserver les RDV pour coiffeur, manucure et maquillage</item>
+	    <item>Réserver la salle pour </item>la répétition
+	</string-array>
+	<string-array name="planning_after_one_week">
+	    <item>Mettre à jour la liste des invités en fonction des réponses</item>
+	    <item>Contacter ceux qui n\'ont pas répondu</item>
+	    <item>Confirmer les réservations pour la lune de miel</item>
+	    <item>Acheter le restant des vêtements, bijoux &amp; lingerie</item>
+	    <item>Donner la liste finale des invités au traiteur &amp; hébergeur</item>
+	    <item>Finaliser et imprimer le plan de table</item>
+	    <item>Imprimer les étiquettes de placement</item>
+	    <item>Faire ses bagages pour la Lune de Miel</item>
+	    <item>Désigner un responsable du retour des locations</item>
+	    <item>Arranger l\'hébergement des personnes habitant loin</item>
+	    <item>Confirmer les détails de la cérémonie avec le prêtre/maire</item>
+	</string-array>
+	<string-array name="planning_before_one_week">
+	    <item>Finaliser le parcours du mariage</item>
+	    <item>S\'assurer que tous les paiements ont été faits</item>
+	    <item>Réceptionner les locations</item>
+	    <item>Confirmer les détails de la cérémonie et de la réception</item>
+	    <item>Finaliser les dicours</item>
+	    <item>Confirmer les réservations de logement</item>
+	    <item>Faire ses bagages pour le mariage</item>
+	</string-array>
+	<string-array name="planning_on_dday">
+	    <item>Confier la gestion du groupe de musique au témoin</item>
+	    <item>Donner les chèques restant à payer au témoin</item>
+	    <item>Amusez-vous! On ne se marrie qu\'une fois :)</item>
+	</string-array>
 </resources>

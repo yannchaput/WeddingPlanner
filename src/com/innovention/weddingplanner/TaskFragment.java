@@ -29,6 +29,7 @@ import android.widget.Spinner;
 import com.innovention.weddingplanner.Constantes.FragmentTags;
 import com.innovention.weddingplanner.bean.IDtoBean;
 import com.innovention.weddingplanner.bean.Task;
+import com.innovention.weddingplanner.bean.Task.Period;
 import com.innovention.weddingplanner.exception.InconsistentFieldException;
 import com.innovention.weddingplanner.exception.MissingMandatoryFieldException;
 
@@ -211,6 +212,7 @@ public class TaskFragment extends Fragment implements OnDateSetListener {
 							.dueDate(dueDate)
 							.remind(remindDate)
 							.remindOption((String) remindSpinner.getSelectedItem())
+							.setPlanning(Period.CUSTOM)
 							.build();
 					// Validate task
 					try {

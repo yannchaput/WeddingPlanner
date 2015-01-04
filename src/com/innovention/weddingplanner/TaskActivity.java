@@ -3,12 +3,20 @@ package com.innovention.weddingplanner;
 import static com.innovention.weddingplanner.utils.WeddingPlannerHelper.hideKeyboard;
 import static com.innovention.weddingplanner.utils.WeddingPlannerHelper.replaceFragment;
 import static com.innovention.weddingplanner.utils.WeddingPlannerHelper.showAlert;
+
+import java.util.concurrent.Executors;
+
 import android.annotation.TargetApi;
 import android.app.ActionBar;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.NavUtils;
@@ -17,6 +25,7 @@ import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 
 import com.innovention.weddingplanner.Constantes.FragmentTags;
+import com.innovention.weddingplanner.SettingsActivity.SettingsFragment.PopulatePlanningRunnable;
 import com.innovention.weddingplanner.TaskFragment.OnValidateTask;
 import com.innovention.weddingplanner.TaskListFragment.OnTaskSelectedListener;
 import com.innovention.weddingplanner.bean.IDtoBean;
@@ -39,6 +48,57 @@ public class TaskActivity extends FragmentActivity implements
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+
+		// Populate tasks if reuqired
+		final SharedPreferences prefs = PreferenceManager
+				.getDefaultSharedPreferences(this);
+		boolean populate = prefs.getBoolean("planning", false);
+		boolean init = prefs.getBoolean("init_planning", false);
+
+		if (!populate && !init) {
+			DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					switch (which) {
+					case DialogInterface.BUTTON_POSITIVE:
+						final Handler handler = new Handler();
+						Runnable runnable = new SettingsActivity.SettingsFragment.PopulatePlanningRunnable(TaskActivity.this, handler, 
+								new Runnable() {
+									
+									@Override
+									public void run() {
+										Fragment fgt = TaskActivity.this.getSupportFragmentManager().findFragmentByTag(FragmentTags.TAG_FGT_TASKLIST.getValue());
+										if (null != fgt) {
+											((TaskListFragment) fgt).refresh();
+										}
+										
+									}
+								});
+						Log.d(TAG, "Import predefined planning");
+						Executors.newSingleThreadExecutor().execute(runnable);
+						prefs.edit().putBoolean("planning", true).apply();
+						break;
+
+					case DialogInterface.BUTTON_NEGATIVE:
+						// No button clicked
+						break;
+					}
+					prefs.edit().putBoolean("init_planning", true).apply();
+				}
+			};
+			AlertDialog.Builder builder = new AlertDialog.Builder(this);
+			builder.setMessage(
+					getResources().getString(R.string.planning_dialog_msg))
+					.setPositiveButton(
+							getResources().getString(
+									R.string.planning_dialog_msg_option1),
+							dialogClickListener)
+					.setNegativeButton(
+							getResources().getString(
+									R.string.planning_dialog_msg_option2),
+							dialogClickListener).show();
+		}
+		
 		setContentView(R.layout.activity_task);
 
 		// Set up the action bar to show a dropdown list.
@@ -56,8 +116,8 @@ public class TaskActivity extends FragmentActivity implements
 						android.R.id.text1, new String[] {
 								getString(R.string.title_section1),
 								getString(R.string.title_section2),
-								getString(R.string.title_section3), 
-								getString(R.string.title_section4)}), this);
+								getString(R.string.title_section3),
+								getString(R.string.title_section4) }), this);
 	}
 
 	/**
@@ -127,57 +187,62 @@ public class TaskActivity extends FragmentActivity implements
 		args.putInt(TaskListFragment.ARG_SECTION_NUMBER, position);
 		fragment.setArguments(args);
 		getSupportFragmentManager().beginTransaction()
-				.replace(R.id.layoutTask, fragment).commit();
+				.replace(R.id.layoutTask, fragment, FragmentTags.TAG_FGT_TASKLIST.getValue()).commit();
 		return true;
 	}
-	
+
 	/**
 	 * Triggered by the CAB on the list
+	 * 
 	 * @param id
 	 * @param action
 	 */
 	@Override
 	public void onSelectTask(long id, FragmentTags action) {
-		Log.d(TAG, String.format("onSelectTask - task with id %d was selected for %s", id, action.getValue()));
-		
-		TasksDao service = DaoLocator.getInstance(getApplicationContext()).get(SERVICES.TASK);
-		
-		switch(action) {
-			case TAG_FGT_UPDATETASK:
-				Task task = service.get(id);
-				Log.v(TAG, "Update task " + task);
-				if (null != task) {
-					replaceFragment(this, FragmentTags.TAG_FGT_UPDATETASK, task);
-				}
-				else {
-					showAlert(R.string.update_task_alert_dialog_title, R.string.update_task_0_alert_message, getSupportFragmentManager());
-				}
-				break;
-			case TAG_FGT_DELETETASK:
-				Log.v(TAG, "Delete task with id " + id);
-				int count = service.removeWithId((int) id);
-				if (count > 1)
-					showAlert(R.string.delete_task_alert_dialog_title,
-							R.string.delete_guest_multiple_alert_message,
-							getSupportFragmentManager());
-				else if (count == 0){
-					showAlert(R.string.delete_task_alert_dialog_title,
-							R.string.delete_guest_0_alert_message,
-							getSupportFragmentManager());
-				}
-				else {
-					showAlert(R.string.delete_task_OK_alert_dialog_title,
-							R.string.delete_guest_OK_alert_message,
-							getSupportFragmentManager());
-				}
-				break;
-			default:
-				return;
+		Log.d(TAG, String.format(
+				"onSelectTask - task with id %d was selected for %s", id,
+				action.getValue()));
+
+		TasksDao service = DaoLocator.getInstance(getApplicationContext()).get(
+				SERVICES.TASK);
+
+		switch (action) {
+		case TAG_FGT_UPDATETASK:
+			Task task = service.get(id);
+			Log.v(TAG, "Update task " + task);
+			if (null != task) {
+				replaceFragment(this, FragmentTags.TAG_FGT_UPDATETASK, task);
+			} else {
+				showAlert(R.string.update_task_alert_dialog_title,
+						R.string.update_task_0_alert_message,
+						getSupportFragmentManager());
+			}
+			break;
+		case TAG_FGT_DELETETASK:
+			Log.v(TAG, "Delete task with id " + id);
+			int count = service.removeWithId((int) id);
+			if (count > 1)
+				showAlert(R.string.delete_task_alert_dialog_title,
+						R.string.delete_guest_multiple_alert_message,
+						getSupportFragmentManager());
+			else if (count == 0) {
+				showAlert(R.string.delete_task_alert_dialog_title,
+						R.string.delete_guest_0_alert_message,
+						getSupportFragmentManager());
+			} else {
+				showAlert(R.string.delete_task_OK_alert_dialog_title,
+						R.string.delete_guest_OK_alert_message,
+						getSupportFragmentManager());
+			}
+			break;
+		default:
+			return;
 		}
 	}
 
 	/**
 	 * Triggered on "Validate" button click
+	 * 
 	 * @param v
 	 * @param tag
 	 */
@@ -187,19 +252,18 @@ public class TaskActivity extends FragmentActivity implements
 		// Hide virtual keyboard if opened
 		hideKeyboard(this);
 
-			Log.v(TAG, "saveTask - build task bean: " + bean);
-			TasksDao dao = DaoLocator.getInstance(getApplication())
-					.get(SERVICES.TASK);
-			if (FragmentTags.TAG_FGT_CREATETASK.equals(tag)) {
-				Log.d(TAG, "Save task in creation mode : " + bean);
-				dao.insert( (Task) bean);
-			}
-			else if (FragmentTags.TAG_FGT_UPDATETASK.equals(tag)) {
-				Log.d(TAG, "Save task in update mode : " + bean);
-				dao.update(bean.getId(), (Task) bean);
-			}
-			
-			replaceFragment(this, FragmentTags.TAG_FGT_TASKLIST);
+		Log.v(TAG, "saveTask - build task bean: " + bean);
+		TasksDao dao = DaoLocator.getInstance(getApplication()).get(
+				SERVICES.TASK);
+		if (FragmentTags.TAG_FGT_CREATETASK.equals(tag)) {
+			Log.d(TAG, "Save task in creation mode : " + bean);
+			dao.insert((Task) bean);
+		} else if (FragmentTags.TAG_FGT_UPDATETASK.equals(tag)) {
+			Log.d(TAG, "Save task in update mode : " + bean);
+			dao.update(bean.getId(), (Task) bean);
+		}
+
+		replaceFragment(this, FragmentTags.TAG_FGT_TASKLIST);
 	}
-	
+
 }

@@ -54,6 +54,8 @@ public interface ConstantesDAO {
 	byte NUM_COL_TASK_REMINDDATE = NUM_COL_TASK_DUEDATE + 1;
 	String COL_TASK_REMINDOPTION = "remindoption";
 	byte NUM_COL_TASK_REMINDOPTION = NUM_COL_TASK_REMINDDATE + 1;
+	String COL_TASK_PERIOD = "period";
+	byte NUM_COL_TASK_PERIOD = NUM_COL_TASK_REMINDOPTION + 1;
 	
 	// Vendor table
 	String COL_VENDOR_COMPANY = "company";
@@ -86,7 +88,7 @@ public interface ConstantesDAO {
 	byte NUM_COL_BUDGET_NOTE = NUM_COL_BUDGET_PAID_AMOUNT + 1;
 	
 	// General
-	int VERSION_BDD = 11;
+	int VERSION_BDD = 12;
 	String NOM_BDD = "wedplanner.db";
 	String BDD_BACKUP_NOM = "wedplanner_backup.db";
 	//String BDD_PATH = "//data//data//com.innovention.weddingplanner//databases";
@@ -151,7 +153,9 @@ public interface ConstantesDAO {
 	.append(COL_TASK_REMINDDATE)
 	.append(" TEXT, ")
 	.append(COL_TASK_REMINDOPTION)
-	.append(" TEXT ")
+	.append(" TEXT, ")
+	.append(COL_TASK_PERIOD)
+	.append(" TEXT NOT NULL")
 	.append(");")
 	.toString();
 	

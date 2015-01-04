@@ -28,6 +28,9 @@
     <string name="item_recreateDb_toast">Database was restored without error</string>
     <string name="item_recreateDb_failed_toast">An error occurred. Data were not restored successfully</string>
     <string name="item_rate_my_app">Rate my app</string>
+    <string name="item_planning">Auto planning</string>
+    <string name="item_planning_on_summary">Automatic planning population is enabled</string>
+    <string name="item_planning_off_summary">Automatic planning population is disabled</string>
 
     <!-- Contact list -->
     <string name="contact_tab_statistics">Statistics</string>
@@ -89,6 +92,9 @@
     <string name="title_section2">Ongoing</string>
     <string name="title_section3">Completed</string>
     <string name="title_section4">Overdue</string>
+    <string name="planning_dialog_msg">Would you like to set a default planning?</string>
+    <string name="planning_dialog_msg_option1">Yes</string>
+    <string name="planning_dialog_msg_option2">No</string>
 
     <!-- Task form -->
     <string name="task_hint_field_description">Description</string>
@@ -126,6 +132,17 @@
     <string name="action_add_task">New task</string>
     <string name="action_delete_task">Delete task</string>
     <string name="action_update_task">Update task</string>
+    <string-array name="task_period_list">
+        <item>Before one year</item>
+        <item>9-12 months</item>
+        <item>6-9 months</item>
+        <item>3-6 months</item>
+        <item>1-3 months</item>
+        <item>After 1 week</item>
+        <item>Before 1 week</item>
+        <item>DDay</item>
+        <item>My planning</item>
+    </string-array>
 
     <!-- Vendor list -->
     <string name="action_add_vendor">New vendor</string>
@@ -236,4 +253,98 @@
 	<string name="contact_stats_nb_absents">Nb. absent</string>
 	<string name="contact_stats_nb_rsvp">Nb. RSVP</string>
 
+	<!-- Planning importer -->
+	<string-array name="planning_over_one_year">
+	    <item>Announce your engagement</item>
+	    <item>Plan an engagement party</item>
+	    <item>Discuss the size and style of your wedding</item>
+	    <item>Collect ideas for colour schemes, the wedding dress, etc.</item>
+	    <item>Decide on a budget (update your budget view)</item>
+	    <item>Discuss how the expenses will be shared among parties</item>
+	    <item>Discuss potential dates for the wedding</item>
+	    <item>Meet with and book your wedding officiant or clergy</item>
+	    <item>Set the wedding date (update the welcome view)</item>
+	    <item>Reserve the venue for the ceremony</item>
+	    <item>Book the venue for the reception</item>
+	    <item>Consult with a wedding coordinator if needed</item>
+	    <item>Discuss your guest list</item>
+	    <item>Research wedding vendors in your area</item>
+	</string-array>
+	<string-array name="planning_fourth_quarter">
+	    <item>Decide on and secure bookings with a photographer and videographer</item>
+	    <item>Book the musicians and DJ</item>
+	    <item>Schedule dancing lessons</item>
+	    <item>Reserve the caterer</item>
+	    <item>Finalise the design for your wedding dress and schedule fittings</item>
+	    <item>Plan the honeymoon</item>
+	    <item>Finalise wedding attendants</item>
+	    <item>Reserve florist</item>
+	    <item>Order the wedding cake</item>
+	    <item>Finalise the guest list (update the guest list view)</item>
+	    <item>Send the save-the-dates card</item>
+	    <item>Design invitations</item>
+	    <item>Update your vendor contacts (vendor\'s view)</item>
+	</string-array>
+	<string-array name="planning_third_quarter">
+	    <item>Plan the ceremony and reception program</item>
+	    <item>Confirm booking with musicians and DJ</item>
+	    <item>Choose music selections for the ceremony and reception</item>
+	    <item>Confirm booking with photographer and videographer</item>
+	    <item>Plan the menu with the caterer</item>
+	    <item>Make bookings for honeymoon (travel, accomodation)</item>
+	    <item>Draw up pre-marital contracts</item>
+	    <item>Order wedding favours for guests</item>
+	    <item>Buy presents for the attendants and parents</item>
+	    <item>Discuss the outfits of the mother of the bride and mother of the groom</item>
+	    <item>Select and order rental decorations</item>
+	</string-array>
+	<string-array name="planning_second_quarter">
+	    <item>Select bridesmaids dresses and schedule fittings</item>
+	    <item>Arrange for transportation for the wedding day</item>
+	    <item>Finalize attire for the groom and male attendants</item>
+	    <item>Design/order wedding rings</item>
+	    <item>Schedule appointment for hair &amp; make up tests</item>
+	    <item>Finalize order with the florist</item>
+	    <item>Send out wedding invitation</item>
+	</string-array>
+	<string-array name="planning_first_quarter">
+	    <item>Finalize menu with the caterer</item>
+	    <item>Finalize beverages with the reception venue</item>
+	    <item>Draw up the seating plan</item>
+	    <item>Write wedding vows</item>
+	    <item>Draft the speeches</item>
+	    <item>Discuss the program with your MC</item>
+	    <item>Have programs printed or share a blog</item>
+	    <item>Print maps to the reception venue</item>
+	    <item>Schedule final dress fitting</item>
+	    <item>Secure appointments for hair, nails and make up</item>
+	    <item>Book venue for rehearsal dinner</item>
+	</string-array>
+	<string-array name="planning_after_one_week">
+	    <item>Update your guest list RSVPs</item>
+	    <item>Contact guests who have not yet replied</item>
+	    <item>Confirm honeymoon reservations</item>
+	    <item>Purchase remaining attire, jewellry and undergarments</item>
+	    <item>Give final head count to caterer &amp; venue</item>
+	    <item>Finalize and print seating plan</item>
+	    <item>Have place cards printed</item>
+	    <item>Pack for the honeymoon</item>
+	    <item>Arrange who will return rented items</item>
+	    <item>Arrange accomodations for out-of-town guests</item>
+	    <item>Confirm ceremony details with your officiant</item>
+	</string-array>
+	<string-array name="planning_before_one_week">
+	    <item>Finalize the itinerary for the wedding day</item>
+	    <item>Ensure any outstanding payments to vendor have been made</item>
+	    <item>Pick up all rentals</item>
+	    <item>Confirm details with ceremony and reception venues</item>
+	    <item>Finalize the speeches</item>
+	    <item>Confirm accomodation bookings</item>
+	    <item>Pack for the wedding day</item>
+	</string-array>
+	<string-array name="planning_on_dday">
+	    <item>Give the wedding bands to the best man</item>
+	    <item>Give any outstanding cheques to the best man</item>
+	    <item>Have Fun!</item>
+	</string-array>
 </resources>

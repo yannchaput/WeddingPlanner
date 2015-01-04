@@ -22,7 +22,9 @@ import org.apache.commons.lang3.StringUtils;
 
 import com.innovention.weddingplanner.Constantes;
 import com.innovention.weddingplanner.bean.Contact.Category;
+import com.innovention.weddingplanner.bean.Task.Period;
 import com.innovention.weddingplanner.exception.TechnicalException;
+import com.innovention.weddingplanner.utils.WeddingPlannerHelper;
 
 import android.app.DownloadManager.Query;
 import android.content.ContentValues;
@@ -34,6 +36,7 @@ import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.os.Environment;
+import android.text.TextUtils;
 import android.util.Log;
 
 /**
@@ -215,7 +218,7 @@ public final class DatabaseHelper extends SQLiteOpenHelper {
 					ConstantesDAO.COL_ADDRESS, ConstantesDAO.COL_INVITATION,
 					ConstantesDAO.COL_CHURCH, ConstantesDAO.COL_TOWNHALL,
 					ConstantesDAO.COL_COCKTAIL, ConstantesDAO.COL_PARTY,
-					ConstantesDAO.COL_RSVP };
+					ConstantesDAO.COL_RSVP, ConstantesDAO.COL_GUEST_CATEGORY };
 			query = SQLiteQueryBuilder.buildQueryString(false,
 					ConstantesDAO.TABLE_GUESTS, columns, null, null, null,
 					null, null);
@@ -235,6 +238,7 @@ public final class DatabaseHelper extends SQLiteOpenHelper {
 					int cocktail = c.getInt(ConstantesDAO.NUM_COL_COCKTAIL);
 					int party = c.getInt(ConstantesDAO.NUM_COL_PARTY);
 					String rsvp = c.getString(ConstantesDAO.NUM_COL_RSVP);
+					String category = c.getString(ConstantesDAO.NUM_COL_GUEST_CATEGORY);
 
 					ContentValues values = new ContentValues();
 					values.put(ConstantesDAO.COL_ID, id);
@@ -249,7 +253,7 @@ public final class DatabaseHelper extends SQLiteOpenHelper {
 					values.put(ConstantesDAO.COL_COCKTAIL, cocktail);
 					values.put(ConstantesDAO.COL_PARTY, party);
 					values.put(ConstantesDAO.COL_RSVP, rsvp);
-					values.put(ConstantesDAO.COL_GUEST_CATEGORY, Category.OTHER.toString());
+					values.put(ConstantesDAO.COL_GUEST_CATEGORY, category);
 					dst.insert(ConstantesDAO.TABLE_GUESTS, null, values);
 					c.moveToNext();
 				}
@@ -260,7 +264,7 @@ public final class DatabaseHelper extends SQLiteOpenHelper {
 					ConstantesDAO.COL_TASK_STATUS, ConstantesDAO.COL_TASK_DESC,
 					ConstantesDAO.COL_TASK_DUEDATE,
 					ConstantesDAO.COL_TASK_REMINDDATE,
-					ConstantesDAO.COL_TASK_REMINDOPTION };
+					ConstantesDAO.COL_TASK_REMINDOPTION, ConstantesDAO.COL_TASK_PERIOD };
 			query = SQLiteQueryBuilder.buildQueryString(false,
 					ConstantesDAO.TABLE_TASKS, columns, null, null, null, null,
 					null);
@@ -277,6 +281,13 @@ public final class DatabaseHelper extends SQLiteOpenHelper {
 							.getString(ConstantesDAO.NUM_COL_TASK_REMINDDATE);
 					String option = c
 							.getString(ConstantesDAO.NUM_COL_TASK_REMINDOPTION);
+					String period = "";
+					try {
+						if (c.getColumnIndex(ConstantesDAO.COL_TASK_PERIOD) != -1)
+								period = c.getString(ConstantesDAO.NUM_COL_TASK_PERIOD);
+					} catch (Exception e) {
+						period = Period.CUSTOM.name();
+					}
 
 					ContentValues values = new ContentValues();
 					values.put(ConstantesDAO.COL_ID, id);
@@ -285,6 +296,7 @@ public final class DatabaseHelper extends SQLiteOpenHelper {
 					values.put(ConstantesDAO.COL_TASK_DUEDATE, dueDate);
 					values.put(ConstantesDAO.COL_TASK_REMINDDATE, remindDate);
 					values.put(ConstantesDAO.COL_TASK_REMINDOPTION, option);
+					values.put(ConstantesDAO.COL_TASK_PERIOD, WeddingPlannerHelper.isEmpty(period) ? Period.CUSTOM.name():period);
 					dst.insert(ConstantesDAO.TABLE_TASKS, null, values);
 					c.moveToNext();
 				}

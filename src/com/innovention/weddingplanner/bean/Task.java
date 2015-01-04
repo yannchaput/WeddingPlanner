@@ -27,6 +27,22 @@ public class Task implements IDtoBean, Parcelable {
 	private DateTime dueDate;
 	private DateTime remindDate;
 	private String remindChoice;
+	private Period period = Period.CUSTOM;
+	
+	public enum Period {
+		OVER_YEAR((byte) 1), FOURTH_QUARTER((byte) 2), THIRD_QUARTER((byte) 3), SECOND_QUARTER((byte) 4), FIRST_QUARTER((byte) 5), 
+		OVER_WEEK((byte) 6), BEFORE_WEEK((byte) 7), DDAY((byte) 8), CUSTOM((byte) 9);
+		
+		private byte order;
+		
+		private Period(final byte order) {
+			this.order = order;
+		}
+		
+		public byte getOrder() {
+			return order;
+		}
+	}
 	
 	/**
 	 * Builder class for Task bean
@@ -41,6 +57,7 @@ public class Task implements IDtoBean, Parcelable {
 		private DateTime dueDate;
 		private DateTime remindDate;
 		private String remindChoice;
+		private Period period = Period.CUSTOM;
 		
 		public Builder() {
 			
@@ -74,6 +91,11 @@ public class Task implements IDtoBean, Parcelable {
 		
 		public Builder remindOption(String option) {
 			this.remindChoice = option;
+			return this;
+		}
+		
+		public Builder setPlanning(Period period) {
+			this.period = period;
 			return this;
 		}
 		
@@ -113,6 +135,7 @@ public class Task implements IDtoBean, Parcelable {
 		this.dueDate = DateTime.parse(in.readString());
 		this.remindDate = DateTime.parse(in.readString());
 		this.remindChoice = in.readString();
+		this.period = Period.valueOf(in.readString());
 	}
 	
 	private Task(final Builder builder) {
@@ -122,6 +145,7 @@ public class Task implements IDtoBean, Parcelable {
 		this.dueDate = builder.dueDate;
 		this.remindDate = builder.remindDate;
 		this.remindChoice = builder.remindChoice;
+		this.period = builder.period;
 	}
 
 	@Override
@@ -161,6 +185,7 @@ public class Task implements IDtoBean, Parcelable {
 				.add("remindDate", getRemindDate())
 				.add("reminder option", getRemindChoice())
 				.add("active", getActive())
+				.add("period", getPeriod())
 				.toString();
 	}
 
@@ -215,6 +240,15 @@ public class Task implements IDtoBean, Parcelable {
 		dest.writeString(dueDate.toString());
 		dest.writeString(remindDate.toString());
 		dest.writeString(remindChoice);
+		dest.writeString(period.name());
+	}
+
+	public Period getPeriod() {
+		return period;
+	}
+
+	public void setPeriod(Period period) {
+		this.period = period;
 	}
 
 }

@@ -1,7 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
-    <Preference android:key="recreateDB" android:title="@string/item_recreateDb_action" android:summary="@string/item_recreateDb_summary"/>
-    <Preference android:key="resetDb" android:title="@string/item_resetDb_action" android:summary="@string/item_resetDb_summary"/>
-    <Preference android:key="rateApp" android:title="@string/item_rate_my_app" />
-    
+
+    <Preference
+        android:key="recreateDB"
+        android:summary="@string/item_recreateDb_summary"
+        android:title="@string/item_recreateDb_action" />
+    <Preference
+        android:key="resetDb"
+        android:summary="@string/item_resetDb_summary"
+        android:title="@string/item_resetDb_action" />
+
+    <CheckBoxPreference
+        android:defaultValue="false"
+        android:key="planning"
+        android:persistent="true"
+        android:summaryOff="@string/item_planning_off_summary"
+        android:summaryOn="@string/item_planning_on_summary"
+        android:title="@string/item_planning" />
+
+    <Preference
+        android:key="rateApp"
+        android:title="@string/item_rate_my_app" />
+
 </PreferenceScreen>

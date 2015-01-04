@@ -135,7 +135,7 @@ public class MainActivity extends FragmentActivity {
 		case R.id.action_settings:
 			Intent intent = new Intent();
 			intent.setClass(this, SettingsActivity.class);
-			startActivityForResult(intent, 0);
+			startActivity(intent);
 		default:
 			return super.onOptionsItemSelected(item);
 		}
@@ -278,13 +278,6 @@ public class MainActivity extends FragmentActivity {
 		Resources res = getResources();
 		days2WeddingTxt.setText(daysToCome + " " + res.getString(R.string.days_to_wedding));
 	}
-
-	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		// TODO Auto-generated method stub
-		super.onActivityResult(requestCode, requestCode, data);
-	}
-	
 	
 
 }

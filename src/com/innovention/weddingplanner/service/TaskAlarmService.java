@@ -53,7 +53,7 @@ public class TaskAlarmService extends Service {
 				SERVICES.TASK);
 		
 		// Correction du plantage ANR 17-11-2014
-		if (intent.getAction() == null) {
+		if (null == intent || intent.getAction() == null) {
 			return super.onStartCommand(intent, flags, startId);
 		}
 
